@@ -659,29 +659,36 @@ const AssignScheduleToApplicants = () => {
 
 
 
-        setEmailMessage(
-            `Hello, ${person.first_name} ${person.middle_name ? person.middle_name.charAt(0) + "." : ""} ${person.last_name}
+     setEmailMessage(
+`Hello, ${person.first_name} ${person.middle_name ? person.middle_name.charAt(0) + "." : ""} ${person.last_name},
 
 You have been scheduled for document verification with the following details:
 
 📅 Evaluation Date: ${formatDateLong(sched.schedule_date)}
 🏫 Room: ${sched.room_description}
-🕒 Time: ${formatTime(sched.start_time)} - ${formatTime(sched.end_time)}
+🕒 Scheduled Time: ${formatTime(sched.start_time)} - ${formatTime(sched.end_time)}
 🆔 Applicant No: ${person.applicant_number}
+
+🖨️ Please print the following forms:
+• Printed Online Admission Form Process
+• Personal Data Form (with Applicant Number)
 
 📄 REQUIRED DOCUMENTS:
 ${reqText}
 
+🕘 Office Hours for Admission Evaluation:
+9:00 AM – 4:00 PM
+
 ⚠️ Important Reminders:
-- Arrive at least 30 minutes before your scheduled time.
-- Bring all listed documents and a valid ID.
-- Make sure all documents are Certified True Copies and have a dry seal from your school.
-- Incomplete requirements may delay your verification.
+• Arrive at least **1 hour before** your scheduled time.
+• Bring all listed documents and a **valid ID**.
+• Ensure all documents are **Certified True Copies with a dry seal** from your school.
+• Incomplete requirements may **delay your verification process**.
 
 Thank you and good luck!
 
 ${officeName}`
-        );
+);
 
         setConfirmOpen(true);
     };

@@ -2949,8 +2949,9 @@ app.get("/api/all-applicants", async (req, res) => {
       LEFT JOIN admission.entrance_exam_schedule AS ees
         ON ea.schedule_id = ees.schedule_id
        LEFT JOIN enrollment.program_table AS pgt ON p.program = pgt.program_id
-      LEFT JOIN enrollment.student_numbering_table AS snt
-        ON p.person_id = snt.person_id
+      INNER JOIN enrollment.person_table AS pst ON p.emailAddress = pst.emailAddress
+      INNER JOIN enrollment.student_numbering_table AS snt
+        ON pst.person_id = snt.person_id
 
       /* get aggregated missing_documents for display only */
       LEFT JOIN (
