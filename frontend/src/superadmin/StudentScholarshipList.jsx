@@ -99,7 +99,7 @@ const StudentScholarshipList = () => {
 
   const [hasAccess, setHasAccess] = useState(null);
   const [loading, setLoading] = useState(false);
-  const pageId = 56;
+  const pageId = 129;
 
   const [employeeID, setEmployeeID] = useState("");
   useEffect(() => {

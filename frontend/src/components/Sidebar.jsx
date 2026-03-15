@@ -157,11 +157,12 @@ function buildSidebarStyles(s = {}) {
     justify-content: center;
     flex-shrink: 0;
     opacity: .75;
+    color: ${titleColor}
   }
   .sb-item:hover { background: ${subBtnColor}; color: ${titleColor}; }
   .sb-item.active { background: ${accent}; color: #fff !important; }
   .sb-item.active:hover { background: ${accent}; }
-  .sb-item.active .sb-icon { opacity: 1; }
+  .sb-item.active .sb-icon { opacity: 1; color: #fff !important; }
   .sb-item-label { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
 
   /* ── Group toggle ── */
@@ -175,7 +176,7 @@ function buildSidebarStyles(s = {}) {
     border: none;
     background: transparent;
     cursor: pointer;
-    color: ${titleColor};
+    color: black;
     font-size: 11.5px;
     font-weight: 400;
     font-family: 'Poppins', sans-serif;
@@ -185,8 +186,9 @@ function buildSidebarStyles(s = {}) {
     line-height: 1;
     vertical-align: middle;
   }
+  .sb-group-btn .sb-icon{color: ${titleColor};}
   .sb-group-btn:hover { background: ${subBtnColor}; color: ${titleColor}; }
-  .sb-group-btn.open { color: ${accent}; }
+  .sb-group-btn.open { color: ${accent}; background: ${subBtnColor} }
   .sb-group-label { flex: 1; }
   .sb-group-chevron { flex-shrink: 0; opacity: .5; }
   .sb-group-chevron svg { font-size: 16px !important; }

@@ -495,6 +495,38 @@ const UserPageAccess = () => {
     }
   };
 
+  const handleUserStatusToggle = async (userId, currentStatus) => {
+    const nextStatus = currentStatus === 1 ? 0 : 1;
+
+    // Optimistic update
+    setAllUsers((prev) =>
+      prev.map((u) => (u.id === userId ? { ...u, status: nextStatus } : u)),
+    );
+
+    try {
+      await axios.put(`${API_BASE_URL}/update_student_status/${userId}`, {
+        status: nextStatus,
+      });
+
+      setSnack({
+        open: true,
+        severity: "success",
+        message: `User status updated to ${nextStatus === 1 ? "Active" : "Inactive"}`,
+      });
+    } catch (err) {
+      console.error(err);
+      // Rollback on failure
+      setAllUsers((prev) =>
+        prev.map((u) => (u.id === userId ? { ...u, status: currentStatus } : u)),
+      );
+      setSnack({
+        open: true,
+        severity: "error",
+        message: "Failed to update user status",
+      });
+    }
+  };
+
   if (hasAccess === false) return <Unauthorized />;
 
   return (
@@ -875,9 +907,9 @@ const UserPageAccess = () => {
                     align="center"
                   >
                     <Switch
-                      checked={!!pageAccess[p.id]} // ensure boolean
-                      onChange={
-                        () => handleToggleChange(p.id, !!pageAccess[p.id]) // pass current value correctly
+                      checked={Number(u.status) === 1}
+                      onChange={() =>
+                        handleUserStatusToggle(u.id, Number(u.status))
                       }
                       color="primary"
                       size="medium"
