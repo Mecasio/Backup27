@@ -1675,6 +1675,7 @@ useEffect(() => {
 
     <Box sx={{ mt: 2, pl: 2 }}>
       <Typography>• Fill up all required personal information.</Typography>
+      <Typography>• Upload your 2 by 2 Formal Picture.</Typography>
       <Typography>• Upload all required online documents.</Typography>
       <Typography>• Ensure that the information you provide is accurate and correct.</Typography>
       <Typography>• Regularly check your Applicant Dashboard for updates.</Typography>

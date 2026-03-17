@@ -772,7 +772,7 @@ const EnrollingOfficerDashboard = ({ profileImage, setProfileImage }) => {
                         sx={{
                             marginTop: 2.5,
                             marginLeft: 2.1,
-                            width: 480,
+                            width: 520,
                             height: 220,
                             p: 2,
                             borderRadius: 3,
@@ -867,7 +867,7 @@ const EnrollingOfficerDashboard = ({ profileImage, setProfileImage }) => {
 
                     <Card
                         sx={{
-                            width: 480,
+                            width: 520,
                             height: 370,
                             p: 3,
                             marginTop: 2.5,

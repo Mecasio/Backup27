@@ -39,7 +39,7 @@ const allowedOrigins = [
   'http://192.168.50.211:5173',
   'http://136.239.248.62:5173',
   'http://192.168.50.62:5173',
-  'http://192.168.50.53:5173',
+  'http://192.168.50.54:5173',
 ];
 
 app.use(
@@ -12552,8 +12552,12 @@ app.get("/api/person_data/:person_id/:role", async (req, res) => {
            ua.last_name AS lname,
            ua.role,
            ua.employee_id,
+           dt.dprtmnt_id,
+           dt.dprtmnt_name,
+           dt.dprtmnt_code,
            ua.email
          FROM user_accounts AS ua
+         LEFT JOIN dprtmnt_table AS dt ON ua.dprtmnt_id = dt.dprtmnt_id 
          WHERE ua.person_id = ? AND ua.role = 'registrar'`,
         [person_id],
       );
@@ -12567,8 +12571,13 @@ app.get("/api/person_data/:person_id/:role", async (req, res) => {
            pt.fname,
            pt.lname,
            'faculty' AS role,
+           dt.dprtmnt_id,
+           dt.dprtmnt_name,
+           dt.dprtmnt_code,
            pt.email
          FROM prof_table AS pt
+         LEFT JOIN dprtmnt_profs_table AS dpt ON pt.prof_id = dpt.prof_id
+         LEFT JOIN dprtmnt_table AS dt ON dpt.dprtmnt_id = dpt.dprtmnt_id
          WHERE pt.person_id = ?`,
         [person_id],
       );

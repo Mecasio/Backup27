@@ -694,9 +694,8 @@ You are scheduled for an interview on:
 
 Please bring the following requirements:
 
-1. Log in at /login_applicant → Applicant Form → "Print Admission Form Process".
-2. Proceed to the Guidance Office for verification.
-3. Your Admission Form must be signed before taking the exam.
+1. Proceed to the Guidance Office for verification.
+2. Your Admission Form must be signed before taking the exam.
 
 Thank you and good luck!`
         );
@@ -770,9 +769,8 @@ You are scheduled for an interview on:
 
 Please bring the following requirements:
 
-1. Log in at /login_applicant → Applicant Form → "Print Admission Form Process".
-2. Proceed to the Guidance Office for verification.
-3. Your Admission Form must be signed before taking the exam.
+1. Proceed to the Guidance Office for verification.
+2. Your Admission Form must be signed before taking the exam.
 
 Thank you and good luck!`
         );

@@ -872,7 +872,7 @@ const AdmissionOfficerDashboard = ({ profileImage, setProfileImage }) => {
         <Box>
           <Card
             sx={{
-              width: 400,
+              width: 470,
               height: 400,
               marginTop: 2.5,
               marginLeft: 1.1,
@@ -938,7 +938,7 @@ const AdmissionOfficerDashboard = ({ profileImage, setProfileImage }) => {
           </Card>
           <Card
             sx={{
-              width: 400,
+              width: 470,
               height: 230,
               marginTop: 2.5,
               marginLeft: 1.1,

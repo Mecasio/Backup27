@@ -673,7 +673,7 @@ const SideBar = ({ setIsAuthenticated, profileImage, setProfileImage }) => {
         arrow
         placement="right"
         title={
-          <div style={{ padding: 6, maxWidth: 240 }}>
+          <div style={{ padding: 6, maxWidth: 300 }}>
             <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 4 }}>
               {personData?.fname ? `${personData.fname} ${personData.lname}` : role || "User"}
             </div>
@@ -683,6 +683,9 @@ const SideBar = ({ setIsAuthenticated, profileImage, setProfileImage }) => {
                 : role === "applicant"
                   ? `Applicant No: ${personData?.applicant_number || "—"}`
                   : `ID: ${personData?.employee_id || "—"}`}
+            </div>
+            <div style={{ fontSize: 13,  marginBottom: 4 }}>
+              {personData?.dprtmnt_name} ({personData?.dprtmnt_code})
             </div>
           </div>
         }
