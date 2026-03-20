@@ -717,7 +717,7 @@ const ApplicantList = () => {
   useEffect(() => {
     fetch(`${API_BASE_URL}/api/all-applicants`) // 👈 This is the new endpoint
       .then((res) => res.json())
-
+      .then((data) => setPersons(data))
       .catch((err) => console.error("Error fetching applicants:", err));
   }, []);
 
