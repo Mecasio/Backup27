@@ -1,17 +1,30 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
 import { SettingsContext } from "../App";
 import axios from "axios";
-import { Button, Box, Container, Typography, Checkbox, Card, FormControl, Alert, Snackbar, FormControlLabel, FormHelperText, Modal } from "@mui/material";
+import {
+  Button,
+  Box,
+  Container,
+  Typography,
+  Checkbox,
+  Card,
+  FormControl,
+  Alert,
+  Snackbar,
+  FormControlLabel,
+  FormHelperText,
+  Modal,
+} from "@mui/material";
 import { Link } from "react-router-dom";
 import PersonIcon from "@mui/icons-material/Person";
 import FamilyRestroomIcon from "@mui/icons-material/FamilyRestroom";
 import SchoolIcon from "@mui/icons-material/School";
 import HealthAndSafetyIcon from "@mui/icons-material/HealthAndSafety";
 import InfoIcon from "@mui/icons-material/Info";
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import FolderIcon from '@mui/icons-material/Folder';
-import ErrorIcon from '@mui/icons-material/Error';
-import { useNavigate } from 'react-router-dom';
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import FolderIcon from "@mui/icons-material/Folder";
+import ErrorIcon from "@mui/icons-material/Error";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import ExamPermit from "../applicant/ExamPermit";
@@ -24,8 +37,8 @@ const Dashboard5 = (props) => {
   const [subtitleColor, setSubtitleColor] = useState("#555555");
   const [borderColor, setBorderColor] = useState("#000000");
   const [mainButtonColor, setMainButtonColor] = useState("#1976d2");
-  const [subButtonColor, setSubButtonColor] = useState("#ffffff");   // ✅ NEW
-  const [stepperColor, setStepperColor] = useState("#000000");       // ✅ NEW
+  const [subButtonColor, setSubButtonColor] = useState("#ffffff"); // ✅ NEW
+  const [stepperColor, setStepperColor] = useState("#000000"); // ✅ NEW
 
   const [fetchedLogo, setFetchedLogo] = useState(null);
   const [companyName, setCompanyName] = useState("");
@@ -39,9 +52,10 @@ const Dashboard5 = (props) => {
     if (settings.title_color) setTitleColor(settings.title_color);
     if (settings.subtitle_color) setSubtitleColor(settings.subtitle_color);
     if (settings.border_color) setBorderColor(settings.border_color);
-    if (settings.main_button_color) setMainButtonColor(settings.main_button_color);
-    if (settings.sub_button_color) setSubButtonColor(settings.sub_button_color);   // ✅ NEW
-    if (settings.stepper_color) setStepperColor(settings.stepper_color);           // ✅ NEW
+    if (settings.main_button_color)
+      setMainButtonColor(settings.main_button_color);
+    if (settings.sub_button_color) setSubButtonColor(settings.sub_button_color); // ✅ NEW
+    if (settings.stepper_color) setStepperColor(settings.stepper_color); // ✅ NEW
 
     // 🏫 Logo
     if (settings.logo_url) {
@@ -54,15 +68,17 @@ const Dashboard5 = (props) => {
     if (settings.company_name) setCompanyName(settings.company_name);
     if (settings.short_term) setShortTerm(settings.short_term);
     if (settings.campus_address) setCampusAddress(settings.campus_address);
-
   }, [settings]);
-
 
   const navigate = useNavigate();
   const [userID, setUserID] = useState("");
   const [user, setUser] = useState("");
   const [userRole, setUserRole] = useState("");
-  const [snack, setSnack] = useState({ open: false, message: "", severity: "info" });
+  const [snack, setSnack] = useState({
+    open: false,
+    message: "",
+    severity: "info",
+  });
   const [person, setPerson] = useState({
     termsOfAgreement: "",
   });
@@ -71,19 +87,19 @@ const Dashboard5 = (props) => {
   const [activeSemesterId, setActiveSemesterId] = useState(null);
 
   useEffect(() => {
-    axios.get(`${API_BASE_URL}/active_school_year`)
-      .then(res => {
+    axios
+      .get(`${API_BASE_URL}/active_school_year`)
+      .then((res) => {
         const active = res.data?.[0];
         if (active) {
           setActiveYearId(active.year_id);
           setActiveSemesterId(active.semester_id);
         }
       })
-      .catch(err => {
+      .catch((err) => {
         console.error("Failed to fetch active school year", err);
       });
   }, []);
-
 
   // do not alter
   useEffect(() => {
@@ -91,7 +107,6 @@ const Dashboard5 = (props) => {
     const storedRole = localStorage.getItem("role");
     const storedID = localStorage.getItem("person_id");
     const keys = JSON.parse(localStorage.getItem("dashboardKeys") || "{}");
-
 
     const overrideId = props?.adminOverridePersonId; // new
 
@@ -121,16 +136,37 @@ const Dashboard5 = (props) => {
   const keys = JSON.parse(localStorage.getItem("dashboardKeys") || "{}");
 
   const steps = [
-    { label: "Personal Information", icon: <PersonIcon />, path: `/dashboard/${keys.step1}` },
-    { label: "Family Background", icon: <FamilyRestroomIcon />, path: `/dashboard/${keys.step2}` },
-    { label: "Educational Attainment", icon: <SchoolIcon />, path: `/dashboard/${keys.step3}` },
-    { label: "Health Medical Records", icon: <HealthAndSafetyIcon />, path: `/dashboard/${keys.step4}` },
-    { label: "Other Information", icon: <InfoIcon />, path: `/dashboard/${keys.step5}` },
+    {
+      label: "Personal Information",
+      icon: <PersonIcon />,
+      path: `/dashboard/${keys.step1}`,
+    },
+    {
+      label: "Family Background",
+      icon: <FamilyRestroomIcon />,
+      path: `/dashboard/${keys.step2}`,
+    },
+    {
+      label: "Educational Attainment",
+      icon: <SchoolIcon />,
+      path: `/dashboard/${keys.step3}`,
+    },
+    {
+      label: "Health Medical Records",
+      icon: <HealthAndSafetyIcon />,
+      path: `/dashboard/${keys.step4}`,
+    },
+    {
+      label: "Other Information",
+      icon: <InfoIcon />,
+      path: `/dashboard/${keys.step5}`,
+    },
   ];
 
-
   const [activeStep, setActiveStep] = useState(4);
-  const [clickedSteps, setClickedSteps] = useState(Array(steps.length).fill(false));
+  const [clickedSteps, setClickedSteps] = useState(
+    Array(steps.length).fill(false),
+  );
 
   const handleStepClick = (index) => {
     if (isFormValid()) {
@@ -140,7 +176,11 @@ const Dashboard5 = (props) => {
       setClickedSteps(newClickedSteps);
       navigate(steps[index].path); // ✅ actually move to step
     } else {
-      alert("Please fill all required fields before proceeding.");
+      setSnackbar({
+        open: true,
+        message: "Please complete required fields first.",
+        severity: "warning",
+      });
     }
   };
   // Do not alter
@@ -148,7 +188,7 @@ const Dashboard5 = (props) => {
     try {
       const res = await axios.get(`${API_BASE_URL}/form/person/${id}`);
       setPerson(res.data);
-    } catch (error) { }
+    } catch (error) {}
   };
 
   // Do not alter
@@ -158,7 +198,7 @@ const Dashboard5 = (props) => {
 
     const updatedPerson = {
       ...person,
-      created_at: person.created_at // Only add if not already set
+      created_at: person.created_at, // Only add if not already set
     };
 
     try {
@@ -168,7 +208,6 @@ const Dashboard5 = (props) => {
       console.error("Auto-save failed:", error);
     }
   };
-
 
   // Real-time save on every character typed
   const handleChange = (e) => {
@@ -180,7 +219,6 @@ const Dashboard5 = (props) => {
     setPerson(updatedPerson);
     handleUpdate(updatedPerson);
   };
-
 
   const handleBlur = async () => {
     try {
@@ -207,17 +245,21 @@ const Dashboard5 = (props) => {
   };
 
   const handleClose = (_, reason) => {
-    if (reason === 'clickaway') return;
-    setSnack(prev => ({ ...prev, open: false }));
+    if (reason === "clickaway") return;
+    setSnack((prev) => ({ ...prev, open: false }));
   };
 
   // Add this state at the top if not already:
-  const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "success",
+  });
 
   // Snackbar close handler
   const handleCloseSnackbar = (event, reason) => {
-    if (reason === 'clickaway') return;
-    setSnackbar(prev => ({ ...prev, open: false }));
+    if (reason === "clickaway") return;
+    setSnackbar((prev) => ({ ...prev, open: false }));
   };
 
   // Example: replace previous calls with this:
@@ -238,14 +280,12 @@ const Dashboard5 = (props) => {
 
     if (!activeYearId || !activeSemesterId) {
       showSnackbar("Active school year not found.", "error");
-      console.log(activeSemesterId)
+      console.log(activeSemesterId);
       return;
     }
 
     try {
-
-
-      console.log(activeSemesterId)
+      console.log(activeSemesterId);
 
       // optional notification
       await axios.post(`${API_BASE_URL}/api/notify-submission`, {
@@ -256,11 +296,10 @@ const Dashboard5 = (props) => {
 
       showSnackbar(
         "Application submitted successfully. Please upload your documents.",
-        "success"
+        "success",
       );
 
       setTimeout(() => navigate("/requirements_uploader"), 1500);
-
     } catch (error) {
       if (error.response?.status === 409) {
         showSnackbar(error.response.data.message, "error");
@@ -269,7 +308,6 @@ const Dashboard5 = (props) => {
       }
     }
   };
-
 
   const divToPrintRef = useRef();
   const [showPrintView, setShowPrintView] = useState(false);
@@ -312,7 +350,6 @@ const Dashboard5 = (props) => {
     }
   };
 
-
   const [examPermitError, setExamPermitError] = useState("");
   const [examPermitModalOpen, setExamPermitModalOpen] = useState(false);
 
@@ -321,30 +358,35 @@ const Dashboard5 = (props) => {
     setExamPermitError("");
   };
 
-   const handleExamPermitClick = async () => {
-      try {
-        const res = await axios.get(`${API_BASE_URL}/api/verified-exam-applicants`);
-        const verified = res.data.some(a => a.person_id === parseInt(userID));
-  
-        if (!verified) {
-          setExamPermitError("❌ You cannot print the Exam Permit until all required documents are verified.");
-          setExamPermitModalOpen(true);
-          return;
-        }
-  
-        // ✅ Render permit and print
-        setShowPrintView(true);
-        setTimeout(() => {
-          printDiv();
-          setShowPrintView(false);
-        }, 500);
-      } catch (err) {
-        console.error("Error verifying exam permit eligibility:", err);
-        setExamPermitError("⚠️ Unable to check document verification status right now.");
+  const handleExamPermitClick = async () => {
+    try {
+      const res = await axios.get(
+        `${API_BASE_URL}/api/verified-exam-applicants`,
+      );
+      const verified = res.data.some((a) => a.person_id === parseInt(userID));
+
+      if (!verified) {
+        setExamPermitError(
+          "❌ You cannot print the Exam Permit until all required documents are verified.",
+        );
         setExamPermitModalOpen(true);
+        return;
       }
-    };
-  
+
+      // ✅ Render permit and print
+      setShowPrintView(true);
+      setTimeout(() => {
+        printDiv();
+        setShowPrintView(false);
+      }, 500);
+    } catch (err) {
+      console.error("Error verifying exam permit eligibility:", err);
+      setExamPermitError(
+        "⚠️ Unable to check document verification status right now.",
+      );
+      setExamPermitModalOpen(true);
+    }
+  };
 
   const links = [
     { to: "/ecat_application_form", label: "ECAT Application Form" },
@@ -354,32 +396,37 @@ const Dashboard5 = (props) => {
       to: "/office_of_the_registrar",
       label: `Application For ${shortTerm ? shortTerm.toUpperCase() : ""} College Admission`,
     },
-    { to: "/admission_services", label: "Application/Student Satisfactory Survey" },
+    {
+      to: "/admission_services",
+      label: "Application/Student Satisfactory Survey",
+    },
     { label: "Examination Permit", onClick: handleExamPermitClick },
   ];
-
-
 
   const [canPrintPermit, setCanPrintPermit] = useState(false);
 
   useEffect(() => {
     if (!userID) return;
-    axios.get(`${API_BASE_URL}/exampermit/verified-exam-applicants`)
-      .then(res => {
-        const verified = res.data.some(a => a.person_id === parseInt(userID));
+    axios
+      .get(`${API_BASE_URL}/exampermit/verified-exam-applicants`)
+      .then((res) => {
+        const verified = res.data.some((a) => a.person_id === parseInt(userID));
         setCanPrintPermit(verified);
       });
   }, [userID]);
 
-
-
-
-
-
   // dot not alter
   return (
-    <Box sx={{ height: "calc(100vh - 150px)", overflowY: "auto", paddingRight: 1, backgroundColor: "transparent", mt: 1, padding: 2 }}>
-
+    <Box
+      sx={{
+        height: "calc(100vh - 150px)",
+        overflowY: "auto",
+        paddingRight: 1,
+        backgroundColor: "transparent",
+        mt: 1,
+        padding: 2,
+      }}
+    >
       {showPrintView && (
         <div ref={divToPrintRef} style={{ display: "block" }}>
           <ExamPermit />
@@ -387,30 +434,24 @@ const Dashboard5 = (props) => {
       )}
       <Box
         sx={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          flexWrap: 'wrap',
-
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          flexWrap: "wrap",
 
           mb: 2,
-
         }}
       >
         <Typography
           variant="h4"
           sx={{
-            fontWeight: 'bold',
+            fontWeight: "bold",
             color: titleColor,
-            fontSize: '36px',
+            fontSize: "36px",
           }}
         >
           OTHER INFORMATION
         </Typography>
-
-
-
-
       </Box>
       <hr style={{ border: "1px solid #ccc", width: "100%" }} />
 
@@ -465,16 +506,25 @@ const Dashboard5 = (props) => {
             }}
           >
             <strong style={{ color: "maroon" }}>Notice:</strong> &nbsp;
-            <strong></strong> <span style={{ fontSize: '1.2em', margin: '0 15px' }}>➔</span> Kindly type 'NA' or N/A in boxes where there are no possible answers to the information being requested. &nbsp;  &nbsp; <br />
-            <strong></strong> <span style={{ fontSize: '1.2em', margin: '0 15px', marginLeft: "100px", }}>➔</span> To make use of the letter 'Ñ', please press ALT while typing "165", while for 'ñ', please press ALT while typing "164"
-
+            <strong></strong>{" "}
+            <span style={{ fontSize: "1.2em", margin: "0 15px" }}>➔</span>{" "}
+            Kindly type 'NA' or N/A in boxes where there are no possible answers
+            to the information being requested. &nbsp; &nbsp; <br />
+            <strong></strong>{" "}
+            <span
+              style={{
+                fontSize: "1.2em",
+                margin: "0 15px",
+                marginLeft: "100px",
+              }}
+            >
+              ➔
+            </span>{" "}
+            To make use of the letter 'Ñ', please press ALT while typing "165",
+            while for 'ñ', please press ALT while typing "164"
           </Typography>
         </Box>
       </Box>
-
-
-
-
 
       <h1
         style={{
@@ -563,13 +613,21 @@ const Dashboard5 = (props) => {
       </Box>
 
       <Container maxWidth="lg">
-
         <Container>
-          <h1 style={{ fontSize: "50px", fontWeight: "bold", textAlign: "center", color: subtitleColor, marginTop: "25px" }}>
+          <h1
+            style={{
+              fontSize: "50px",
+              fontWeight: "bold",
+              textAlign: "center",
+              color: subtitleColor,
+              marginTop: "25px",
+            }}
+          >
             APPLICANT FORM
           </h1>
           <div style={{ textAlign: "center" }}>
-            Complete the applicant form to secure your place for the upcoming academic year at{" "}
+            Complete the applicant form to secure your place for the upcoming
+            academic year at{" "}
             {shortTerm ? (
               <>
                 <strong>{shortTerm.toUpperCase()}</strong> <br />
@@ -580,10 +638,16 @@ const Dashboard5 = (props) => {
             )}
             .
           </div>
-
         </Container>
         <br />
-        <Box sx={{ display: "flex", justifyContent: "center", width: "100%", px: 4 }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            width: "100%",
+            px: 4,
+          }}
+        >
           {steps.map((step, index) => (
             <React.Fragment key={index}>
               <Box
@@ -601,7 +665,10 @@ const Dashboard5 = (props) => {
                     height: 50,
                     borderRadius: "50%",
                     border: `2px solid ${borderColor}`,
-                    backgroundColor: activeStep === index ? settings?.header_color || "#1976d2" : "#E8C999",
+                    backgroundColor:
+                      activeStep === index
+                        ? settings?.header_color || "#1976d2"
+                        : "#E8C999",
                     color: activeStep === index ? "#fff" : "#000",
                     display: "flex",
                     alignItems: "center",
@@ -636,68 +703,157 @@ const Dashboard5 = (props) => {
           ))}
         </Box>
 
-
-
         <br />
         <form>
-          <Container maxWidth="100%" sx={{ backgroundColor: settings?.header_color || "#1976d2", border: "2px solid black", color: "white", borderRadius: 2, boxShadow: 3, padding: "4px" }}>
+          <Container
+            maxWidth="100%"
+            sx={{
+              backgroundColor: settings?.header_color || "#1976d2",
+              border: "2px solid black",
+              color: "white",
+              borderRadius: 2,
+              boxShadow: 3,
+              padding: "4px",
+            }}
+          >
             <Box sx={{ width: "100%" }}>
-              <Typography style={{ fontSize: "20px", padding: "10px", fontFamily: "Poppins, sans-serif" }}>Step 5: Other Information</Typography>
+              <Typography
+                style={{
+                  fontSize: "20px",
+                  padding: "10px",
+                  fontFamily: "Poppins, sans-serif",
+                }}
+              >
+                Step 5: Other Information
+              </Typography>
             </Box>
           </Container>
-          <Container maxWidth="100%" sx={{ backgroundColor: "#f1f1f1", border: `2px solid ${borderColor}`, padding: 4, borderRadius: 2, boxShadow: 3 }}>
-            <Typography style={{ fontSize: "20px", color: mainButtonColor, fontWeight: "bold" }}>
+          <Container
+            maxWidth="100%"
+            sx={{
+              backgroundColor: "#f1f1f1",
+              border: `2px solid ${borderColor}`,
+              padding: 4,
+              borderRadius: 2,
+              boxShadow: 3,
+            }}
+          >
+            <Typography
+              style={{
+                fontSize: "20px",
+                color: mainButtonColor,
+                fontWeight: "bold",
+              }}
+            >
               Other Information:
             </Typography>
             <hr style={{ border: "1px solid #ccc", width: "100%" }} />
             <Typography style={{ fontWeight: "bold", textAlign: "Center" }}>
               Data Subject Consent Form
             </Typography>
-            < br />
-            <Typography style={{ fontSize: "12px", fontFamily: "Poppins, sans-serif", textAlign: "Left" }}>
-              In accordance with RA 10173 or Data Privacy Act of 2012, I give my consent to the following terms and conditions on the collection, use, processing, and disclosure of my personal data:
-            </Typography>
-            < br />
+            <br />
             <Typography
-              style={{ fontSize: "12px", fontFamily: "Poppins, sans-serif", textAlign: "left" }}
+              style={{
+                fontSize: "12px",
+                fontFamily: "Poppins, sans-serif",
+                textAlign: "Left",
+              }}
             >
-              1. I am aware that the{" "}
-              {companyName || "Your School Name"}{" "}
-              {shortTerm ? `(${shortTerm.toUpperCase()})` : ""}{" "}
-              has collected and stored my personal data during my admission/enrollment at{" "}
-              {shortTerm ? shortTerm.toUpperCase() : companyName || ""}.
-              This data includes my demographic profile, contact details like home address,
-              email address, landline numbers, and mobile numbers.
+              In accordance with RA 10173 or Data Privacy Act of 2012, I give my
+              consent to the following terms and conditions on the collection,
+              use, processing, and disclosure of my personal data:
+            </Typography>
+            <br />
+            <Typography
+              style={{
+                fontSize: "12px",
+                fontFamily: "Poppins, sans-serif",
+                textAlign: "left",
+              }}
+            >
+              1. I am aware that the {companyName || "Your School Name"}{" "}
+              {shortTerm ? `(${shortTerm.toUpperCase()})` : ""} has collected
+              and stored my personal data during my admission/enrollment at{" "}
+              {shortTerm ? shortTerm.toUpperCase() : companyName || ""}. This
+              data includes my demographic profile, contact details like home
+              address, email address, landline numbers, and mobile numbers.
             </Typography>
 
-            <Typography style={{ fontSize: "12px", fontFamily: "Poppins, sans-serif", textAlign: "Left" }}>
-              2. I agree to personally update these data through personal request from the Office of the registrar.
+            <Typography
+              style={{
+                fontSize: "12px",
+                fontFamily: "Poppins, sans-serif",
+                textAlign: "Left",
+              }}
+            >
+              2. I agree to personally update these data through personal
+              request from the Office of the registrar.
             </Typography>
             <Typography
-              style={{ fontSize: "12px", fontFamily: "Poppins, sans-serif", textAlign: "left" }}
+              style={{
+                fontSize: "12px",
+                fontFamily: "Poppins, sans-serif",
+                textAlign: "left",
+              }}
             >
-              3. In consonance with the above stated Act, I am aware that the University will
-              protect my school records related to my being a student/graduate of{" "}
-              {shortTerm ? shortTerm.toUpperCase() : ""}. However, I have the
-              right to authorize a representative to claim the same subject to the policy of
-              the University.
+              3. In consonance with the above stated Act, I am aware that the
+              University will protect my school records related to my being a
+              student/graduate of {shortTerm ? shortTerm.toUpperCase() : ""}.
+              However, I have the right to authorize a representative to claim
+              the same subject to the policy of the University.
             </Typography>
 
-            <Typography style={{ fontSize: "12px", fontFamily: "Poppins, sans-serif", textAlign: "Left" }}>
-              4. In order to promote efficient management of the organization’s records, I authorize the University to manage my data for data sharing with industry partners, government agencies/embassies, other educational institutions, and other offices for the university for employment, statistics, immigration, transfer credentials, and other legal purposes that may serve me best.
+            <Typography
+              style={{
+                fontSize: "12px",
+                fontFamily: "Poppins, sans-serif",
+                textAlign: "Left",
+              }}
+            >
+              4. In order to promote efficient management of the organization’s
+              records, I authorize the University to manage my data for data
+              sharing with industry partners, government agencies/embassies,
+              other educational institutions, and other offices for the
+              university for employment, statistics, immigration, transfer
+              credentials, and other legal purposes that may serve me best.
             </Typography>
-            < br />
-            <Typography style={{ fontSize: "12px", fontFamily: "Poppins, sans-serif", textAlign: "Left" }}>
-              By clicking the submit button, I warrant that I have read, understood all of the above provisions, and agreed to its full implementation.
+            <br />
+            <Typography
+              style={{
+                fontSize: "12px",
+                fontFamily: "Poppins, sans-serif",
+                textAlign: "Left",
+              }}
+            >
+              By clicking the submit button, I warrant that I have read,
+              understood all of the above provisions, and agreed to its full
+              implementation.
             </Typography>
             <br />
             <hr style={{ border: "1px solid #ccc", width: "100%" }} />
-            < br />
-            <Typography style={{ fontSize: "12px", fontFamily: "Poppins, sans-serif", textAlign: "Left" }}>
-              I certify that the information given above are true, complete, and accurate to the best of my knowledge and belief. I promise to abide by the rules and regulations of Eulogio "Amang" Rodriguez Institute of Science and Technology regarding the ECAT and my possible admission. I am aware that any false or misleading information and/or statement may result in the refusal or disqualification of my admission to the institution.
+            <br />
+            <Typography
+              style={{
+                fontSize: "12px",
+                fontFamily: "Poppins, sans-serif",
+                textAlign: "Left",
+              }}
+            >
+              I certify that the information given above are true, complete, and
+              accurate to the best of my knowledge and belief. I promise to
+              abide by the rules and regulations of Eulogio "Amang" Rodriguez
+              Institute of Science and Technology regarding the ECAT and my
+              possible admission. I am aware that any false or misleading
+              information and/or statement may result in the refusal or
+              disqualification of my admission to the institution.
             </Typography>
 
-            <FormControl required error={!!errors.termsOfAgreement} component="fieldset" sx={{ mb: 2 }}>
+            <FormControl
+              required
+              error={!!errors.termsOfAgreement}
+              component="fieldset"
+              sx={{ mb: 2 }}
+            >
               <FormControlLabel
                 control={
                   <Checkbox
@@ -735,8 +891,15 @@ const Dashboard5 = (props) => {
                   textAlign: "center",
                 }}
               >
-                <ErrorIcon sx={{ color: mainButtonColor, fontSize: 50, mb: 2 }} />
-                <Typography id="exam-permit-error-title" variant="h6" component="h2" color="maroon">
+                <ErrorIcon
+                  sx={{ color: mainButtonColor, fontSize: 50, mb: 2 }}
+                />
+                <Typography
+                  id="exam-permit-error-title"
+                  variant="h6"
+                  component="h2"
+                  color="maroon"
+                >
                   Exam Permit Notice
                 </Typography>
                 <Typography id="exam-permit-error-description" sx={{ mt: 2 }}>
@@ -745,15 +908,16 @@ const Dashboard5 = (props) => {
                 <Button
                   onClick={handleCloseExamPermitModal}
                   variant="contained"
-                  sx={{ mt: 3, backgroundcolor: mainButtonColor, "&:hover": { backgroundColor: "#8B0000" } }}
+                  sx={{
+                    mt: 3,
+                    backgroundcolor: mainButtonColor,
+                    "&:hover": { backgroundColor: "#8B0000" },
+                  }}
                 >
                   Close
                 </Button>
               </Box>
             </Modal>
-
-
-
 
             <Box display="flex" justifyContent="space-between" mt={4}>
               {/* Previous Page Button */}
@@ -799,9 +963,7 @@ const Dashboard5 = (props) => {
               >
                 Submit (Save Information)
               </Button>
-
             </Box>
-
 
             <Snackbar
               open={snackbar.open}
@@ -809,24 +971,19 @@ const Dashboard5 = (props) => {
               onClose={handleCloseSnackbar}
               anchorOrigin={{ vertical: "top", horizontal: "center" }}
             >
-              <Alert onClose={handleCloseSnackbar} severity={snackbar.severity} sx={{ width: '100%' }}>
+              <Alert
+                onClose={handleCloseSnackbar}
+                severity={snackbar.severity}
+                sx={{ width: "100%" }}
+              >
                 {snackbar.message}
               </Alert>
             </Snackbar>
-
-
-
           </Container>
-
         </form>
-
       </Container>
-
-
     </Box>
-
   );
 };
-
 
 export default Dashboard5;
