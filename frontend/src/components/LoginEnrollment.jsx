@@ -373,7 +373,7 @@ const LoginEnrollment = ({ setIsAuthenticated }) => {
                     padding: "0.8rem 2.5rem 0.8rem 2.5rem",
                     borderRadius: "6px",
                     border: `2px solid ${borderColor}`,
-
+                    height: "55px",
                     fontSize: "1rem",
                     backgroundColor: "white",
                     outline: "none",
@@ -389,7 +389,7 @@ const LoginEnrollment = ({ setIsAuthenticated }) => {
                 <PersonIcon
                   style={{
                     position: "absolute",
-                    top: "2.5rem",
+                    top: "2.75rem",
                     left: "0.7rem",
                     color: "rgba(0,0,0,0.4)",
                   }}
@@ -397,7 +397,7 @@ const LoginEnrollment = ({ setIsAuthenticated }) => {
                 <ArrowDropDownIcon
                   style={{
                     position: "absolute",
-                    top: "2.5rem",
+                    top: "2.75rem",
                     right: "0.7rem",
                     color: "rgba(0,0,0,0.4)",
                     pointerEvents: "none",
@@ -421,13 +421,13 @@ const LoginEnrollment = ({ setIsAuthenticated }) => {
                     className="border"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    style={{ paddingLeft: "2.5rem", border: `2px solid ${borderColor}`, }}
+                    style={{ paddingLeft: "2.5rem", height: "55px", border: `2px solid ${borderColor}`, }}
                     autoFocus
                   />
                   <EmailIcon
                     style={{
                       position: "absolute",
-                      top: "2.5rem",
+                      top: "2.75rem",
                       left: "0.7rem",
                       color: "rgba(0,0,0,0.4)",
                     }}
@@ -444,12 +444,12 @@ const LoginEnrollment = ({ setIsAuthenticated }) => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     className="border"
-                    style={{ paddingLeft: "2.5rem", border: `2px solid ${borderColor}`, }}
+                    style={{ paddingLeft: "2.5rem", height: "55px", border: `2px solid ${borderColor}`, }}
                   />
                   <LockIcon
                     style={{
                       position: "absolute",
-                      top: "2.5rem",
+                      top: "2.75rem",
                       left: "0.7rem",
                       color: "rgba(0,0,0,0.4)",
                     }}
@@ -469,7 +469,7 @@ const LoginEnrollment = ({ setIsAuthenticated }) => {
                       marginBottom: "50px"
                     }}
                   >
-                    {showPassword ? <Visibility /> : <VisibilityOff />}
+                    {showPassword ? <Visibility sx={{padding: "2.75px", }} /> : <VisibilityOff sx={{padding: "2.75px"}}/>}
                   </button>
                 </div>
 

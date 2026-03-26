@@ -31,6 +31,7 @@ import ProtectedRoute, { isTokenValid } from "./components/ProtectedRoute";
 import API_BASE_URL from "./apiConfig";
 import StudentListForEnrollment from "./registrar/StudentListForEnrollment";
 import ApplicationProcessAdmin from "./superadmin/ApplicationProcessAdmin";
+import CourseTaggingForSummerCollege from "./registrar/CourseTaggingForSummerCollege";
 
 // ✅ Create a Context so all components can access settings
 export const SettingsContext = createContext(null);
@@ -1118,6 +1119,14 @@ function App() {
                         element={
                           <ProtectedRoute>
                             <CourseTaggingForSummer />
+                          </ProtectedRoute>
+                        }
+                      />
+                       <Route
+                        path="/summer_tagging_for_college"
+                        element={
+                          <ProtectedRoute>
+                            <CourseTaggingForSummerCollege />
                           </ProtectedRoute>
                         }
                       />

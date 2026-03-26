@@ -236,6 +236,7 @@ const Login = ({ setIsAuthenticated }) => {
                   borderRadius: "6px",
                   border: `2px solid ${borderColor}`,
                   fontSize: "1rem",
+                  height: "55px",
                   backgroundColor: "white",
                   outline: "none",
                   appearance: "none",
@@ -255,7 +256,7 @@ const Login = ({ setIsAuthenticated }) => {
               <PersonIcon
                 style={{
                   position: "absolute",
-                  top: "2.5rem",
+                  top: "2.75rem",
                   left: "0.7rem",
                   color: "rgba(0,0,0,0.4)",
                 }}
@@ -263,7 +264,7 @@ const Login = ({ setIsAuthenticated }) => {
               <ArrowDropDownIcon
                 style={{
                   position: "absolute",
-                  top: "2.5rem",
+                  top: "2.75rem",
                   right: "0.7rem",
                   color: "rgba(0,0,0,0.4)",
                   pointerEvents: "none",
@@ -285,13 +286,14 @@ const Login = ({ setIsAuthenticated }) => {
                 onKeyDown={(e) => e.key === "Enter" && handleLogin()}
                 style={{
                   paddingLeft: "2.5rem",
+                  height: "55px",
                   border: `2px solid ${borderColor}`,
                 }}
               />
               <EmailIcon
                 style={{
                   position: "absolute",
-                  top: "2.5rem",
+                  top: "2.75rem",
                   left: "0.7rem",
                   color: "rgba(0,0,0,0.4)",
                 }}
@@ -312,13 +314,14 @@ const Login = ({ setIsAuthenticated }) => {
                 className="border"
                 style={{
                   paddingLeft: "2.5rem",
+                  height: "55px",
                   border: `2px solid ${borderColor}`,
                 }}
               />
               <LockIcon
                 style={{
                   position: "absolute",
-                  top: "2.5rem",
+                  top: "2.75rem",
                   left: "0.7rem",
                   color: "rgba(0,0,0,0.4)",
                 }}

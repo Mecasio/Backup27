@@ -45,7 +45,7 @@ const allowedOrigins = [
   "http://192.168.50.211:5173",
   "http://136.239.248.62:5173",
   "http://192.168.50.44:5173",
-  "http://192.168.50.47:5173",
+  "http://192.168.50.55:5173",
 ];
 
 app.use(
@@ -3509,134 +3509,42 @@ io.on("connection", (socket) => {
   console.log(" Socket.IO client connected");
 
   // ---------------------- Forgot Password: Applicant ----------------------
-socket.on("forgot-password-applicant", async (data) => {
-  const { applicant_number, email, birthdate } = data;
+  socket.on("forgot-password-applicant", async (data) => {
+    const { applicant_number, email, birthdate } = data;
 
-  try {
-    //  Validate all 3 fields
-    const [rows] = await db.query(
-      `SELECT ua.email, p.birthOfDate
+    try {
+      //  Validate all 3 fields
+      const [rows] = await db.query(
+        `SELECT ua.email, p.birthOfDate
        FROM user_accounts ua
        JOIN person_table p ON ua.person_id = p.person_id
        JOIN applicant_numbering_table a ON p.person_id = a.person_id
        WHERE ua.email = ?
          AND a.applicant_number = ?
          AND p.birthOfDate = ?`,
-      [email, applicant_number, birthdate]
-    );
+        [email, applicant_number, birthdate]
+      );
 
-    if (rows.length === 0) {
-      return socket.emit("password-reset-result-applicant", {
-        success: false,
-        message: "Invalid Applicant Number, Birthday, or Email.",
-      });
-    }
+      if (rows.length === 0) {
+        return socket.emit("password-reset-result-applicant", {
+          success: false,
+          message: "Invalid Applicant Number, Birthday, or Email.",
+        });
+      }
 
-    //  Generate password
-    const newPassword = Array.from({ length: 8 }, () =>
-      String.fromCharCode(Math.floor(Math.random() * 26) + 65)
-    ).join("");
-
-    const hashed = await bcrypt.hash(newPassword, 10);
-
-    await db.query(
-      "UPDATE user_accounts SET password = ? WHERE email = ?",
-      [hashed, email]
-    );
-
-    //  Send email (same as your code)
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-    });
-
-    await transporter.sendMail({
-      from: `"System" <${process.env.EMAIL_USER}>`,
-      to: email,
-      subject: "Password Reset",
-      text: `Your new password is: ${newPassword}`,
-    });
-
-    socket.emit("password-reset-result-applicant", {
-      success: true,
-      message: "Password reset successful. Check your email.",
-    });
-
-  } catch (error) {
-    console.error(error);
-    socket.emit("password-reset-result-applicant", {
-      success: false,
-      message: "Server error.",
-    });
-  }
-});
-
-  // ---------------- Registrar: Reset Password ----------------
-  // FORGOT PASSWORD (handles student, registrar, faculty)
-  app.post("/forgot-password", async (req, res) => {
-    const { email } = req.body;
-    if (!email) return res.status(400).json({ message: "Email is required" });
-
-    // Generate uppercase temporary password (A“Z + 0“9)
-    const generateTempPassword = () => {
-      const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-      return Array.from({ length: 8 }, () =>
-        chars.charAt(Math.floor(Math.random() * chars.length)),
+      //  Generate password
+      const newPassword = Array.from({ length: 8 }, () =>
+        String.fromCharCode(Math.floor(Math.random() * 26) + 65)
       ).join("");
-    };
 
-    const newPassword = generateTempPassword();
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
+      const hashed = await bcrypt.hash(newPassword, 10);
 
-    try {
-      // Fetch short_term from company_settings
-      const [company] = await db.query(
-        "SELECT short_term FROM company_settings WHERE id = 1",
-      );
-      const shortTerm = company?.[0]?.short_term || "Institution";
-
-      // 1¸ Update Student or Registrar password
-      const [userResult] = await db3.query(
-        "UPDATE user_accounts SET password = ? WHERE email = ? AND (role = 'student' OR role = 'registrar')",
-        [hashedPassword, email],
+      await db.query(
+        "UPDATE user_accounts SET password = ? WHERE email = ?",
+        [hashed, email]
       );
 
-      if (userResult.affectedRows > 0) {
-        await sendResetEmail(email, newPassword, shortTerm);
-        return res.json({
-          message: `${shortTerm} password reset successfully. Please check your email.`,
-        });
-      }
-
-      // 2¸ Update Faculty password
-      const [profResult] = await db3.query(
-        "UPDATE prof_table SET password = ? WHERE email = ? AND role = 'faculty'",
-        [hashedPassword, email],
-      );
-
-      if (profResult.affectedRows > 0) {
-        await sendResetEmail(email, newPassword, shortTerm);
-        return res.json({
-          message: `${shortTerm} password reset successfully. Please check your email.`,
-        });
-      }
-
-      // 3¸ Not found
-      return res.status(404).json({
-        message: `${shortTerm} account not found. Please check your email address.`,
-      });
-    } catch (err) {
-      console.error("Forgot password error:", err);
-      res.status(500).json({ message: "Internal server error" });
-    }
-  });
-
-  // ---------------- Email Sender (same message format as student/faculty/applicant) ----------------
-  async function sendResetEmail(to, tempPassword, shortTerm) {
-    try {
+      //  Send email (same as your code)
       const transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
@@ -3646,17 +3554,31 @@ socket.on("forgot-password-applicant", async (data) => {
       });
 
       await transporter.sendMail({
-        from: `"${shortTerm} - Information System" <${process.env.EMAIL_USER}>`,
-        to,
-        subject: "Your Password has Reset",
-        text: `Your new temporary password is: ${tempPassword}\n\nPlease change it after logging in.`,
+        from: `"System" <${process.env.EMAIL_USER}>`,
+        to: email,
+        subject: "Password Reset",
+        text: `Your new password is: ${newPassword}`,
       });
 
-      console.log(`${shortTerm} reset email sent to ${to}`);
-    } catch (emailErr) {
-      console.error("Email send error:", emailErr);
+      socket.emit("password-reset-result-applicant", {
+        success: true,
+        message: "Password reset successful. Check your email.",
+      });
+
+    } catch (error) {
+      console.error(error);
+      socket.emit("password-reset-result-applicant", {
+        success: false,
+        message: "Server error.",
+      });
     }
-  }
+  });
+
+  // ---------------- Registrar: Reset Password ----------------
+  // FORGOT PASSWORD (handles student, registrar, faculty)
+
+
+
 
   //  Get exam scores for a person
   app.get("/api/exam/:personId", async (req, res) => {
@@ -4359,6 +4281,127 @@ WHERE proctor LIKE ?
       });
     }
   });
+});
+
+// ---------------- Email Sender (same message format as student/faculty/applicant) ----------------
+async function sendResetEmail(to, tempPassword, shortTerm) {
+  try {
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
+
+    await transporter.sendMail({
+      from: `"${shortTerm} - Information System" <${process.env.EMAIL_USER}>`,
+      to,
+      subject: "Your Password has Reset",
+      text: `Your new temporary password is: ${tempPassword}\n\nPlease change it after logging in.`,
+    });
+
+    console.log(`${shortTerm} reset email sent to ${to}`);
+  } catch (emailErr) {
+    console.error("Email send error:", emailErr);
+  }
+}
+
+app.post("/forgot-password", async (req, res) => {
+  const { email, identifier } = req.body;
+
+  if (!email || !identifier) {
+    return res.status(400).json({ message: "Email and ID are required" });
+  }
+
+  const generateTempPassword = () => {
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    return Array.from({ length: 8 }, () =>
+      chars.charAt(Math.floor(Math.random() * chars.length))
+    ).join("");
+  };
+
+  const newPassword = generateTempPassword();
+  const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+  try {
+    const [company] = await db.query(
+      "SELECT short_term FROM company_settings WHERE id = 1"
+    );
+    const shortTerm = company?.[0]?.short_term || "Institution";
+
+    // =========================
+    // 1️⃣ STUDENT (student_number + email)
+    // =========================
+    const [studentCheck] = await db3.query(
+      `SELECT ua.id 
+       FROM user_accounts ua
+       JOIN student_numbering_table snt 
+         ON ua.person_id = snt.person_id
+       WHERE ua.email = ? AND snt.student_number = ? AND ua.role = 'student'`,
+      [email, identifier]
+    );
+
+    if (studentCheck.length > 0) {
+      await db3.query(
+        "UPDATE user_accounts SET password = ? WHERE id = ?",
+        [hashedPassword, studentCheck[0].id]
+      );
+
+      await sendResetEmail(email, newPassword, shortTerm);
+
+      return res.json({
+        message: `${shortTerm} (Student) password reset successfully.`,
+      });
+    }
+
+    // =========================
+    // 2️⃣ REGISTRAR (employee_id + email)
+    // =========================
+    const [registrarResult] = await db3.query(
+      `UPDATE user_accounts 
+       SET password = ? 
+       WHERE email = ? AND employee_id = ? AND role = 'registrar'`,
+      [hashedPassword, email, identifier]
+    );
+
+    if (registrarResult.affectedRows > 0) {
+      await sendResetEmail(email, newPassword, shortTerm);
+
+      return res.json({
+        message: `${shortTerm} (Registrar) password reset successfully.`,
+      });
+    }
+
+    // =========================
+    // 3️⃣ FACULTY (employee_id + email)
+    // =========================
+    const [facultyResult] = await db3.query(
+      `UPDATE prof_table 
+       SET password = ? 
+       WHERE email = ? AND employee_id = ? AND role = 'faculty'`,
+      [hashedPassword, email, identifier]
+    );
+
+    if (facultyResult.affectedRows > 0) {
+      await sendResetEmail(email, newPassword, shortTerm);
+
+      return res.json({
+        message: `${shortTerm} (Faculty) password reset successfully.`,
+      });
+    }
+
+    // =========================
+    // ❌ NOT FOUND
+    // =========================
+    return res.status(404).json({
+      message: `${shortTerm} account not found. Check your credentials.`,
+    });
+
+  } catch (err) {
+    console.error("Forgot password error:", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
 });
 
 app.get("/api/exam-schedule/:applicant_number", async (req, res) => {
@@ -7181,11 +7224,11 @@ app.put("/add_grades", async (req, res) => {
 
       return result.affectedRows > 0
         ? res
-            .status(200)
-            .json({ message: "Grades marked as INC successfully!" })
+          .status(200)
+          .json({ message: "Grades marked as INC successfully!" })
         : res
-            .status(404)
-            .json({ message: "No matching record found to update." });
+          .status(404)
+          .json({ message: "No matching record found to update." });
     }
 
     const [result] = await db3.execute(
@@ -7206,8 +7249,8 @@ app.put("/add_grades", async (req, res) => {
     return result.affectedRows > 0
       ? res.status(200).json({ message: "Grades updated successfully!" })
       : res
-          .status(404)
-          .json({ message: "No matching record found to update." });
+        .status(404)
+        .json({ message: "No matching record found to update." });
   } catch (err) {
     console.error("Failed to update grades:", err);
     return res.status(500).json({ message: "Server error" });
@@ -9697,55 +9740,55 @@ app.get("/api/applicant-has-score/:applicant_number", async (req, res) => {
 
 //  CHECK IF APPLICANT IS QUALIFIED FOR INTERVIEW / QUALIFYING EXAM (NO PASSING SCORE)
 app.get("/api/applicant-qualified-interview/:applicant_number", async (req, res) => {
-    const { applicant_number } = req.params;
+  const { applicant_number } = req.params;
 
-    try {
-      // 1¸ Get person_id from applicant_numbering_table
-      const [personRows] = await db.query(
-        "SELECT person_id FROM applicant_numbering_table WHERE applicant_number = ? LIMIT 1",
-        [applicant_number],
-      );
+  try {
+    // 1¸ Get person_id from applicant_numbering_table
+    const [personRows] = await db.query(
+      "SELECT person_id FROM applicant_numbering_table WHERE applicant_number = ? LIMIT 1",
+      [applicant_number],
+    );
 
-      if (personRows.length === 0) {
-        return res
-          .status(404)
-          .json({ qualified: false, message: "Applicant not found." });
-      }
+    if (personRows.length === 0) {
+      return res
+        .status(404)
+        .json({ qualified: false, message: "Applicant not found." });
+    }
 
-      const person_id = personRows[0].person_id;
+    const person_id = personRows[0].person_id;
 
-      // 2¸ Check if applicant has exam record in admission_exam table
-      const [examRows] = await db.query(
-        "SELECT final_rating FROM admission_exam WHERE person_id = ? LIMIT 1",
-        [person_id],
-      );
+    // 2¸ Check if applicant has exam record in admission_exam table
+    const [examRows] = await db.query(
+      "SELECT final_rating FROM admission_exam WHERE person_id = ? LIMIT 1",
+      [person_id],
+    );
 
-      if (examRows.length === 0) {
-        return res.json({
-          qualified: false,
-          message:
-            " Applicant has no entrance exam score yet  not qualified for interview.",
-        });
-      }
-
-      // 3¸ If applicant has any exam record, they are qualified
-      const finalRating = examRows[0].final_rating;
-
-      res.json({
-        qualified: true,
-        person_id,
-        final_rating: finalRating,
-        message:
-          " Applicant is qualified to take the Qualifying / Interview Exam.",
-      });
-    } catch (err) {
-      console.error("Error checking interview qualification:", err);
-      res.status(500).json({
+    if (examRows.length === 0) {
+      return res.json({
         qualified: false,
-        message: "Server error while checking qualification.",
+        message:
+          " Applicant has no entrance exam score yet  not qualified for interview.",
       });
     }
-  },
+
+    // 3¸ If applicant has any exam record, they are qualified
+    const finalRating = examRows[0].final_rating;
+
+    res.json({
+      qualified: true,
+      person_id,
+      final_rating: finalRating,
+      message:
+        " Applicant is qualified to take the Qualifying / Interview Exam.",
+    });
+  } catch (err) {
+    console.error("Error checking interview qualification:", err);
+    res.status(500).json({
+      qualified: false,
+      message: "Server error while checking qualification.",
+    });
+  }
+},
 );
 
 //  Fetch Qualifying, Interview, and Exam Results by Person ID

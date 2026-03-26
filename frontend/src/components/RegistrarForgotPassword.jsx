@@ -12,7 +12,7 @@ import {
 import { Link } from "react-router-dom";
 import "../styles/Container.css";
 import Logo from "../assets/Logo.png";
-import { Email } from "@mui/icons-material";
+import { Email, Badge as BadgeIcon, } from "@mui/icons-material";
 // import ReCAPTCHA from "react-google-recaptcha";
 import { SettingsContext } from "../App"; // ✅ import context for bg_image and logo
 import API_BASE_URL from "../apiConfig";
@@ -37,6 +37,7 @@ const RegistrarForgotPassword = () => {
 
   // const [capVal, setCapVal] = useState(null);
   const [email, setEmail] = useState("");
+  const [identifier, setIdentifier] = useState("");
   const [snack, setSnack] = useState({
     open: false,
     message: "",
@@ -80,8 +81,8 @@ const RegistrarForgotPassword = () => {
     try {
       const res = await axios.post(`${API_BASE_URL}/forgot-password`, {
         email,
+        identifier,
       });
-
       setSnack({
         open: true,
         message: res.data.message,
@@ -102,15 +103,12 @@ const RegistrarForgotPassword = () => {
 
 
 
-
-
   const handleClose = (_, reason) => {
     if (reason === "clickaway") return;
     setSnack((prev) => ({ ...prev, open: false }));
   };
 
-  const isButtonDisabled = !email || loading || cooldown > 0;
-
+  const isButtonDisabled = !email || !identifier || loading || cooldown > 0;
 
 
   // ✅ use dynamic background and logo from settings
@@ -140,7 +138,7 @@ const RegistrarForgotPassword = () => {
         style={{ display: "flex", alignItems: "center", justifyContent: "center" }}
         maxWidth={false}
       >
-        <div style={{ border: "5px solid black" }} className="Container">
+        <div style={{ border: "5px solid black", marginTop: "-75px" }} className="Container">
           {/* Header */}
           <div
             className="Header"
@@ -175,11 +173,38 @@ const RegistrarForgotPassword = () => {
 
           {/* Body */}
           <div className="Body">
+            <label>Student Number / Employee ID:</label>
+            <TextField
+              fullWidth
+              style={{ border: `2px solid ${borderColor}`, marginBottom: "20px", borderRadius: "5px", height: "55px" }}
+              placeholder="Enter Student No. / Employee ID"
+              value={identifier}
+              onChange={(e) => setIdentifier(e.target.value)}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <BadgeIcon />
+                  </InputAdornment>
+                ),
+                sx: {
+                  height: "50px",
+                  "& input": {
+                    height: "50px",
+                    padding: "0 10px",
+                    boxSizing: "border-box",
+
+                  },
+                },
+              }}
+            />
+
+
+
             <label htmlFor="email">Email Address:</label>
             <TextField
               fullWidth
               type="email"
-              style={{ border: `2px solid ${borderColor}`, borderRadius: "5px" }}
+              style={{ border: `2px solid ${borderColor}`, borderRadius: "5px", height: "55px" }}
               placeholder="Enter your Email Address (e.g., username@gmail.com)"
               variant="outlined"
               value={email}
@@ -249,7 +274,7 @@ const RegistrarForgotPassword = () => {
           {/* Footer */}
           <div className="Footer">
             <div className="FooterText">
-          &copy; {currentYear} {settings?.company_name || "EARIST"} <br />
+              &copy; {currentYear} {settings?.company_name || "EARIST"} <br />
               Student Information System. <br />
               All rights reserved.
             </div>

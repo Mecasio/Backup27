@@ -1,14 +1,11 @@
-
 import React, { useState, useEffect, useContext } from "react";
 import { SettingsContext } from "../App";
 import axios from "axios";
 import {
   Box,
   Button,
-  Grid,
   Typography,
   Table,
-  Card,
   TableBody,
   TableCell,
   TableHead,
@@ -16,7 +13,6 @@ import {
   Paper,
   TextField,
   MenuItem,
-  Container,
   Dialog,
   DialogTitle,
   DialogContent,
@@ -37,11 +33,10 @@ import PersonSearchIcon from "@mui/icons-material/PersonSearch";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
-import SearchIcon from '@mui/icons-material/Search';
+import SearchIcon from "@mui/icons-material/Search";
 import API_BASE_URL from "../apiConfig";
-import { useNavigate } from "react-router-dom";
-import ScoreIcon from '@mui/icons-material/Score';
-const CourseTaggingForSummer = () => {
+import ScoreIcon from "@mui/icons-material/Score";
+const CourseTaggingForSummerCollege = () => {
   const settings = useContext(SettingsContext);
 
   const [titleColor, setTitleColor] = useState("#000000");
@@ -65,8 +60,7 @@ const CourseTaggingForSummer = () => {
     if (settings.border_color) setBorderColor(settings.border_color);
     if (settings.main_button_color)
       setMainButtonColor(settings.main_button_color);
-    if (settings.sub_button_color)
-      setSubButtonColor(settings.sub_button_color); // ✅ NEW
+    if (settings.sub_button_color) setSubButtonColor(settings.sub_button_color); // ✅ NEW
     if (settings.stepper_color) setStepperColor(settings.stepper_color); // ✅ NEW
 
     // 🏫 Logo
@@ -98,7 +92,7 @@ const CourseTaggingForSummer = () => {
   const [user, setUser] = useState("");
   const [userRole, setUserRole] = useState("");
 
-  const pageId = 140;
+  const pageId = 141;
 
   const [employeeID, setEmployeeID] = useState("");
 
@@ -127,7 +121,7 @@ const CourseTaggingForSummer = () => {
   const checkAccess = async (employeeID) => {
     try {
       const response = await axios.get(
-        `${API_BASE_URL}/api/page_access/${employeeID}/${pageId}`
+        `${API_BASE_URL}/api/page_access/${employeeID}/${pageId}`,
       );
       if (response.data && response.data.page_privilege === 1) {
         setHasAccess(true);
@@ -144,14 +138,6 @@ const CourseTaggingForSummer = () => {
       }
       setLoading(false);
     }
-  };
-
-
-
-
-  const handleStepClick = (index, to) => {
-    setActiveStep(index);
-    navigate(to); // this will actually change the page
   };
 
   useEffect(() => {
@@ -190,7 +176,6 @@ const CourseTaggingForSummer = () => {
   const [selectedSection, setSelectedSection] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [departments, setDepartments] = useState([]);
   const [selectedDepartment, setSelectedDepartment] = useState(null);
   const [yearLevel, setYearLevel] = useState([]);
   const [subjectCounts, setSubjectCounts] = useState({});
@@ -208,7 +193,6 @@ const CourseTaggingForSummer = () => {
 
   const [searchQuery, setSearchQuery] = useState("");
 
-
   // Modal for confirming enroll (single or bulk)
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [pendingAction, setPendingAction] = useState(null); // { type: 'single'|'bulk', course?, yearLevelId? }
@@ -220,7 +204,7 @@ const CourseTaggingForSummer = () => {
         `${API_BASE_URL}/subject-enrollment-count`,
         {
           params: { sectionId, activeSchoolYearId },
-        }
+        },
       );
 
       const counts = {};
@@ -255,7 +239,7 @@ const CourseTaggingForSummer = () => {
         const summerSemester = semesters.find((semester) =>
           String(semester.semester_description || "")
             .toLowerCase()
-            .includes("summer")
+            .includes("summer"),
         );
 
         if (!summerSemester) {
@@ -284,7 +268,7 @@ const CourseTaggingForSummer = () => {
         }
 
         const selectedYearRes = await axios.get(
-          `${API_BASE_URL}/get_selecterd_year/${yearId}/${summerSemester.semester_id}`
+          `${API_BASE_URL}/get_selecterd_year/${yearId}/${summerSemester.semester_id}`,
         );
         const summerSchoolYearId = Array.isArray(selectedYearRes.data)
           ? selectedYearRes.data[0]?.school_year_id
@@ -341,11 +325,6 @@ const CourseTaggingForSummer = () => {
     }
   }, [userId, currId, activeSchoolYearId]);
 
-  // Fetch department sections when component mounts
-  useEffect(() => {
-    fetchDepartmentSections();
-  }, []);
-
   // Fetch sections whenever selectedDepartment changes
   useEffect(() => {
     if (selectedDepartment) {
@@ -361,7 +340,7 @@ const CourseTaggingForSummer = () => {
         `${API_BASE_URL}/api/department-sections`,
         {
           params: { departmentId: selectedDepartment },
-        }
+        },
       );
       // Artificial delay
       setTimeout(() => {
@@ -386,11 +365,11 @@ const CourseTaggingForSummer = () => {
         {
           studentId: studentNumber,
           departmentSectionId: sectionId,
-        }
+        },
       );
 
       const courseRes = await axios.get(
-        `${API_BASE_URL}/api/search-student/${sectionId}`
+        `${API_BASE_URL}/api/search-student/${sectionId}`,
       );
 
       if (courseRes.data.length > 0) {
@@ -416,7 +395,6 @@ const CourseTaggingForSummer = () => {
     return status ? status.hasPrereq === true : false;
   };
 
-
   // 🔍 Helper to check prerequisites using backend (fixed)
   const checkPrerequisite = async (student_number, course) => {
     try {
@@ -427,7 +405,7 @@ const CourseTaggingForSummer = () => {
           course_id: course.course_id,
           semester_id: course.semester_id,
           curriculum_id: currId,
-        }
+        },
       );
 
       // Backend returns: { allowed, status, message, failedPrereq?, missingPrereq? }
@@ -498,16 +476,13 @@ const CourseTaggingForSummer = () => {
 
         // Backend status tells us if the subject actually has a prerequisite
         let hasPrereq = true;
-        if (
-          res.status === "NO_PREREQ" ||
-          res.status === "PREREQ_NOT_FOUND"
-        ) {
+        if (res.status === "NO_PREREQ" || res.status === "PREREQ_NOT_FOUND") {
           hasPrereq = false;
         }
 
         map[course.course_id] = {
           allowed: !!res.allowed, // true = meets prereq / or no prereq
-          hasPrereq,               // true = course has prerequisite
+          hasPrereq, // true = course has prerequisite
         };
       }
 
@@ -516,7 +491,6 @@ const CourseTaggingForSummer = () => {
 
     computePrereqStatus();
   }, [userId, courses]);
-
 
   const addToCart = async (course) => {
     if (!selectedSection) {
@@ -561,13 +535,13 @@ const CourseTaggingForSummer = () => {
       // ✅ ALWAYS ENROLL – NO PREREQ BLOCK HERE
       await axios.post(
         `${API_BASE_URL}/add-to-enrolled-courses/${userId}/${currId}/`,
-        payload
+        payload,
       );
 
       // Refresh enrolled courses list after adding
       const { data } = await axios.get(
         `${API_BASE_URL}/enrolled_courses/${userId}/${currId}`,
-        { params: { activeSchoolYearId } }
+        { params: { activeSchoolYearId } },
       );
       setEnrolled(data);
 
@@ -602,7 +576,7 @@ const CourseTaggingForSummer = () => {
       // Refresh enrolled courses list
       const { data } = await axios.get(
         `${API_BASE_URL}/enrolled_courses/${userId}/${currId}`,
-        { params: { activeSchoolYearId } }
+        { params: { activeSchoolYearId } },
       );
       setEnrolled(data);
 
@@ -616,7 +590,7 @@ const CourseTaggingForSummer = () => {
     } catch (err) {
       console.error(
         "Error deleting course or refreshing enrolled list:",
-        err.response?.data || err.message || err
+        err.response?.data || err.message || err,
       );
 
       setSnack({
@@ -629,7 +603,6 @@ const CourseTaggingForSummer = () => {
   //-------delete
 
   //-------delete
-
 
   const addAllToCart = async (yearLevelId) => {
     const newCourses = courses.filter(
@@ -691,13 +664,13 @@ const CourseTaggingForSummer = () => {
           } catch (err) {
             console.error("Error enrolling course in bulk:", err);
           }
-        })
+        }),
       );
 
       // Refresh enrolled courses list
       const { data } = await axios.get(
         `${API_BASE_URL}/enrolled_courses/${userId}/${currId}`,
-        { params: { activeSchoolYearId } }
+        { params: { activeSchoolYearId } },
       );
       setEnrolled(data);
 
@@ -710,7 +683,8 @@ const CourseTaggingForSummer = () => {
       if (enrolledCount > 0) {
         setSnack({
           open: true,
-          message: "Bulk enroll finished. All available subjects were enrolled.",
+          message:
+            "Bulk enroll finished. All available subjects were enrolled.",
           severity: "success",
         });
       } else {
@@ -730,7 +704,6 @@ const CourseTaggingForSummer = () => {
     }
   };
 
-
   const deleteAllCart = async () => {
     try {
       if (!activeSchoolYearId) {
@@ -749,7 +722,7 @@ const CourseTaggingForSummer = () => {
       // Refresh enrolled courses list
       const { data } = await axios.get(
         `${API_BASE_URL}/enrolled_courses/${userId}/${currId}`,
-        { params: { activeSchoolYearId } }
+        { params: { activeSchoolYearId } },
       );
       setEnrolled(data);
       setDisableYearButtons(false);
@@ -783,7 +756,7 @@ const CourseTaggingForSummer = () => {
       const response = await axios.post(
         `${API_BASE_URL}/student-tagging`,
         { studentNumber, active_school_year_id: activeSchoolYearId },
-        { headers: { "Content-Type": "application/json" } }
+        { headers: { "Content-Type": "application/json" } },
       );
 
       const {
@@ -843,25 +816,28 @@ const CourseTaggingForSummer = () => {
     }
   };
 
-  // Fetch all departments when component mounts
   useEffect(() => {
-    const fetchDepartments = async () => {
-      try {
-        const res = await axios.get(`${API_BASE_URL}/departments`);
-        setDepartments(res.data);
-      } catch (err) {
-        console.error("Error fetching departments:", err);
-      }
-    };
+    const email = localStorage.getItem("email");
 
-    fetchDepartments();
+    if (email) {
+      axios
+        .get(`${API_BASE_URL}/api/admin_data/${email}`)
+        .then((res) => {
+          const deptId = res.data?.dprtmnt_id;
+          setSelectedDepartment(deptId || null);
+        })
+        .catch((err) => {
+          console.error("Failed to fetch admin data:", err);
+          setSnack({
+            open: true,
+            message: "Failed to load your department.",
+            severity: "error",
+          });
+        });
+    }
   }, []);
 
   const [selectedFile, setSelectedFile] = useState(null);
-
-  const handleSelect = (departmentId) => {
-    setSelectedDepartment(departmentId);
-  };
 
   const handleImport = async () => {
     try {
@@ -877,9 +853,13 @@ const CourseTaggingForSummer = () => {
       const formData = new FormData();
       formData.append("file", selectedFile);
 
-      const res = await axios.post(`${API_BASE_URL}/api/import-xlsx`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      const res = await axios.post(
+        `${API_BASE_URL}/api/import-xlsx`,
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        },
+      );
 
       if (res.data.success) {
         setSnack({
@@ -910,7 +890,6 @@ const CourseTaggingForSummer = () => {
       setSelectedFile(e.target.files[0]);
     }
   };
-
 
   // 🟢🟠 Row style based on prerequisite qualification
   const getCourseRowSx = (course) => {
@@ -971,7 +950,6 @@ const CourseTaggingForSummer = () => {
       await addToCart(course);
     }
   };
-
 
   // Wrapper: bulk enroll click → show modal if at least one course has prerequisite
   const handleBulkEnrollClick = async (yearLevelId, semesterLabel) => {
@@ -1068,21 +1046,31 @@ const CourseTaggingForSummer = () => {
 
   const formatYear = (year) => {
     switch (year) {
-      case "First Year": return "1st Year";
-      case "Second Year": return "2nd Year";
-      case "Third Year": return "3rd Year";
-      case "Fourth Year": return "4th Year";
-      case "Fifth Year": return "5th Year";
-      default: return year;
+      case "First Year":
+        return "1st Year";
+      case "Second Year":
+        return "2nd Year";
+      case "Third Year":
+        return "3rd Year";
+      case "Fourth Year":
+        return "4th Year";
+      case "Fifth Year":
+        return "5th Year";
+      default:
+        return year;
     }
   };
 
   const formatSemester = (semester) => {
     switch (semester) {
-      case "First Semester": return "1st Sem";
-      case "Second Semester": return "2nd Sem";
-      case "Summer": return "Summer";
-      default: return semester;
+      case "First Semester":
+        return "1st Sem";
+      case "Second Semester":
+        return "2nd Sem";
+      case "Summer":
+        return "Summer";
+      default:
+        return semester;
     }
   };
 
@@ -1106,7 +1094,16 @@ const CourseTaggingForSummer = () => {
   }
 
   return (
-    <Box sx={{ height: "calc(100vh - 150px)", overflowY: "auto", paddingRight: 2, backgroundColor: "transparent", mt: 1, padding: 2 }}>
+    <Box
+      sx={{
+        height: "calc(100vh - 150px)",
+        overflowY: "auto",
+        paddingRight: 2,
+        backgroundColor: "transparent",
+        mt: 1,
+        padding: 2,
+      }}
+    >
       <Box
         sx={{
           display: "flex",
@@ -1128,12 +1125,9 @@ const CourseTaggingForSummer = () => {
         >
           COURSE TAGGING PANEL
         </Typography>
-
-
       </Box>
 
       <hr style={{ border: "1px solid #ccc", width: "100%" }} />
-      <br />
       <br />
       <Box
         sx={{
@@ -1146,7 +1140,6 @@ const CourseTaggingForSummer = () => {
           mr: 2,
         }}
       >
-
         {/* LEFT SIDE — Download Template */}
         <div style={{ position: "relative" }}>
           <button
@@ -1184,9 +1177,13 @@ const CourseTaggingForSummer = () => {
             alignItems: "center",
           }}
         >
-
           {/* CHOOSE EXCEL */}
-          <Box display="flex" alignItems="center" gap={1} sx={{ minWidth: 200 }}>
+          <Box
+            display="flex"
+            alignItems="center"
+            gap={1}
+            sx={{ minWidth: 200 }}
+          >
             <input
               type="file"
               accept=".xlsx,.xls"
@@ -1212,7 +1209,6 @@ const CourseTaggingForSummer = () => {
                 justifyContent: "center",
                 userSelect: "none",
                 width: "200px",
-
               }}
               type="button"
             >
@@ -1222,7 +1218,12 @@ const CourseTaggingForSummer = () => {
           </Box>
 
           {/* UPLOAD BUTTON */}
-          <Box display="flex" alignItems="center" gap={1} sx={{ minWidth: 200 }}>
+          <Box
+            display="flex"
+            alignItems="center"
+            gap={1}
+            sx={{ minWidth: 200 }}
+          >
             <Button
               variant="contained"
               fullWidth
@@ -1232,73 +1233,15 @@ const CourseTaggingForSummer = () => {
                 height: "50px",
                 width: "200px",
                 fontWeight: "bold",
-                border: "2px solid black"
+                border: "2px solid black",
               }}
               onClick={handleImport}
             >
               Upload
             </Button>
           </Box>
-
         </Box>
-
       </Box>
-
-
-      <Typography
-        variant="h4"
-        fontWeight="bold"
-        sx={{ color: subtitleColor, fontSize: "42px" }}
-        textAlign="center"
-        gutterBottom
-        mb={3}
-      >
-        Select Department
-      </Typography>
-      <Grid
-        container
-        spacing={4}
-        gap={2}
-        justifyContent="center"
-        textAlign="center"
-        style={{ backgroundColor: "white", mt: 2, padding: "1rem 0rem" }}
-      >
-        {departments.map((dept, index) => (
-          <Grid key={dept.dprtmnt_id}>
-            <Button
-              fullWidth
-              key={index}
-              variant="contained"
-              value={dept.dprtmnt_id}
-              onClick={() => handleSelect(dept.dprtmnt_id)}
-              sx={{
-                mt: 2,
-                width: 100,
-                height: 45,
-                fontWeight: "bold",
-                backgroundColor:
-                  selectedDepartment === dept.dprtmnt_id
-                    ? `${mainButtonColor}`
-                    : "white",
-                color:
-                  selectedDepartment === dept.dprtmnt_id
-                    ? "white"
-                    : `${mainButtonColor}`,
-                border: `2px solid ${borderColor}`,
-                "&:hover": {
-                  backgroundColor: `${mainButtonColor}`,
-                  color: "white",
-                },
-              }}
-              style={{ opacity: "1px" }}
-            >
-              {dept.dprtmnt_code}
-            </Button>
-          </Grid>
-        ))}
-      </Grid>
-
-
 
       <Box
         p={4}
@@ -1316,7 +1259,11 @@ const CourseTaggingForSummer = () => {
           component={Paper}
           backgroundColor={"#f1f1f1"}
           p={2}
-          sx={{ border: `2px solid ${borderColor}`, overflowX: "auto", width: "100%" }}
+          sx={{
+            border: `2px solid ${borderColor}`,
+            overflowX: "auto",
+            width: "100%",
+          }}
         >
           {/* Search Student */}
 
@@ -1331,7 +1278,7 @@ const CourseTaggingForSummer = () => {
                 isenrolled ? (
                   <>
                     {courseCode && `(${courseCode}) `} -
-                    {courseDescription && courseDescription}{" "} -
+                    {courseDescription && courseDescription} -
                     {sectionDescription && sectionDescription}
                   </>
                 ) : (
@@ -1354,7 +1301,9 @@ const CourseTaggingForSummer = () => {
                 }
               }}
             />
-            <Typography variant="h6">Search Course Code / Description:</Typography>
+            <Typography variant="h6">
+              Search Course Code / Description:
+            </Typography>
             <TextField
               label="Search Course (Code or Description)"
               variant="outlined"
@@ -1363,7 +1312,6 @@ const CourseTaggingForSummer = () => {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value.toLowerCase())}
             />
-
 
             <Button
               variant="contained"
@@ -1374,7 +1322,6 @@ const CourseTaggingForSummer = () => {
               Search
             </Button>
           </Box>
-
 
           <Typography variant="h6" mt={2} gutterBottom>
             Available Courses
@@ -1400,7 +1347,6 @@ const CourseTaggingForSummer = () => {
                 >
                   Description
                 </TableCell>
-
 
                 <TableCell
                   style={{
@@ -1447,16 +1393,30 @@ const CourseTaggingForSummer = () => {
                   );
                 })
                 .map((c) => (
-
                   <TableRow key={c.course_id} sx={getCourseRowSx(c)}>
-                    <TableCell style={{ border: `2px solid ${borderColor}`, textAlign: "center" }}>
+                    <TableCell
+                      style={{
+                        border: `2px solid ${borderColor}`,
+                        textAlign: "center",
+                      }}
+                    >
                       {c.course_code}
                     </TableCell>
-                    <TableCell style={{ border: `2px solid ${borderColor}`, textAlign: "center" }}>
+                    <TableCell
+                      style={{
+                        border: `2px solid ${borderColor}`,
+                        textAlign: "center",
+                      }}
+                    >
                       {c.course_description}
                     </TableCell>
 
-                    <TableCell style={{ border: `2px solid ${borderColor}`, textAlign: "center" }}>
+                    <TableCell
+                      style={{
+                        border: `2px solid ${borderColor}`,
+                        textAlign: "center",
+                      }}
+                    >
                       {c.course_unit}
                     </TableCell>
                     <TableCell
@@ -1466,7 +1426,10 @@ const CourseTaggingForSummer = () => {
                       }}
                     >
                       {c.prereq
-                        ? c.prereq.split(",").map(p => p.trim()).join(", ")
+                        ? c.prereq
+                            .split(",")
+                            .map((p) => p.trim())
+                            .join(", ")
                         : "None"}
                     </TableCell>
 
@@ -1478,7 +1441,12 @@ const CourseTaggingForSummer = () => {
                     >
                       {subjectCounts[c.course_id] || 0}
                     </TableCell>
-                    <TableCell style={{ border: `2px solid ${borderColor}`, textAlign: "center" }}>
+                    <TableCell
+                      style={{
+                        border: `2px solid ${borderColor}`,
+                        textAlign: "center",
+                      }}
+                    >
                       {!isEnrolledCourse(c.course_id) ? (
                         <Button
                           variant="contained"
@@ -1498,8 +1466,6 @@ const CourseTaggingForSummer = () => {
           </Table>
         </Box>
 
-
-
         <Box
           component={Paper}
           backgroundColor="#f1f1f1"
@@ -1507,10 +1473,9 @@ const CourseTaggingForSummer = () => {
           sx={{
             border: `2px solid ${borderColor}`,
             width: "100%",
-            overflowX: "auto",   // ✅ horizontal scroll here
+            overflowX: "auto", // ✅ horizontal scroll here
           }}
         >
-
           <Box
             sx={{
               display: "flex",
@@ -1535,7 +1500,7 @@ const CourseTaggingForSummer = () => {
               onClick={() => {
                 if (studentNumber) {
                   localStorage.setItem("studentNumberForCOR", studentNumber);
-                  window.open("/search_cor", "_blank");
+                  window.open("/search_cor_for_college", "_blank");
                 } else {
                   setSnack({
                     open: true,
@@ -1575,10 +1540,9 @@ const CourseTaggingForSummer = () => {
                   key={section.department_and_program_section_id}
                   value={section.department_and_program_section_id}
                 >
-                  (
-                  <strong>{section.program_code}</strong>) -{" "}
-                  {section.program_description}{" "}
-                  {section.major || ""} - {section.description}
+                  (<strong>{section.program_code}</strong>) -{" "}
+                  {section.program_description} {section.major || ""} -{" "}
+                  {section.description}
                 </MenuItem>
               ))}
             </TextField>
@@ -1593,16 +1557,20 @@ const CourseTaggingForSummer = () => {
                   variant="contained"
                   color="success"
                   disabled={disableYearButtons || isBulkEnrollDisabled}
-                  onClick={() => handleBulkEnrollClick(year_level.year_level_id, formatSemester(activeSemester))}
+                  onClick={() =>
+                    handleBulkEnrollClick(
+                      year_level.year_level_id,
+                      formatSemester(activeSemester),
+                    )
+                  }
                   sx={{
                     minWidth: 125,
                     fontWeight: "bold",
                     textAlign: "center",
                   }}
                 >
-                  {formatYear(year_level.year_level_description)}{" "}<br />
+                  {formatYear(year_level.year_level_description)} <br />
                   {formatSemester(activeSemester)}
-
                 </Button>
               ))}
 
@@ -1621,13 +1589,7 @@ const CourseTaggingForSummer = () => {
                 justifyContent: "space-between",
                 alignItems: "center",
               }}
-            >
-
-
-
-            </Box>
-
-
+            ></Box>
           </Box>
 
           <Typography variant="h6" gutterBottom>
@@ -1882,11 +1844,11 @@ const CourseTaggingForSummer = () => {
                 >
                   {enrolled.reduce(
                     (sum, item) => sum + (parseFloat(item.course_unit) || 0),
-                    0
+                    0,
                   ) +
                     enrolled.reduce(
                       (sum, item) => sum + (parseFloat(item.lab_unit) || 0),
-                      0
+                      0,
                     )}
                 </TableCell>
 
@@ -1908,14 +1870,12 @@ const CourseTaggingForSummer = () => {
                     variant="contained"
                     color="error"
                     size="small"
-
                     onClick={deleteAllCart}
                   >
                     Unenroll All
                   </Button>
                 </TableCell>
               </TableRow>
-
             </TableBody>
           </Table>
         </Box>
@@ -1964,4 +1924,4 @@ const CourseTaggingForSummer = () => {
   );
 };
 
-export default CourseTaggingForSummer;
+export default CourseTaggingForSummerCollege;

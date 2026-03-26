@@ -440,10 +440,9 @@ const SideBar = ({ setIsAuthenticated, profileImage, setProfileImage }) => {
         { title: "Student Profile", link: "/official_student_dashboard1", icon: AccountCircle, page_id: 43 },
         { title: "Student Online Requirements", link: "/student_official_requirements", icon: FolderCopy, page_id: 124 },
         { title: "Course Tagging", link: "/course_tagging_for_college", icon: Class, page_id: 124 },
+        { title: "Course Tagging For Summer", link: "/summer_tagging_for_college", icon: Class, page_id: 141 },
         { title: "Search COR", link: "/search_cor_for_college", icon: Search, page_id: 125 },
-        {
-          title: "Class List", link: classRosterEnrollmentLink, icon: Class, page_id: 15, activeCheck: () => isClassRosterActive(classRosterEnrollmentLink)
-        },
+        { title: "Class List", link: classRosterEnrollmentLink, icon: Class, page_id: 15, activeCheck: () => isClassRosterActive(classRosterEnrollmentLink) },
 
 
         { title: "Qualifying Room Mgmt", link: "/assign_qualifying_interview_exam", icon: MeetingRoom, page_id: 10 },
@@ -474,6 +473,7 @@ const SideBar = ({ setIsAuthenticated, profileImage, setProfileImage }) => {
         { title: "Applicant List", link: "/super_admin_applicant_list", icon: ListAltOutlined, page_id: 80 },
         { title: "Student Numbering Panel", link: "/student_numbering", icon: Numbers, page_id: 59 },
         { title: "Course Tagging", link: "/course_tagging", icon: Class, page_id: 17 },
+        { title: "Course Tagging For Summer", link: "/course_tagging_for_summer", icon: Class, page_id: 140 },
         { title: "Student List", link: "/student_list", icon: ListAltOutlined, page_id: 104 },
         { title: "Student Profile", link: "/readmission_dashboard1", icon: AccountCircle, page_id: 38 },
         { title: "Submitted Documents", link: "/submitted_documents", icon: FolderCopy, page_id: 106 },
