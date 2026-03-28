@@ -287,6 +287,27 @@ const StudentList = () => {
         program: "",
     });
 
+    useEffect(() => {
+        if (!settings) return;
+
+        const branchId = person?.campus;
+        const matchedBranch = branches.find(
+            (branch) => String(branch?.id) === String(branchId)
+        );
+
+        if (matchedBranch?.address) {
+            setCampusAddress(matchedBranch.address);
+            return;
+        }
+
+        if (settings.campus_address) {
+            setCampusAddress(settings.campus_address);
+            return;
+        }
+
+        setCampusAddress(settings.address || "");
+    }, [settings, branches, person?.campus]);
+
     // ⬇️ Add this inside Student List component, before useEffect
     // fetchStudents will request the backend `/api/all-students` endpoint and store result in `persons`
     const fetchStudents = async () => {
@@ -605,17 +626,9 @@ const StudentList = () => {
     const getPersonKey = (p) => p?.person_id ?? p?.student_number ?? null;
 
 
-
-    const printDiv = () => {
-     // ✅ Determine dynamic campus address (dropdown or custom)
-     let campusAddress = "";
-     if (settings?.campus_address && settings.campus_address.trim() !== "") {
-       campusAddress = settings.campus_address;
-     } else if (settings?.address && settings.address.trim() !== "") {
-       campusAddress = settings.address;
-     } else {
-       campusAddress = "No address set in Settings";
-     }
+  const printDiv = () => {
+     const resolvedCampusAddress =
+       campusAddress || "No address set in Settings";
  
      // ✅ Dynamic logo and company name
      const logoSrc = fetchedLogo || EaristLogo;
@@ -633,7 +646,7 @@ const StudentList = () => {
      newWin.document.write(`
        <html>
          <head>
-           <title>Applicant List</title>
+           <title>Student List</title>
           <style>
    @page { size: A4 landscape; margin: 10mm; }
  
@@ -745,10 +758,10 @@ const StudentList = () => {
        }
    
                  <!-- ✅ Dynamic campus address -->
-                 <div style="font-size: 13px; font-family: Arial">${campusAddress}</div>
+                 <div style="font-size: 13px; font-family: Arial">${resolvedCampusAddress}</div>
    
                  <div style="margin-top: 30px;">
-                   <b style="font-size: 24px; letter-spacing: 1px;">Applicant List</b>
+                   <b style="font-size: 24px; letter-spacing: 1px;">Student List</b>
                  </div>
                </div>
              </div>
@@ -759,12 +772,11 @@ const StudentList = () => {
                 
                  <tr>
      <th style="width:10%">Student ID</th>
-     <th style="width:40%">Student Name</th>
+     <th style="width:35%">Student Name</th>
      <th style="width:15%">Program</th>
      <th style="width:10%">SHS GWA</th>
      <th style="width:10%">Date Applied</th>
-     <th style="width:15%">Status</th>
- 
+
                  </tr>
                </thead>
                <tbody>
@@ -772,9 +784,9 @@ const StudentList = () => {
          .map(
            (person) => `
                        <tr>
-                         <td style="width:10%">${person.student_number ?? "N/A"}</td>
+                         <td style="width:10%">${person.student_number || ""}</td>
                          <td style="width:40%">${person.last_name}, ${person.first_name} ${person.middle_name || ""} ${person.extension || ""}</td>
-                         <td style="width:15%">${person.program_code || ""}</td>
+                         <td style="width:15%">${person.program_code || ""}</td>                 
                          <td style="width:10%">${person.generalAverage1 || ""}</td>
                          <td style="width:10%">${new Date(
              person.created_at.split("T")[0],
@@ -783,13 +795,7 @@ const StudentList = () => {
              month: "short",
              day: "2-digit",
            })}</td>
-                         <td style="width:15%">${person.submitted_medical === 1
-                            ? "On Process"
-                            : person.submitted_medical === 0
-                                ? "No Submitted Documents"
-                                : ""
-                        }</td>
-
+                    
                        </tr>
                      `,
          )
@@ -802,8 +808,6 @@ const StudentList = () => {
      `);
      newWin.document.close();
    };
- 
-
 
 
 

@@ -20,6 +20,7 @@ const StudentOfficeOfTheRegistrar = () => {
     const [fetchedLogo, setFetchedLogo] = useState(null);
     const [companyName, setCompanyName] = useState("");
     const [shortTerm, setShortTerm] = useState("");
+    const [branches, setBranches] = useState([]);
 
     useEffect(() => {
         if (!settings) return;
@@ -43,7 +44,19 @@ const StudentOfficeOfTheRegistrar = () => {
         // 🏷️ School Information
         if (settings.company_name) setCompanyName(settings.company_name);
         if (settings.short_term) setShortTerm(settings.short_term);
-        if (settings.campus_address) setCampusAddress(settings.campus_address);
+        if (settings?.branches) {
+            try {
+                const parsed =
+                    typeof settings.branches === "string"
+                        ? JSON.parse(settings.branches)
+                        : settings.branches;
+
+                setBranches(parsed);
+            } catch (err) {
+                console.error("Failed to parse branches:", err);
+                setBranches([]);
+            }
+        }
     }, [settings]);
 
     const words = companyName.trim().split(" ");
@@ -142,17 +155,33 @@ const StudentOfficeOfTheRegistrar = () => {
     const [campusAddress, setCampusAddress] = useState("");
 
     useEffect(() => {
-        if (settings && settings.address) {
-            setCampusAddress(settings.address);
+        if (!settings) return;
+
+        const branchId = person?.campus;
+        const matchedBranch = branches.find(
+            (branch) => String(branch?.id) === String(branchId)
+        );
+
+        if (matchedBranch?.address) {
+            setCampusAddress(matchedBranch.address);
+            return;
         }
-    }, [settings]);
+
+        if (settings.campus_address) {
+            setCampusAddress(settings.campus_address);
+            return;
+        }
+
+        setCampusAddress(settings.address || "");
+    }, [settings, branches, person?.campus]);
 
     const fetchPersonData = async (id) => {
         try {
-            const response = await axios.get(
-                `${API_BASE_URL}/api/student-person-data/${id}`,
-            );
-            setPerson(response.data);
+            const response = await axios.get(`${API_BASE_URL}/api/person/student/${id}`);
+            const row = response.data?.rows?.[0] ?? response.data;
+            if (row && typeof row === "object") {
+                setPerson(row);
+            }
         } catch (err) {
             console.error("Error fetching person data:", err);
         }
@@ -208,6 +237,7 @@ const StudentOfficeOfTheRegistrar = () => {
 
   html, body {
     margin: 1;
+    margin-top: 15px;
     padding: 0;
     width: 210mm;
     height: 297mm;
@@ -232,7 +262,7 @@ const StudentOfficeOfTheRegistrar = () => {
   }
 
     .student-table {
-    margin-top: -30px !important;
+    margin-top: -50px !important;
   }
 
 
@@ -280,6 +310,23 @@ const StudentOfficeOfTheRegistrar = () => {
         )?.program_description ||
             (person?.program ?? "");
     }
+
+    document.addEventListener("contextmenu", (e) => e.preventDefault());
+
+    document.addEventListener("keydown", (e) => {
+        const isBlockedKey =
+            e.key === "F12" ||
+            e.key === "F11" ||
+            (e.ctrlKey &&
+                e.shiftKey &&
+                (e.key.toLowerCase() === "i" || e.key.toLowerCase() === "j")) ||
+            (e.ctrlKey && e.key.toLowerCase() === "u");
+
+        if (isBlockedKey) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+    });
 
 
 

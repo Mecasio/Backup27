@@ -44,23 +44,28 @@ const ECATApplicationForm = () => {
     // 🏷️ School Info
     if (settings.company_name) setCompanyName(settings.company_name);
     if (settings.short_term) setShortTerm(settings.short_term);
-    if (settings.campus_address) setCampusAddress(settings.campus_address);
 
     // ✅ Branches (JSON stored in DB)
-    if (settings.branches) {
-      setBranches(
-        typeof settings.branches === "string"
-          ? JSON.parse(settings.branches)
-          : settings.branches
-      );
+    if (settings?.branches) {
+      try {
+        const parsed =
+          typeof settings.branches === "string"
+            ? JSON.parse(settings.branches)
+            : settings.branches;
+
+        setBranches(parsed);
+      } catch (err) {
+        console.error("Failed to parse branches:", err);
+        setBranches([]);
+      }
     }
 
   }, [settings]);
 
   const words = companyName.trim().split(" ");
-  const middle = Math.ceil(words.length / 2);
-  const firstLine = words.slice(0, middle).join(" ");
-  const secondLine = words.slice(middle).join(" ");
+  const middleIndex = Math.ceil(words.length / 2);
+  const firstLine = words.slice(0, middleIndex).join(" ");
+  const secondLine = words.slice(middleIndex).join(" ");
 
   const [userID, setUserID] = useState("");
   const [user, setUser] = useState("");
@@ -141,10 +146,25 @@ const ECATApplicationForm = () => {
 
 
   useEffect(() => {
-    if (settings && settings.address) {
-      setCampusAddress(settings.address);
+    if (!settings) return;
+
+    const branchId = person?.campus;
+    const matchedBranch = branches.find(
+      (branch) => String(branch?.id) === String(branchId)
+    );
+
+    if (matchedBranch?.address) {
+      setCampusAddress(matchedBranch.address);
+      return;
     }
-  }, [settings]);
+
+    if (settings.campus_address) {
+      setCampusAddress(settings.campus_address);
+      return;
+    }
+
+    setCampusAddress(settings.address || "");
+  }, [settings, branches, person?.campus]);
 
 
   // ✅ Fetch person data from backend
@@ -228,7 +248,7 @@ const ECATApplicationForm = () => {
   const printDiv = () => {
     const divToPrint = divToPrintRef.current;
     if (divToPrint) {
-      const newWin = window.open('', 'Print-Window');
+      const newWin = window.open("", "Print-Window");
       newWin.document.open();
       newWin.document.write(`
 <html>
@@ -244,7 +264,7 @@ const ECATApplicationForm = () => {
         margin: 0;
         margin-top: -100px;
         padding: 0;
-        font-family: Arial, sans-serif;
+        font-family: Arial;
         width: auto;
         height: auto;
         overflow: visible;
@@ -1581,7 +1601,6 @@ const ECATApplicationForm = () => {
     </Box >
   );
 };
-
 
 export default ECATApplicationForm;
 

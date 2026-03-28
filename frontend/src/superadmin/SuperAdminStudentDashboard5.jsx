@@ -418,7 +418,7 @@ const SuperAdminStudentDashboard5 = () => {
 
     // Put this at the very bottom before the return 
     if (loading || hasAccess === null) {
-       return <LoadingOverlay open={loading} message="Loading..." />;
+        return <LoadingOverlay open={loading} message="Loading..." />;
     }
 
     if (!hasAccess) {
@@ -433,7 +433,7 @@ const SuperAdminStudentDashboard5 = () => {
 
     // dot not alter
     return (
-     <Box sx={{ height: "calc(100vh - 150px)", overflowY: "auto", paddingRight: 1, backgroundColor: "transparent", mt: 1, padding: 2 }}>
+        <Box sx={{ height: "calc(100vh - 150px)", overflowY: "auto", paddingRight: 1, backgroundColor: "transparent", mt: 1, padding: 2 }}>
             {showPrintView && (
                 <div ref={divToPrintRef} style={{ display: "block" }}>
                     <ExamPermit personId={userID} />   {/* ✅ pass the searched person_id */}
@@ -469,8 +469,8 @@ const SuperAdminStudentDashboard5 = () => {
             </Box>
 
             <hr style={{ border: "1px solid #ccc", width: "100%" }} />
-      <br />
-      <br />
+            <br />
+            <br />
 
 
             <TableContainer component={Paper} sx={{ width: '100%', mb: 1 }}>
@@ -478,9 +478,9 @@ const SuperAdminStudentDashboard5 = () => {
                     <TableHead sx={{ backgroundColor: settings?.header_color || "#1976d2", border: `1px solid ${borderColor}`, }}>
                         <TableRow>
                             {/* Left cell: Student Number */}
-                            <TableCell sx={{ color: 'white', fontSize: '20px', fontFamily: "Poppins, sans-serif", border: 'none' }}>
+                            <TableCell sx={{ color: 'white', fontSize: '20px', fontFamily: "Arial", border: 'none' }}>
                                 Student Number:&nbsp;
-                                <span style={{ fontFamily: "Poppins, sans-serif", fontWeight: "normal", textDecoration: "underline" }}>
+                                <span style={{ fontFamily: "Arial", fontWeight: "normal", textDecoration: "underline" }}>
                                     {person?.student_number || "N/A"}
                                 </span>
                             </TableCell>
@@ -488,10 +488,10 @@ const SuperAdminStudentDashboard5 = () => {
                             {/* Right cell: Student Name */}
                             <TableCell
                                 align="right"
-                                sx={{ color: 'white', fontSize: '20px', fontFamily: "Poppins, sans-serif", border: 'none' }}
+                                sx={{ color: 'white', fontSize: '20px', fontFamily: "Arial", border: 'none' }}
                             >
                                 Student Name:&nbsp;
-                                <span style={{ fontFamily: "Poppins, sans-serif", fontWeight: "normal", textDecoration: "underline" }}>
+                                <span style={{ fontFamily: "Arial", fontWeight: "normal", textDecoration: "underline" }}>
                                     {person?.last_name?.toUpperCase()}, {person?.first_name?.toUpperCase()}{" "}
                                     {person?.middle_name?.toUpperCase()} {person?.extension?.toUpperCase() || ""}
                                 </span>
@@ -501,74 +501,74 @@ const SuperAdminStudentDashboard5 = () => {
                 </Table>
             </TableContainer>
 
-             <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          width: "100%",
-          mt: 2,
-        }}
-      >
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            gap: 2,
-            p: 2,
-            borderRadius: "10px",
-            backgroundColor: "#fffaf5",
-            border: "1px solid #6D2323",
-            boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.05)",
-            width: "100%",
-            overflow: "hidden",
-          }}
-        >
-          {/* Icon */}
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              backgroundColor: "#800000",
-              borderRadius: "8px",
-              width: 60,
-              height: 60,
-              flexShrink: 0,
-            }}
-          >
-            <ErrorIcon sx={{ color: "white", fontSize: 40 }} />
-          </Box>
+            <Box
+                sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    width: "100%",
+                    mt: 2,
+                }}
+            >
+                <Box
+                    sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 2,
+                        p: 2,
+                        borderRadius: "10px",
+                        backgroundColor: "#fffaf5",
+                        border: "1px solid #6D2323",
+                        boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.05)",
+                        width: "100%",
+                        overflow: "hidden",
+                    }}
+                >
+                    {/* Icon */}
+                    <Box
+                        sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            backgroundColor: "#800000",
+                            borderRadius: "8px",
+                            width: 60,
+                            height: 60,
+                            flexShrink: 0,
+                        }}
+                    >
+                        <ErrorIcon sx={{ color: "white", fontSize: 40 }} />
+                    </Box>
 
-          {/* Text */}
-          <Typography
-            sx={{
-              fontSize: "20px",
-              fontFamily: "Poppins, sans-serif",
-              color: "#3e3e3e",
-              lineHeight: 1.3, // slightly tighter to fit in fewer rows
-              whiteSpace: "normal",
-              overflow: "hidden",
-            }}
-          >
-            <strong style={{ color: "maroon" }}>Notice:</strong> &nbsp;
-            <strong></strong> <span style={{ fontSize: '1.2em', margin: '0 15px' }}>➔</span> Kindly type 'NA' in boxes where there are no possible answers to the information being requested. &nbsp;  &nbsp; <br />
-            <strong></strong> <span style={{ fontSize: '1.2em', margin: '0 15px', marginLeft: "100px", }}>➔</span> To make use of the letter 'Ñ', please press ALT while typing "165", while for 'ñ', please press ALT while typing "164"
+                    {/* Text */}
+                    <Typography
+                        sx={{
+                            fontSize: "20px",
+                            fontFamily: "Arial",
+                            color: "#3e3e3e",
+                            lineHeight: 1.3, // slightly tighter to fit in fewer rows
+                            whiteSpace: "normal",
+                            overflow: "hidden",
+                        }}
+                    >
+                        <strong style={{ color: "maroon" }}>Notice:</strong> &nbsp;
+                        <strong></strong> <span style={{ fontSize: '1.2em', margin: '0 15px' }}>➔</span> Kindly type 'NA' in boxes where there are no possible answers to the information being requested. &nbsp;  &nbsp; <br />
+                        <strong></strong> <span style={{ fontSize: '1.2em', margin: '0 15px', marginLeft: "100px", }}>➔</span> To make use of the letter 'Ñ', please press ALT while typing "165", while for 'ñ', please press ALT while typing "164"
 
-          </Typography>
-        </Box>
-      </Box>
+                    </Typography>
+                </Box>
+            </Box>
 
-      <h1
-        style={{
-          fontSize: "30px",
-          fontWeight: "bold",
-          textAlign: "center",
-          color: "black",
-          marginTop: "25px",
-        }}
-      >
-        AVAILABLE PRINTABLE DOCUMENTS
-      </h1>
+            <h1
+                style={{
+                    fontSize: "30px",
+                    fontWeight: "bold",
+                    textAlign: "center",
+                    color: "black",
+                    marginTop: "25px",
+                }}
+            >
+                LISTS OF ALL PRINTABLE FILES
+            </h1>
 
 
 
@@ -639,7 +639,7 @@ const SuperAdminStudentDashboard5 = () => {
                                 className="card-text"
                                 sx={{
                                     color: mainButtonColor,
-                                    fontFamily: "Poppins, sans-serif",
+                                    fontFamily: "Arial",
                                     fontWeight: "bold",
                                     fontSize: "0.85rem",
                                 }}
@@ -732,11 +732,11 @@ const SuperAdminStudentDashboard5 = () => {
                             {index < steps.length - 1 && (
                                 <Box
                                     sx={{
-                                         height: "2px",
-                    backgroundColor: mainButtonColor,
-                    flex: 1,
-                    alignSelf: "center",
-                    mx: 2,
+                                        height: "2px",
+                                        backgroundColor: mainButtonColor,
+                                        flex: 1,
+                                        alignSelf: "center",
+                                        mx: 2,
                                     }}
                                 />
                             )}
@@ -747,7 +747,7 @@ const SuperAdminStudentDashboard5 = () => {
                 <form>
                     <Container maxWidth="100%" sx={{ backgroundColor: settings?.header_color || "#1976d2", border: `1px solid ${borderColor}`, color: "white", borderRadius: 2, boxShadow: 3, padding: "4px" }}>
                         <Box sx={{ width: "100%" }}>
-                            <Typography style={{ fontSize: "20px", padding: "10px", fontFamily: "Poppins, sans-serif" }}>Step 5: Other Information</Typography>
+                            <Typography style={{ fontSize: "20px", padding: "10px", fontFamily: "Arial" }}>Step 5: Other Information</Typography>
                         </Box>
                     </Container>
                     <Container maxWidth="100%" sx={{ backgroundColor: "#f1f1f1", border: `1px solid ${borderColor}`, padding: 4, borderRadius: 2, boxShadow: 3 }}>
@@ -759,12 +759,12 @@ const SuperAdminStudentDashboard5 = () => {
                             Data Subject Consent Form
                         </Typography>
                         < br />
-                        <Typography style={{ fontSize: "12px", fontFamily: "Poppins, sans-serif", textAlign: "Left" }}>
+                        <Typography style={{ fontSize: "12px", fontFamily: "Arial", textAlign: "Left" }}>
                             In accordance with RA 10173 or Data Privacy Act of 2012, I give my consent to the following terms and conditions on the collection, use, processing, and disclosure of my personal data:
                         </Typography>
                         < br />
                         <Typography
-                            style={{ fontSize: "12px", fontFamily: "Poppins, sans-serif", textAlign: "left" }}
+                            style={{ fontSize: "12px", fontFamily: "Arial", textAlign: "left" }}
                         >
                             1. I am aware that the{" "}
                             {companyName || "Your School Name"}{" "}
@@ -775,11 +775,11 @@ const SuperAdminStudentDashboard5 = () => {
                             email address, landline numbers, and mobile numbers.
                         </Typography>
 
-                        <Typography style={{ fontSize: "12px", fontFamily: "Poppins, sans-serif", textAlign: "Left" }}>
+                        <Typography style={{ fontSize: "12px", fontFamily: "Arial", textAlign: "Left" }}>
                             2. I agree to personally update these data through personal request from the Office of the registrar.
                         </Typography>
                         <Typography
-                            style={{ fontSize: "12px", fontFamily: "Poppins, sans-serif", textAlign: "left" }}
+                            style={{ fontSize: "12px", fontFamily: "Arial", textAlign: "left" }}
                         >
                             3. In consonance with the above stated Act, I am aware that the University will
                             protect my school records related to my being a student/graduate of{" "}
@@ -787,17 +787,17 @@ const SuperAdminStudentDashboard5 = () => {
                             right to authorize a representative to claim the same subject to the policy of
                             the University.
                         </Typography>
-                        <Typography style={{ fontSize: "12px", fontFamily: "Poppins, sans-serif", textAlign: "Left" }}>
+                        <Typography style={{ fontSize: "12px", fontFamily: "Arial", textAlign: "Left" }}>
                             4. In order to promote efficient management of the organization’s records, I authorize the University to manage my data for data sharing with industry partners, government agencies/embassies, other educational institutions, and other offices for the university for employment, statistics, immigration, transfer credentials, and other legal purposes that may serve me best.
                         </Typography>
                         < br />
-                        <Typography style={{ fontSize: "12px", fontFamily: "Poppins, sans-serif", textAlign: "Left" }}>
+                        <Typography style={{ fontSize: "12px", fontFamily: "Arial", textAlign: "Left" }}>
                             By clicking the submit button, I warrant that I have read, understood all of the above provisions, and agreed to its full implementation.
                         </Typography>
                         <br />
                         <hr style={{ border: "1px solid #ccc", width: "100%" }} />
                         < br />
-                        <Typography style={{ fontSize: "12px", fontFamily: "Poppins, sans-serif", textAlign: "Left" }}>
+                        <Typography style={{ fontSize: "12px", fontFamily: "Arial", textAlign: "Left" }}>
                             I certify that the information given above are true, complete, and accurate to the best of my knowledge and belief. I promise to abide by the rules and regulations of Eulogio "Amang" Rodriguez Institute of Science and Technology regarding the ECAT and my possible admission. I am aware that any false or misleading information and/or statement may result in the refusal or disqualification of my admission to the institution.
                         </Typography>
 
@@ -832,7 +832,7 @@ const SuperAdminStudentDashboard5 = () => {
                                     transform: "translate(-50%, -50%)",
                                     width: 400,
                                     bgcolor: "background.paper",
-                                   border: `1px solid ${borderColor}`,
+                                    border: `1px solid ${borderColor}`,
                                     boxShadow: 24,
                                     p: 4,
                                     borderRadius: 2,

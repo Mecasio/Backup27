@@ -9,6 +9,7 @@ import SentimentVeryDissatisfiedIcon from "@mui/icons-material/SentimentVeryDiss
 import SentimentSatisfiedIcon from "@mui/icons-material/SentimentSatisfied";
 import { FcPrint } from "react-icons/fc";
 import axios from "axios";
+import { useLocation } from "react-router-dom";
 import API_BASE_URL from "../apiConfig";
 const StudentAdmissionServices = () => {
     const settings = useContext(SettingsContext);
@@ -23,6 +24,8 @@ const StudentAdmissionServices = () => {
     const [fetchedLogo, setFetchedLogo] = useState(null);
     const [companyName, setCompanyName] = useState("");
     const [shortTerm, setShortTerm] = useState("");
+    const [campusAddress, setCampusAddress] = useState("");
+    const [branches, setBranches] = useState([]);
 
     useEffect(() => {
         if (!settings) return;
@@ -46,7 +49,19 @@ const StudentAdmissionServices = () => {
         // 🏷️ School Information
         if (settings.company_name) setCompanyName(settings.company_name);
         if (settings.short_term) setShortTerm(settings.short_term);
-        if (settings.campus_address) setCampusAddress(settings.campus_address);
+        if (settings?.branches) {
+            try {
+                const parsed =
+                    typeof settings.branches === "string"
+                        ? JSON.parse(settings.branches)
+                        : settings.branches;
+
+                setBranches(parsed);
+            } catch (err) {
+                console.error("Failed to parse branches:", err);
+                setBranches([]);
+            }
+        }
     }, [settings]);
 
     const words = companyName.trim().split(" ");
@@ -128,35 +143,61 @@ const StudentAdmissionServices = () => {
         guardian_email: "",
     });
 
-    const [campusAddress, setCampusAddress] = useState("");
-
     useEffect(() => {
-        if (settings && settings.address) {
-            setCampusAddress(settings.address);
+        if (!settings) return;
+
+        const branchId = person?.campus;
+        const matchedBranch = branches.find(
+            (branch) => String(branch?.id) === String(branchId)
+        );
+
+        if (matchedBranch?.address) {
+            setCampusAddress(matchedBranch.address);
+            return;
         }
-    }, [settings]);
+
+        if (settings.campus_address) {
+            setCampusAddress(settings.campus_address);
+            return;
+        }
+
+        setCampusAddress(settings.address || "");
+    }, [settings, branches, person?.campus]);
 
     const [userID, setUserID] = useState("");
     const [user, setUser] = useState("");
     const [userRole, setUserRole] = useState("");
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+    const queryPersonId = queryParams.get("person_id");
 
     useEffect(() => {
         const storedUser = localStorage.getItem("email");
         const storedRole = localStorage.getItem("role");
-        const storedID = localStorage.getItem("person_id");
+        const loggedInPersonId = localStorage.getItem("person_id");
+        const searchedPersonId = sessionStorage.getItem("student_edit_person_id");
 
-        if (storedUser && storedRole && storedID) {
-            setUser(storedUser);
-            setUserRole(storedRole);
-            setUserID(storedID);
-        } else {
+        if (!storedUser || !storedRole || !loggedInPersonId) {
             window.location.href = "/login";
+            return;
         }
-    }, []);
+
+        setUser(storedUser);
+        setUserRole(storedRole);
+
+        const allowedRoles = ["registrar", "student"];
+        if (allowedRoles.includes(storedRole)) {
+            const targetId = searchedPersonId || queryPersonId || loggedInPersonId;
+            setUserID(targetId);
+            return;
+        }
+
+        window.location.href = "/login";
+    }, [queryPersonId]);
 
     useEffect(() => {
         if (user && userID && userRole) {
-            if (userRole === "student") {
+            if (["registrar", "student"].includes(userRole)) {
                 fetchPersonData(userID);
             } else {
                 window.location.href = "/login";

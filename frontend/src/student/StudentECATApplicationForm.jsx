@@ -19,6 +19,8 @@ const StudentECATApplicationForm = () => {
   const [fetchedLogo, setFetchedLogo] = useState(null);
   const [companyName, setCompanyName] = useState("");
   const [shortTerm, setShortTerm] = useState("");
+  const [campusAddress, setCampusAddress] = useState("");
+  const [branches, setBranches] = useState([]);
 
   useEffect(() => {
     if (!settings) return;
@@ -42,7 +44,19 @@ const StudentECATApplicationForm = () => {
     // 🏷️ School Information
     if (settings.company_name) setCompanyName(settings.company_name);
     if (settings.short_term) setShortTerm(settings.short_term);
-    if (settings.campus_address) setCampusAddress(settings.campus_address);
+    if (settings?.branches) {
+      try {
+        const parsed =
+          typeof settings.branches === "string"
+            ? JSON.parse(settings.branches)
+            : settings.branches;
+
+        setBranches(parsed);
+      } catch (err) {
+        console.error("Failed to parse branches:", err);
+        setBranches([]);
+      }
+    }
   }, [settings]);
 
   const [userID, setUserID] = useState("");
@@ -137,17 +151,30 @@ const StudentECATApplicationForm = () => {
     strand: "",
   });
 
-  const [campusAddress, setCampusAddress] = useState("");
-
-  useEffect(() => {
-    if (settings && settings.address) {
-      setCampusAddress(settings.address);
-    }
-  }, [settings]);
-
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const queryPersonId = queryParams.get("person_id");
+
+  useEffect(() => {
+    if (!settings) return;
+
+    const branchId = person?.campus;
+    const matchedBranch = branches.find(
+      (branch) => String(branch?.id) === String(branchId),
+    );
+
+    if (matchedBranch?.address) {
+      setCampusAddress(matchedBranch.address);
+      return;
+    }
+
+    if (settings.campus_address) {
+      setCampusAddress(settings.campus_address);
+      return;
+    }
+
+    setCampusAddress(settings.address || "");
+  }, [settings, branches, person?.campus]);
 
   // do not alter
   useEffect(() => {
@@ -178,10 +205,11 @@ const StudentECATApplicationForm = () => {
 
   const fetchPersonData = async (id) => {
     try {
-      const response = await axios.get(
-        `${API_BASE_URL}/api/student-person-data/${id}`,
-      );
-      setPerson(response.data);
+      const response = await axios.get(`${API_BASE_URL}/api/person/student/${id}`);
+      const row = response.data?.rows?.[0] ?? response.data;
+      if (row && typeof row === "object") {
+        setPerson(row);
+      }
     } catch (err) {
       console.error("Error fetching person data:", err);
     }
@@ -232,7 +260,7 @@ const StudentECATApplicationForm = () => {
 
       html, body {
         margin: 0;
-        margin-top: -115px;
+        margin-top: -100px;
         padding: 0;
         font-family: Arial;
         width: auto;

@@ -18,7 +18,6 @@ import ExamPermit from "../applicant/ExamPermit";
 import Unauthorized from "../components/Unauthorized";
 import LoadingOverlay from "../components/LoadingOverlay";
 import API_BASE_URL from "../apiConfig";
-import DateField from "../components/DateField";
 
 const SuperAdminStudentDashboard4 = () => {
 
@@ -130,8 +129,8 @@ const SuperAdminStudentDashboard4 = () => {
 
 
     const location = useLocation();
-  
-   const queryParams = new URLSearchParams(location.search);
+
+    const queryParams = new URLSearchParams(location.search);
     const queryPersonId = queryParams.get("person_id");
 
     useEffect(() => {
@@ -164,8 +163,8 @@ const SuperAdminStudentDashboard4 = () => {
 
         window.location.href = "/login";
     }, [queryPersonId]);
- 
-  
+
+
     const [selectedPerson, setSelectedPerson] = useState(null);
 
     const fetchByPersonId = async (personID) => {
@@ -359,26 +358,26 @@ const SuperAdminStudentDashboard4 = () => {
 
 
 
-const links = [
-  {
-    to: userID ? `/admin_ecat_application_form?person_id=${userID}` : "/admin_ecat_application_form",
-    label: "ECAT Application Form",
-  },
-  {
-    to: userID ? `/admin_admission_form_process?person_id=${userID}` : "/admin_admission_form_process",
-    label: "Admission Form Process",
-  },
-  {
-    to: userID ? `/admin_personal_data_form?person_id=${userID}` : "/admin_personal_data_form",
-    label: "Personal Data Form",
-  },
-  {
-    to: userID ? `/admin_office_of_the_registrar?person_id=${userID}` : "/admin_office_of_the_registrar",
-    label: `Application For ${shortTerm ? shortTerm.toUpperCase() : ""} College Admission`,
-  },
-  { to: "/admission_services", label: "Application/Student Satisfactory Survey" },
- 
-];
+    const links = [
+        {
+            to: userID ? `/admin_ecat_application_form?person_id=${userID}` : "/admin_ecat_application_form",
+            label: "ECAT Application Form",
+        },
+        {
+            to: userID ? `/admin_admission_form_process?person_id=${userID}` : "/admin_admission_form_process",
+            label: "Admission Form Process",
+        },
+        {
+            to: userID ? `/admin_personal_data_form?person_id=${userID}` : "/admin_personal_data_form",
+            label: "Personal Data Form",
+        },
+        {
+            to: userID ? `/admin_office_of_the_registrar?person_id=${userID}` : "/admin_office_of_the_registrar",
+            label: `Application For ${shortTerm ? shortTerm.toUpperCase() : ""} College Admission`,
+        },
+        { to: "/admission_services", label: "Application/Student Satisfactory Survey" },
+
+    ];
 
 
 
@@ -413,7 +412,7 @@ const links = [
 
     // Put this at the very bottom before the return 
     if (loading || hasAccess === null) {
-       return <LoadingOverlay open={loading} message="Loading..." />;
+        return <LoadingOverlay open={loading} message="Loading..." />;
     }
 
     if (!hasAccess) {
@@ -428,7 +427,7 @@ const links = [
 
     // dot not alter
     return (
-       <Box sx={{ height: "calc(100vh - 150px)", overflowY: "auto", paddingRight: 1, backgroundColor: "transparent", mt: 1, padding: 2 }}>
+        <Box sx={{ height: "calc(100vh - 150px)", overflowY: "auto", paddingRight: 1, backgroundColor: "transparent", mt: 1, padding: 2 }}>
             {showPrintView && (
                 <div ref={divToPrintRef} style={{ display: "block" }}>
                     <ExamPermit personId={userID} />   {/* ✅ pass the searched person_id */}
@@ -461,9 +460,9 @@ const links = [
 
             </Box>
 
-              <hr style={{ border: "1px solid #ccc", width: "100%" }} />
-      <br />
-      <br />
+            <hr style={{ border: "1px solid #ccc", width: "100%" }} />
+            <br />
+            <br />
 
 
             <TableContainer component={Paper} sx={{ width: '100%', mb: 1 }}>
@@ -471,9 +470,9 @@ const links = [
                     <TableHead sx={{ backgroundColor: settings?.header_color || "#1976d2", border: `1px solid ${borderColor}`, }}>
                         <TableRow>
                             {/* Left cell: Student Number */}
-                            <TableCell sx={{ color: 'white', fontSize: '20px', fontFamily: "Poppins, sans-serif", border: 'none' }}>
+                            <TableCell sx={{ color: 'white', fontSize: '20px', fontFamily: "Arial", border: 'none' }}>
                                 Student Number:&nbsp;
-                                <span style={{ fontFamily: "Poppins, sans-serif", fontWeight: "normal", textDecoration: "underline" }}>
+                                <span style={{ fontFamily: "Arial", fontWeight: "normal", textDecoration: "underline" }}>
                                     {person?.student_number || "N/A"}
                                 </span>
                             </TableCell>
@@ -481,10 +480,10 @@ const links = [
                             {/* Right cell: Student Name */}
                             <TableCell
                                 align="right"
-                                sx={{ color: 'white', fontSize: '20px', fontFamily: "Poppins, sans-serif", border: 'none' }}
+                                sx={{ color: 'white', fontSize: '20px', fontFamily: "Arial", border: 'none' }}
                             >
                                 Student Name:&nbsp;
-                                <span style={{ fontFamily: "Poppins, sans-serif", fontWeight: "normal", textDecoration: "underline" }}>
+                                <span style={{ fontFamily: "Arial", fontWeight: "normal", textDecoration: "underline" }}>
                                     {person?.last_name?.toUpperCase()}, {person?.first_name?.toUpperCase()}{" "}
                                     {person?.middle_name?.toUpperCase()} {person?.extension?.toUpperCase() || ""}
                                 </span>
@@ -494,74 +493,74 @@ const links = [
                 </Table>
             </TableContainer>
 
-           <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          width: "100%",
-          mt: 2,
-        }}
-      >
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            gap: 2,
-            p: 2,
-            borderRadius: "10px",
-            backgroundColor: "#fffaf5",
-            border: "1px solid #6D2323",
-            boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.05)",
-            width: "100%",
-            overflow: "hidden",
-          }}
-        >
-          {/* Icon */}
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              backgroundColor: "#800000",
-              borderRadius: "8px",
-              width: 60,
-              height: 60,
-              flexShrink: 0,
-            }}
-          >
-            <ErrorIcon sx={{ color: "white", fontSize: 40 }} />
-          </Box>
+            <Box
+                sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    width: "100%",
+                    mt: 2,
+                }}
+            >
+                <Box
+                    sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 2,
+                        p: 2,
+                        borderRadius: "10px",
+                        backgroundColor: "#fffaf5",
+                        border: "1px solid #6D2323",
+                        boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.05)",
+                        width: "100%",
+                        overflow: "hidden",
+                    }}
+                >
+                    {/* Icon */}
+                    <Box
+                        sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            backgroundColor: "#800000",
+                            borderRadius: "8px",
+                            width: 60,
+                            height: 60,
+                            flexShrink: 0,
+                        }}
+                    >
+                        <ErrorIcon sx={{ color: "white", fontSize: 40 }} />
+                    </Box>
 
-          {/* Text */}
-          <Typography
-            sx={{
-              fontSize: "20px",
-              fontFamily: "Poppins, sans-serif",
-              color: "#3e3e3e",
-              lineHeight: 1.3, // slightly tighter to fit in fewer rows
-              whiteSpace: "normal",
-              overflow: "hidden",
-            }}
-          >
-            <strong style={{ color: "maroon" }}>Notice:</strong> &nbsp;
-            <strong></strong> <span style={{ fontSize: '1.2em', margin: '0 15px' }}>➔</span> Kindly type 'NA' in boxes where there are no possible answers to the information being requested. &nbsp;  &nbsp; <br />
-            <strong></strong> <span style={{ fontSize: '1.2em', margin: '0 15px', marginLeft: "100px", }}>➔</span> To make use of the letter 'Ñ', please press ALT while typing "165", while for 'ñ', please press ALT while typing "164"
+                    {/* Text */}
+                    <Typography
+                        sx={{
+                            fontSize: "20px",
+                            fontFamily: "Arial",
+                            color: "#3e3e3e",
+                            lineHeight: 1.3, // slightly tighter to fit in fewer rows
+                            whiteSpace: "normal",
+                            overflow: "hidden",
+                        }}
+                    >
+                        <strong style={{ color: "maroon" }}>Notice:</strong> &nbsp;
+                        <strong></strong> <span style={{ fontSize: '1.2em', margin: '0 15px' }}>➔</span> Kindly type 'NA' in boxes where there are no possible answers to the information being requested. &nbsp;  &nbsp; <br />
+                        <strong></strong> <span style={{ fontSize: '1.2em', margin: '0 15px', marginLeft: "100px", }}>➔</span> To make use of the letter 'Ñ', please press ALT while typing "165", while for 'ñ', please press ALT while typing "164"
 
-          </Typography>
-        </Box>
-      </Box>
+                    </Typography>
+                </Box>
+            </Box>
 
-      <h1
-        style={{
-          fontSize: "30px",
-          fontWeight: "bold",
-          textAlign: "center",
-          color: "black",
-          marginTop: "25px",
-        }}
-      >
-        AVAILABLE PRINTABLE DOCUMENTS
-      </h1>
+            <h1
+                style={{
+                    fontSize: "30px",
+                    fontWeight: "bold",
+                    textAlign: "center",
+                    color: "black",
+                    marginTop: "25px",
+                }}
+            >
+                LISTS OF ALL PRINTABLE FILES
+            </h1>
 
 
 
@@ -626,14 +625,14 @@ const links = [
                             <PictureAsPdfIcon
                                 className="card-icon"
                                 sx={{ fontSize: 35, color: mainButtonColor, mr: 1.5 }}
-                      />
+                            />
 
                             {/* Label */}
                             <Typography
                                 className="card-text"
                                 sx={{
                                     color: mainButtonColor,
-                                    fontFamily: "Poppins, sans-serif",
+                                    fontFamily: "Arial",
                                     fontWeight: "bold",
                                     fontSize: "0.85rem",
                                 }}
@@ -730,13 +729,13 @@ const links = [
                             {index < steps.length - 1 && (
                                 <Box
                                     sx={{
-                                         height: "2px",
-                    backgroundColor: mainButtonColor,
-                    flex: 1,
-                    alignSelf: "center",
-                    mx: 2,
+                                        height: "2px",
+                                        backgroundColor: mainButtonColor,
+                                        flex: 1,
+                                        alignSelf: "center",
+                                        mx: 2,
                                     }}
-                      />
+                                />
                             )}
                         </React.Fragment>
                     ))}
@@ -758,7 +757,7 @@ const links = [
                         }}
                     >
                         <Box sx={{ width: "100%" }}>
-                            <Typography style={{ fontSize: "20px", padding: "10px", fontFamily: "Poppins, sans-serif" }}>Step 4: Health and Medical Records</Typography>
+                            <Typography style={{ fontSize: "20px", padding: "10px", fontFamily: "Arial" }}>Step 4: Health and Medical Records</Typography>
                         </Box>
                     </Container>
 
@@ -790,11 +789,11 @@ const links = [
                                                 handleUpdate(updatedPerson);
                                             }}
                                             onBlur={handleBlur}
-                      />
+                                        />
                                     }
                                     label={symptom.charAt(0).toUpperCase() + symptom.slice(1)}
                                     sx={{ ml: 5 }}
-                      />
+                                />
                             ))}
                         </FormGroup>
 
@@ -810,7 +809,7 @@ const links = [
                                 width: "100%",
                                 border: "1px solid black",
                                 borderCollapse: "collapse",
-                                fontFamily: "Poppins, sans-serif",
+                                fontFamily: "Arial, Helvetica, sans-serif",
                                 tableLayout: "fixed",
                             }}
                         >
@@ -868,8 +867,8 @@ const links = [
                                                                             handleUpdate(updatedPerson);
                                                                         }}
                                                                         onBlur={handleBlur}
-                      />
-                                                                    <span style={{ fontSize: "15px", fontFamily: "Poppins, sans-serif" }}>Yes</span>
+                                                                    />
+                                                                    <span style={{ fontSize: "15px", fontFamily: "Arial" }}>Yes</span>
                                                                 </div>
 
                                                                 {/* NO */}
@@ -886,8 +885,8 @@ const links = [
                                                                             handleUpdate(updatedPerson);
                                                                         }}
                                                                         onBlur={handleBlur}
-                      />
-                                                                    <span style={{ fontSize: "15px", fontFamily: "Poppins, sans-serif" }}>No</span>
+                                                                    />
+                                                                    <span style={{ fontSize: "15px", fontFamily: "Arial" }}>No</span>
                                                                 </div>
                                                             </div>
 
@@ -926,10 +925,10 @@ const links = [
                                                         handleUpdate(updatedPerson);
                                                     }}
                                                     onBlur={handleBlur}
-                      />
+                                                />
                                             }
                                             label="Yes"
-                      />
+                                        />
 
                                         {/* NO */}
                                         <FormControlLabel
@@ -946,10 +945,10 @@ const links = [
                                                         handleUpdate(updatedPerson);
                                                     }}
                                                     onBlur={handleBlur}
-                      />
+                                                />
                                             }
                                             label="No"
-                      />
+                                        />
 
 
                                     </Box>
@@ -981,7 +980,7 @@ const links = [
                                     handleUpdate(updatedPerson);
                                 }}
                                 onBlur={handleBlur}
-                      />
+                            />
                         </Box>
 
                         <br />
@@ -1011,7 +1010,7 @@ const links = [
                                     handleUpdate(updatedPerson);
                                 }}
                                 onBlur={handleBlur}
-                      />
+                            />
                         </Box>
 
                         {/* IV. COVID PROFILE */}
@@ -1024,7 +1023,7 @@ const links = [
                             style={{
                                 border: "1px solid black",
                                 borderCollapse: "collapse",
-                                fontFamily: "Poppins, sans-serif",
+                                fontFamily: "Arial, Helvetica, sans-serif",
                                 width: "100%",
                                 tableLayout: "fixed",
                             }}
@@ -1059,8 +1058,8 @@ const links = [
                                                             handleUpdate(updatedPerson);
                                                         }}
                                                         onBlur={handleBlur}
-                      />
-                                                    <span style={{ fontSize: "15px", fontFamily: "Poppins, sans-serif" }}>YES</span>
+                                                    />
+                                                    <span style={{ fontSize: "15px", fontFamily: "Arial" }}>YES</span>
                                                 </Box>
 
                                                 {/* NO */}
@@ -1077,8 +1076,8 @@ const links = [
                                                             handleUpdate(updatedPerson);
                                                         }}
                                                         onBlur={handleBlur}
-                      />
-                                                    <span style={{ fontSize: "15px", fontFamily: "Poppins, sans-serif" }}>NO</span>
+                                                    />
+                                                    <span style={{ fontSize: "15px", fontFamily: "Arial" }}>NO</span>
 
 
                                                 </Box>
@@ -1086,9 +1085,9 @@ const links = [
 
                                             {/* IF YES, WHEN */}
                                             <span>IF YES, WHEN:</span>
-                                            <DateField
-                                                  size="small"
-                        name="covidDate"
+                                            <input
+                                                type="date"
+                                                name="covidDate"
                                                 value={person.covidDate || ""}
                                                 onChange={(e) => {
                                                     const updatedPerson = {
@@ -1107,7 +1106,7 @@ const links = [
                                                     border: "1px solid #ccc",
                                                     borderRadius: "4px",
                                                 }}
-                      />
+                                            />
                                         </Box>
                                     </td>
                                 </tr>
@@ -1127,7 +1126,7 @@ const links = [
                                             style={{
                                                 borderCollapse: "collapse",
                                                 width: "100%",
-                                                fontFamily: "Poppins, sans-serif",
+                                                fontFamily: "Arial, Helvetica, sans-serif",
                                                 tableLayout: "fixed",
                                             }}
                                         >
@@ -1162,7 +1161,7 @@ const links = [
                                                                 }}
                                                                 onBlur={handleBlur}
                                                                 style={inputStyle}
-                      />
+                                                            />
                                                         </td>
                                                     ))}
                                                 </tr>
@@ -1173,9 +1172,9 @@ const links = [
 
                                                     {["vaccine1Date", "vaccine2Date", "booster1Date", "booster2Date"].map((field) => (
                                                         <td key={field} style={{ padding: "4px" }}>
-                                                            <DateField
-                                                                  size="small"
-                        name={field}
+                                                            <input
+                                                                type="date"
+                                                                name={field}
                                                                 value={person[field] || ""}
                                                                 onChange={(e) => {
                                                                     const updatedPerson = {
@@ -1187,7 +1186,7 @@ const links = [
                                                                 }}
                                                                 onBlur={handleBlur}
                                                                 style={inputStyle}
-                      />
+                                                            />
                                                         </td>
                                                     ))}
                                                 </tr>
@@ -1225,7 +1224,7 @@ const links = [
                                             }}
                                             onBlur={handleBlur}
                                             className="w-full border px-3 py-2 rounded"
-                      />
+                                        />
                                     </td>
                                 </tr>
 
@@ -1245,7 +1244,7 @@ const links = [
                                             }}
                                             onBlur={handleBlur}
                                             className="w-full border px-3 py-2 rounded"
-                      />
+                                        />
                                     </td>
                                 </tr>
 
@@ -1265,7 +1264,7 @@ const links = [
                                             }}
                                             onBlur={handleBlur}
                                             className="w-full border px-3 py-2 rounded"
-                      />
+                                        />
                                     </td>
                                 </tr>
 
@@ -1285,7 +1284,7 @@ const links = [
                                             }}
                                             onBlur={handleBlur}
                                             className="w-full border px-3 py-2 rounded"
-                      />
+                                        />
                                     </td>
                                 </tr>
                             </tbody>
@@ -1303,7 +1302,7 @@ const links = [
                                     width: "100%",
                                     border: "1px solid black",
                                     borderCollapse: "collapse",
-                                    fontFamily: "Poppins, sans-serif",
+                                    fontFamily: "Arial, Helvetica, sans-serif",
                                     tableLayout: "fixed",
                                 }}
                             >
@@ -1318,7 +1317,7 @@ const links = [
                                             }}
                                         >
                                             {/* Question */}
-                                            <Typography sx={{ fontSize: "15px", fontFamily: "Poppins, sans-serif", marginBottom: "4px" }}>
+                                            <Typography sx={{ fontSize: "15px", fontFamily: "Arial", marginBottom: "4px" }}>
                                                 Do you have any of the following symptoms today?
                                             </Typography>
 
@@ -1338,8 +1337,8 @@ const links = [
                                                             handleUpdate(updatedPerson);
                                                         }}
                                                         onBlur={handleBlur}
-                      />
-                                                    <span style={{ fontSize: "15px", fontFamily: "Poppins, sans-serif" }}>Physically Fit</span>
+                                                    />
+                                                    <span style={{ fontSize: "15px", fontFamily: "Arial" }}>Physically Fit</span>
                                                 </div>
 
                                                 {/* For Compliance (1) */}
@@ -1356,8 +1355,8 @@ const links = [
                                                             handleUpdate(updatedPerson);
                                                         }}
                                                         onBlur={handleBlur}
-                      />
-                                                    <span style={{ fontSize: "15px", fontFamily: "Poppins, sans-serif" }}>For Compliance</span>
+                                                    />
+                                                    <span style={{ fontSize: "15px", fontFamily: "Arial" }}>For Compliance</span>
                                                 </div>
                                             </div>
                                         </td>
@@ -1409,7 +1408,7 @@ const links = [
                                                         padding: 0,
                                                     },
                                                 }}
-                      />
+                                            />
                                         </TableCell>
                                     </TableRow>
                                 </TableBody>
@@ -1472,7 +1471,7 @@ const links = [
                                             color: "#000",
                                             transition: "color 0.3s",
                                         }}
-                      />
+                                    />
                                 }
                                 sx={{
                                     backgroundColor: subButtonColor,
@@ -1505,7 +1504,7 @@ const links = [
                                             color: '#fff',
                                             transition: 'color 0.3s',
                                         }}
-                      />
+                                    />
                                 }
                                 sx={{
 

@@ -101,17 +101,18 @@ const ProctorApplicantList = () => {
 
   const location = useLocation();
 
- const tabs = [
-    { label: "Room Registration", to: "/room_registration", icon: <KeyIcon fontSize="large" /> },
-    { label: "Verify Documents Room Assignment", to: "/verify_document_schedule", icon: <MeetingRoomIcon fontSize="large" /> },
-    // { label: "Verify Documents Schedule Management", to: "/verify_schedule", icon: <ScheduleIcon fontSize="large" /> },
-    { label: "Evaluator's Applicant List", to: "/evaluator_schedule_room_list", icon: <PeopleIcon fontSize="large" /> },
-    { label: "Entrance Exam Room Assignment", to: "/assign_entrance_exam", icon: <MeetingRoomIcon fontSize="large" /> },
-    // { label: "Entrance Exam Schedule Management", to: "/assign_schedule_applicant", icon: <ScheduleIcon fontSize="large" /> },
-    { label: "Proctor's Applicant List", to: "/admission_schedule_room_list", icon: <PeopleIcon fontSize="large" /> },
-    // { label: "Examination Permit", to: "/registrar_examination_profile", icon: <PersonSearchIcon fontSize="large" /> },
-    { label: "Announcement", to: "/announcement_for_admission", icon: <CampaignIcon fontSize="large" /> },
-  ];
+
+   const tabs = [
+     { label: "Room Registration", to: "/room_registration", icon: <KeyIcon fontSize="large" /> },
+     { label: "Verify Documents Room Assignment", to: "/verify_document_schedule", icon: <MeetingRoomIcon fontSize="large" /> },
+     { label: "Verify Documents Schedule Management", to: "/verify_schedule", icon: <ScheduleIcon fontSize="large" /> },
+     { label: "Evaluator's Applicant List", to: "/evaluator_schedule_room_list", icon: <PeopleIcon fontSize="large" /> },
+     { label: "Entrance Exam Room Assignment", to: "/assign_entrance_exam", icon: <MeetingRoomIcon fontSize="large" /> },
+     { label: "Entrance Exam Schedule Management", to: "/assign_schedule_applicant", icon: <ScheduleIcon fontSize="large" /> },
+     { label: "Proctor's Applicant List", to: "/admission_schedule_room_list", icon: <PeopleIcon fontSize="large" /> },
+     { label: "Announcement", to: "/announcement_for_admission", icon: <CampaignIcon fontSize="large" /> },
+   ];
+
 
   // Also put it at the very top
   const [userID, setUserID] = useState("");
@@ -175,7 +176,7 @@ const ProctorApplicantList = () => {
   const [applicantToDelete, setApplicantToDelete] = useState(null);
 
   const navigate = useNavigate();
-  const [activeStep, setActiveStep] = useState(4);
+  const [activeStep, setActiveStep] = useState(6);
   const [clickedSteps, setClickedSteps] = useState(Array(tabs.length).fill(false));
 
 
@@ -231,6 +232,7 @@ const ProctorApplicantList = () => {
     const fetchCurriculums = async () => {
       try {
         const response = await axios.get(`${API_BASE_URL}/api/applied_program`);
+        console.log("✅ curriculumOptions:", response.data); // <--- add this
         setCurriculumOptions(response.data);
       } catch (error) {
         console.error("Error fetching curriculum options:", error);
@@ -240,134 +242,113 @@ const ProctorApplicantList = () => {
     fetchCurriculums();
   }, []);
 
-   const printDiv = () => {
-     const newWin = window.open("", "Print-Window");
-     newWin.document.open();
- 
-     const logoSrc = fetchedLogo || EaristLogo;
-     const name = companyName?.trim() || "No Company Name Available";
- 
-     const words = name.split(" ");
-     const middleIndex = Math.ceil(words.length / 2);
-     const firstLine = words.slice(0, middleIndex).join(" ");
-     const secondLine = words.slice(middleIndex).join(" ");
- 
-     const address = settings?.campus_address || settings?.address || "No address set in Settings";
-     const today = new Date().toLocaleDateString("en-US", {
-       year: "numeric",
-       month: "long",
-       day: "numeric",
-     });
- 
-     const borderColor = "black"; // table border color
-     const headerColor = "lightgray"; // dynamic header color
- 
-     const htmlContent = `
- <html>
-   <head>
-     <title>Evaluator Applicant List</title>
-     <style>
-       @page { size: A4 landscape; margin: 5mm; }
-       body { font-family: Arial; margin: 0; padding: 0; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-       .print-container { display: flex; flex-direction: column; align-items: center; text-align: center; }
-       .print-header img { position: absolute; left: 0; margin-left: 10px; width: 90px; height: 90px; border-radius: 50%; object-fit: cover; }
-       .print-header div { font-size: 12px; }
-       b.header-title { font-size: 18px !important; }
-       table { border-collapse: collapse; width: 100%; margin-top: 10px; }
-       th, td { border: 1px solid ${borderColor}; padding: 3px 4px; font-size: 10px; line-height: 1.1; }
-       th { text-align: center; background-color: ${headerColor}; color: black; }
-       th:nth-child(1) { width: 3%; }
-       th:nth-child(2) { width: 10%; }
-       th:nth-child(3) { width: 25%; }
-       th:nth-child(4) { width: 25%; }
-       th:nth-child(5) { width: 10%; }
- 
-       .header-top {
-   display: flex;
-   align-items: center;
-   justify-content: center;
-   gap: 15px;
-   margin-left: 50px; /* ✅ your requested spacing */
- }
- 
- .header-top img {
-   width: 80px;
-   height: 80px;
-   border-radius: 50%;
-   object-fit: cover;
- }
- 
- .header-text {
-   display: inline-block;
-   padding-left: 100px; /* ✅ VERY IMPORTANT */
- }
-     </style>
-   </head>
-   <body onload="window.print(); setTimeout(() => window.close(), 100);">
-     <div class="print-container">
-       <div class="print-header">
-         <img src="${logoSrc}" alt="School Logo" />
-         <div>
-           <div style="font-size: 13px; font-family: Arial">Republic of the Philippines</div>
-           <b style="letter-spacing:1px; font-size:22px; font-family:Arial, serif;">${firstLine}</b>
-           ${secondLine ? `<div style="letter-spacing:1px; font-size:22px; font-family:Arial, serif;"><b>${secondLine}</b></div>` : ""}
-           <div style="font-size:12px;">${address}</div>
-           <div style="margin-top:25px;"><b style="font-size:22px; letter-spacing:1px;">Evaluator Applicant List</b></div>
-         </div>
-       </div>
- 
-       <div style="margin-top:20px; width:100%; display:flex; flex-direction:column; gap:8px;">
-         <div style="display:flex; justify-content:space-between; width:100%;">
-           <span><b>Evaluator:</b> ${evaluator?.evaluator || "N/A"}</span>
-           <span><b>Building:</b> ${evaluator?.building_description || "N/A"}</span>
-         </div>
-         <div style="display:flex; justify-content:space-between; width:100%;">
-           <span><b>Room:</b> ${evaluator?.room_description || "N/A"}</span>
-           <span><b>Schedule:</b>
-             ${formatDateLong(evaluator?.schedule_date) || ""} |
-             ${evaluator?.start_time ? new Date("1970-01-01T" + evaluator.start_time).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", hour12: true }) : ""} -
-             ${evaluator?.end_time ? new Date("1970-01-01T" + evaluator.end_time).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", hour12: true }) : ""}
-           </span>
-         </div>
-       </div>
- 
-       <table>
-         <thead>
-           <tr>
-             <th>#</th>
-             <th>Applicant #</th>
-             <th>Applicant Name</th>
-             <th>Program</th>
-             <th>Signature</th>
-           </tr>
-         </thead>
-         <tbody>
-           ${applicants.map((a, index) => {
-       const programItem = curriculumOptions.find(item => item.curriculum_id?.toString() === a.program?.toString());
-       const program = programItem ? `(${programItem.program_code}) - ${programItem.program_description} ${programItem.major || ""}` : "N/A";
-       return `
-             <tr>
-               <td>${index + 1}</td>
-               <td>${a.applicant_number}</td>
-               <td>${a.last_name}, ${a.first_name} ${a.middle_name || ""}</td>
-               <td>${program}</td>
-               <td></td>
-             </tr>`;
-     }).join("")}
-           <tr>
-             <td colspan="5" style="text-align:right; font-weight:bold;">Total Applicants: ${applicants.length}</td>
-           </tr>
-         </tbody>
-       </table>
-     </div>
-   </body>
- </html>
- `;
- 
-     newWin.document.write(htmlContent);
-     newWin.document.close();
-   };
- 
+  const printDiv = () => {
+    const newWin = window.open("", "Print-Window");
+    newWin.document.open();
+
+    const logoSrc = fetchedLogo || EaristLogo;
+    const name = companyName?.trim() || "No Company Name Available";
+
+    const words = name.split(" ");
+    const middleIndex = Math.ceil(words.length / 2);
+    const firstLine = words.slice(0, middleIndex).join(" ");
+    const secondLine = words.slice(middleIndex).join(" ");
+
+    const address = settings?.campus_address || settings?.address || "No address set in Settings";
+    const today = new Date().toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+
+    const borderColor = "black"; // table border color
+    const headerColor = "lightgray"; // dynamic header color
+
+    const htmlContent = `
+<html>
+  <head>
+    <title>Proctor Applicant List</title>
+    <style>
+      @page { size: A4 landscape; margin: 5mm; }
+      body { font-family: Arial, sans-serif; margin: 0; padding: 0; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+      .print-container { display: flex; flex-direction: column; align-items: center; text-align: center; }
+      .print-header img { position: absolute; left: 0; margin-left: 10px; width: 90px; height: 90px; border-radius: 50%; object-fit: cover; }
+      .print-header div { font-size: 12px; }
+      b.header-title { font-size: 18px !important; }
+      table { border-collapse: collapse; width: 100%; margin-top: 10px; }
+      th, td { border: 1px solid ${borderColor}; padding: 3px 4px; font-size: 10px; line-height: 1.1; }
+      th { text-align: center; background-color: ${headerColor}; color: black; }
+      th:nth-child(1) { width: 3%; }
+      th:nth-child(2) { width: 10%; }
+      th:nth-child(3) { width: 25%; }
+      th:nth-child(4) { width: 25%; }
+      th:nth-child(5) { width: 10%; }
+    </style>
+  </head>
+  <body onload="window.print(); setTimeout(() => window.close(), 100);">
+    <div class="print-container">
+      <div class="print-header">
+        <img src="${logoSrc}" alt="School Logo" />
+        <div>
+          <div style="font-size: 13px; font-family: Arial">Republic of the Philippines</div>
+          <b style="letter-spacing:1px; font-size:20px; font-family: Arial">${firstLine}</b>
+          ${secondLine ? `<div style="letter-spacing:1px; font-size: 20px; font-family: Arial"><b>${secondLine}</b></div>` : ""}
+          <div style="font-size: 13px; font-family: Arial">${address}</div>
+          <div style="margin-top:25px;"><b style="font-size:20px; letter-spacing:1px;">Proctor Applicant List</b></div>
+        </div>
+      </div>
+
+      <div style="margin-top:20px; width:100%; display:flex; flex-direction:column; gap:8px;">
+        <div style="display:flex; justify-content:space-between; width:100%;">
+          <span><b>Proctor:</b> ${proctor?.proctor || "N/A"}</span>
+          <span><b>Building:</b> ${proctor?.building_description || "N/A"}</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; width:100%;">
+          <span><b>Room:</b> ${proctor?.room_description || "N/A"}</span>
+          <span><b>Schedule:</b>
+            ${formatDateLong(proctor?.day_description) || ""} |
+            ${proctor?.start_time ? new Date("1970-01-01T" + proctor.start_time).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", hour12: true }) : ""} -
+            ${proctor?.end_time ? new Date("1970-01-01T" + proctor.end_time).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", hour12: true }) : ""}
+          </span>
+        </div>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            
+            <th style="width:20%">Applicant ID</th>
+            <th style="width:30%">Applicant Name</th>
+            <th style="width:30%">Program</th>
+            <th style="width:20%">Signature</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${applicants.map((a, index) => {
+      const programItem = curriculumOptions.find(item => item.curriculum_id?.toString() === a.program?.toString());
+      const program = programItem ? `(${programItem.program_code}) - ${programItem.program_description} ${programItem.major || ""}` : "N/A";
+      return `
+            <tr>
+              
+              <td style="width:20%; text-align:center;">${a.applicant_number}</td>
+              <td style="width:30%; text-align:left;">${a.last_name}, ${a.first_name} ${a.middle_name || ""}</td>
+              <td style="width:30%; text-align:center;">${program}</td>
+              <td style="width:20%; text-align:center;"></td>
+            </tr>`;
+    }).join("")}
+          <tr>
+            <td colspan="5" style="text-align:right; font-weight:bold;">Total Applicants: ${applicants.length}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </body>
+</html>
+`;
+
+    newWin.document.write(htmlContent);
+    newWin.document.close();
+  };
 
 
   // 🔎 Auto-search whenever searchQuery changes (debounced)
@@ -486,7 +467,7 @@ const ProctorApplicantList = () => {
               justifyContent: "center",
               cursor: "pointer",
               borderRadius: 2,
-              border: `1px solid ${borderColor}`,
+              border: `2px solid ${borderColor}`,
               backgroundColor: activeStep === index ? settings?.header_color || "#1976d2" : "#E8C999",
               color: activeStep === index ? "#fff" : "#000",
               boxShadow:
@@ -602,13 +583,13 @@ const ProctorApplicantList = () => {
           <Table>
             <TableHead sx={{ backgroundColor: settings?.header_color || "#1976d2" }}>
               <TableRow>
-                <TableCell sx={{ color: "white", textAlign: "center", border: `1px solid ${borderColor}` }}>#</TableCell>
-                <TableCell sx={{ color: "white", textAlign: "center", border: `1px solid ${borderColor}` }}>Applicant</TableCell>
-                <TableCell sx={{ color: "white", textAlign: "center", border: `1px solid ${borderColor}` }}>Name</TableCell>
-                <TableCell sx={{ color: "white", textAlign: "center", border: `1px solid ${borderColor}` }}>Program</TableCell>
-                <TableCell sx={{ color: "white", textAlign: "center", border: `1px solid ${borderColor}` }}>Building</TableCell>
-                <TableCell sx={{ color: "white", textAlign: "center", border: `1px solid ${borderColor}` }}>Room</TableCell>
-                <TableCell sx={{ color: "white", textAlign: "center", border: `1px solid ${borderColor}` }}>Action</TableCell>
+                <TableCell sx={{ color: "white", textAlign: "center", border: `2px solid ${borderColor}` }}>#</TableCell>
+                <TableCell sx={{ color: "white", textAlign: "center", border: `2px solid ${borderColor}` }}>Applicant</TableCell>
+                <TableCell sx={{ color: "white", textAlign: "center", border: `2px solid ${borderColor}` }}>Name</TableCell>
+                <TableCell sx={{ color: "white", textAlign: "center", border: `2px solid ${borderColor}` }}>Program</TableCell>
+                <TableCell sx={{ color: "white", textAlign: "center", border: `2px solid ${borderColor}` }}>Building</TableCell>
+                <TableCell sx={{ color: "white", textAlign: "center", border: `2px solid ${borderColor}` }}>Room</TableCell>
+                <TableCell sx={{ color: "white", textAlign: "center", border: `2px solid ${borderColor}` }}>Action</TableCell>
 
               </TableRow>
             </TableHead>
@@ -616,12 +597,12 @@ const ProctorApplicantList = () => {
             <TableBody>
               {applicants.map((a, idx) => (
                 <TableRow key={idx}>
-                  <TableCell align="center" sx={{ border: `1px solid ${borderColor}` }}>{idx + 1}</TableCell>
-                  <TableCell align="left" sx={{ border: `1px solid ${borderColor}` }}>{a.applicant_number}</TableCell>
-                  <TableCell align="left" sx={{ border: `1px solid ${borderColor}` }}>
+                  <TableCell align="center" sx={{ border: `2px solid ${borderColor}` }}>{idx + 1}</TableCell>
+                  <TableCell align="left" sx={{ border: `2px solid ${borderColor}` }}>{a.applicant_number}</TableCell>
+                  <TableCell align="left" sx={{ border: `2px solid ${borderColor}` }}>
                     {`${a.last_name}, ${a.first_name} ${a.middle_name || ""}`}
                   </TableCell>
-                  <TableCell align="left" sx={{ border: `1px solid ${borderColor}` }}>
+                  <TableCell align="left" sx={{ border: `2px solid ${borderColor}` }}>
                     {(() => {
                       const item = curriculumOptions.find(
                         (x) => x.curriculum_id?.toString() === a.program?.toString()
@@ -633,13 +614,13 @@ const ProctorApplicantList = () => {
                     })()}
                   </TableCell>
 
-                  <TableCell align="left" sx={{ border: `1px solid ${borderColor}` }}>
+                  <TableCell align="left" sx={{ border: `2px solid ${borderColor}` }}>
                     {a.building_description || proctor?.building_description || "N/A"} {/* ✅ NEW */}
                   </TableCell>
-                  <TableCell align="left" sx={{ border: `1px solid ${borderColor}` }}>
+                  <TableCell align="left" sx={{ border: `2px solid ${borderColor}` }}>
                     {a.room_description || proctor?.room_description || "N/A"} {/* ✅ NEW */}
                   </TableCell>
-                  <TableCell align="center" sx={{ border: `1px solid ${borderColor}` }}>
+                  <TableCell align="center" sx={{ border: `2px solid ${borderColor}` }}>
                     <IconButton
                       color="error"
                       onClick={() => {
@@ -753,4 +734,3 @@ const ProctorApplicantList = () => {
 };
 
 export default ProctorApplicantList;
-

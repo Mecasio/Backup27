@@ -85,7 +85,6 @@ const SuperAdminApplicantList = () => {
     // 🏷️ School Info
     if (settings.company_name) setCompanyName(settings.company_name);
     if (settings.short_term) setShortTerm(settings.short_term);
-    if (settings.campus_address) setCampusAddress(settings.campus_address);
 
     // ✅ Branches (JSON stored in DB)
     if (settings?.branches) {
@@ -102,6 +101,7 @@ const SuperAdminApplicantList = () => {
       }
     }
   }, [settings]);
+
 
   useEffect(() => {
     socket.current = io(API_BASE_URL);
@@ -363,6 +363,27 @@ const SuperAdminApplicantList = () => {
     created_at: "",
     middle_code: "",
   });
+
+  useEffect(() => {
+    if (!settings) return;
+
+    const branchId = person?.campus;
+    const matchedBranch = branches.find(
+      (branch) => String(branch?.id) === String(branchId),
+    );
+
+    if (matchedBranch?.address) {
+      setCampusAddress(matchedBranch.address);
+      return;
+    }
+
+    if (settings.campus_address) {
+      setCampusAddress(settings.campus_address);
+      return;
+    }
+
+    setCampusAddress(settings.address || "");
+  }, [settings, branches, person?.campus]);
 
   // ⬇️ Add this inside ApplicantList component, before useEffect
   const fetchApplicants = async () => {
@@ -823,198 +844,192 @@ const SuperAdminApplicantList = () => {
   const [applicants, setApplicants] = useState([]);
   const divToPrintRef = useRef();
 
-   const printDiv = () => {
-      // ✅ Determine dynamic campus address (dropdown or custom)
-      let campusAddress = "";
-      if (settings?.campus_address && settings.campus_address.trim() !== "") {
-        campusAddress = settings.campus_address;
-      } else if (settings?.address && settings.address.trim() !== "") {
-        campusAddress = settings.address;
-      } else {
-        campusAddress = "No address set in Settings";
-      }
+  const printDiv = () => {
+     const resolvedCampusAddress =
+       campusAddress || "No address set in Settings";
+ 
+     // ✅ Dynamic logo and company name
+     const logoSrc = fetchedLogo || EaristLogo;
+     const name = companyName?.trim() || "";
+ 
+     // ✅ Split company name into two balanced lines
+     const words = name.split(" ");
+     const middleIndex = Math.ceil(words.length / 2);
+     const firstLine = words.slice(0, middleIndex).join(" ");
+     const secondLine = words.slice(middleIndex).join(" ");
+ 
+     // ✅ Generate printable HTML
+     const newWin = window.open("", "Print-Window");
+     newWin.document.open();
+     newWin.document.write(`
+       <html>
+         <head>
+           <title>Applicant List</title>
+          <style>
+   @page { size: A4 landscape; margin: 10mm; }
+ 
+   body {
+     font-family: Arial;
+     margin: 0;
+     padding: 0;
+   }
+ 
+   .print-container {
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+     text-align: center;
+     padding-left: 10px;
+     padding-right: 10px;
+   }
+ 
+ .print-header {
+   position: relative;
+   width: 100%;
+   text-align: center;
+   margin-top: 20px;
+ }
+ 
+ .print-header img {
+   position: absolute;
+   left: 220px; /* adjust if needed */
+   top: -10px;
+   width: 120px;
+   height: 120px;
+   border-radius: 50%;
+   object-fit: cover;
+ }
+ 
+ .header-top {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   gap: 15px;
+   margin-left: 50px; /* ✅ your requested spacing */
+ }
+ 
+ .header-top img {
+   width: 80px;
+   height: 80px;
+   border-radius: 50%;
+   object-fit: cover;
+ }
+ 
+ .header-text {
+   display: inline-block;
+   padding-left: 100px; /* ✅ VERY IMPORTANT (logo width + spacing) */
+ }
+ 
+   table {
+     border-collapse: collapse;
+     width: 100%;
+     margin-top: 20px;
+     border: 1.5px solid black; /* slightly thicker for landscape clarity */
+     table-layout: fixed;
+   }
+ 
+   th, td {
+     border: 1.5px solid black;
+     padding: 6px 8px;
+     font-size: 13px; /* slightly bigger (more space in landscape) */
+     text-align: center;
+     word-wrap: break-word;
+   }
+ 
+   table tr td:last-child,
+   table tr th:last-child {
+     border-right: 1.5px solid black !important;
+   }
+ 
+   th {
+     background-color: lightgray;
+     color: black;
+     -webkit-print-color-adjust: exact;
+     print-color-adjust: exact;
+   }
+ </style>
+         </head>
+         <body onload="window.print(); setTimeout(() => window.close(), 100);">
+           <div class="print-container">
+   
+             <!-- ✅ HEADER -->
+        <div class="print-header">
+   <img src="${logoSrc}" alt="School Logo" />
+ 
+   <div class="header-text">
+                 <div style="font-size: 13px; font-family: Arial">Republic of the Philippines</div>
+   
+                 <!-- ✅ Dynamic company name -->
+                 ${name
+         ? `
+                       <b style="letter-spacing: 1px; font-size: 20px; font-family: Arial, sans-serif;">
+                         ${firstLine}
+                       </b>
+                       ${secondLine
+           ? `<div style="letter-spacing: 1px; font-size: 20px; font-family: Arial, sans-serif;">
+                               <b>${secondLine}</b>
+                             </div>`
+           : ""
+         }
+                     `
+         : ""
+       }
+   
+                 <!-- ✅ Dynamic campus address -->
+                 <div style="font-size: 13px; font-family: Arial">${resolvedCampusAddress}</div>
+   
+                 <div style="margin-top: 30px;">
+                   <b style="font-size: 24px; letter-spacing: 1px;">Applicant List</b>
+                 </div>
+               </div>
+             </div>
+   
+             <!-- ✅ TABLE -->
+             <table>
+               <thead>
+                
+                 <tr>
+     <th style="width:10%">Applicant ID</th>
+     <th style="width:35%">Applicant Name</th>
+     <th style="width:15%">Program</th>
+     <th style="width:10%">SHS GWA</th>
+     <th style="width:10%">Date Applied</th>
+     <th style="width:20%">Status</th>
+ 
+                 </tr>
+               </thead>
+               <tbody>
+                 ${filteredPersons
+         .map(
+           (person) => `
+                       <tr>
+                         <td style="width:10%">${person.applicant_number || ""}</td>
+                         <td style="width:40%">${person.last_name}, ${person.first_name} ${person.middle_name || ""} ${person.extension || ""}</td>
+                         <td style="width:15%">${person.program_code || ""}</td>                 
+                         <td style="width:10%">${person.generalAverage1 || ""}</td>
+                         <td style="width:10%">${new Date(
+             person.created_at.split("T")[0],
+           ).toLocaleDateString("en-PH", {
+             year: "numeric",
+             month: "short",
+             day: "2-digit",
+           })}</td>
+                         <td style="width:15%">${getApplicantStatus(person)}</td>
+                       </tr>
+                     `,
+         )
+         .join("")}
+               </tbody>
+             </table>
+           </div>
+         </body>
+       </html>
+     `);
+     newWin.document.close();
+   };
+ 
   
-      // ✅ Dynamic logo and company name
-      const logoSrc = fetchedLogo || EaristLogo;
-      const name = companyName?.trim() || "";
-  
-      // ✅ Split company name into two balanced lines
-      const words = name.split(" ");
-      const middleIndex = Math.ceil(words.length / 2);
-      const firstLine = words.slice(0, middleIndex).join(" ");
-      const secondLine = words.slice(middleIndex).join(" ");
-  
-      // ✅ Generate printable HTML
-      const newWin = window.open("", "Print-Window");
-      newWin.document.open();
-      newWin.document.write(`
-        <html>
-          <head>
-            <title>Applicant List</title>
-           <style>
-    @page { size: A4 landscape; margin: 10mm; }
-  
-    body {
-      font-family: Arial;
-      margin: 0;
-      padding: 0;
-    }
-  
-    .print-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      padding-left: 10px;
-      padding-right: 10px;
-    }
-  
-  .print-header {
-    position: relative;
-    width: 100%;
-    text-align: center;
-    margin-top: 20px;
-  }
-  
-  .print-header img {
-    position: absolute;
-    left: 220px; /* adjust if needed */
-    top: -10px;
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    object-fit: cover;
-  }
-  
-  .header-top {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 15px;
-    margin-left: 50px; /* ✅ your requested spacing */
-  }
-  
-  .header-top img {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    object-fit: cover;
-  }
-  
-  .header-text {
-    display: inline-block;
-    padding-left: 100px; /* ✅ VERY IMPORTANT (logo width + spacing) */
-  }
-  
-    table {
-      border-collapse: collapse;
-      width: 100%;
-      margin-top: 20px;
-      border: 1.5px solid black; /* slightly thicker for landscape clarity */
-      table-layout: fixed;
-    }
-  
-    th, td {
-      border: 1.5px solid black;
-      padding: 6px 8px;
-      font-size: 13px; /* slightly bigger (more space in landscape) */
-      text-align: center;
-      word-wrap: break-word;
-    }
-  
-    table tr td:last-child,
-    table tr th:last-child {
-      border-right: 1.5px solid black !important;
-    }
-  
-    th {
-      background-color: lightgray;
-      color: black;
-      -webkit-print-color-adjust: exact;
-      print-color-adjust: exact;
-    }
-  </style>
-          </head>
-          <body onload="window.print(); setTimeout(() => window.close(), 100);">
-            <div class="print-container">
-    
-              <!-- ✅ HEADER -->
-         <div class="print-header">
-    <img src="${logoSrc}" alt="School Logo" />
-  
-    <div class="header-text">
-                  <div style="font-size: 13px; font-family: Arial">Republic of the Philippines</div>
-    
-                  <!-- ✅ Dynamic company name -->
-                  ${name
-          ? `
-                        <b style="letter-spacing: 1px; font-size: 20px; font-family: Arial, sans-serif;">
-                          ${firstLine}
-                        </b>
-                        ${secondLine
-            ? `<div style="letter-spacing: 1px; font-size: 20px; font-family: Arial, sans-serif;">
-                                <b>${secondLine}</b>
-                              </div>`
-            : ""
-          }
-                      `
-          : ""
-        }
-    
-                  <!-- ✅ Dynamic campus address -->
-                  <div style="font-size: 13px; font-family: Arial">${campusAddress}</div>
-    
-                  <div style="margin-top: 30px;">
-                    <b style="font-size: 24px; letter-spacing: 1px;">Applicant List</b>
-                  </div>
-                </div>
-              </div>
-    
-              <!-- ✅ TABLE -->
-              <table>
-                <thead>
-                 
-                  <tr>
-      <th style="width:10%">Applicant ID</th>
-      <th style="width:40%">Applicant Name</th>
-      <th style="width:15%">Program</th>
-      <th style="width:10%">SHS GWA</th>
-      <th style="width:10%">Date Applied</th>
-      <th style="width:15%">Status</th>
-  
-                  </tr>
-                </thead>
-                <tbody>
-                  ${filteredPersons
-          .map(
-            (person) => `
-                        <tr>
-                          <td style="width:10%">${person.applicant_number || ""}</td>
-                          <td style="width:40%">${person.last_name}, ${person.first_name} ${person.middle_name || ""} ${person.extension || ""}</td>
-                          <td style="width:15%">${person.program_code || ""}</td>
-                          
-                          <td style="width:10%">${person.generalAverage1 || ""}</td>
-                          <td style="width:10%">${new Date(
-              person.created_at.split("T")[0],
-            ).toLocaleDateString("en-PH", {
-              year: "numeric",
-              month: "short",
-              day: "2-digit",
-            })}</td>
-                          <td style="width:15%">${getApplicantStatus(person)}</td>
-                        </tr>
-                      `,
-          )
-          .join("")}
-                </tbody>
-              </table>
-            </div>
-          </body>
-        </html>
-      `);
-      newWin.document.close();
-    };
-  
+
 
   // Put this at the very bottom before the return
   if (loading || hasAccess === null) {

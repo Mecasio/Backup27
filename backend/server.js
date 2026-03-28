@@ -45,7 +45,7 @@ const allowedOrigins = [
   "http://192.168.50.211:5173",
   "http://136.239.248.62:5173",
   "http://192.168.50.44:5173",
-  "http://192.168.0.180:5173",
+  "http://192.168.50.42:5173",
 ];
 
 app.use(
@@ -103,10 +103,10 @@ const receiptCounter = require("./routes/payment/receiptCounter");
 const matriculationPayment = require("./routes/payment/matriculation");
 const programRoute = require("./routes/system_routes/programRoute");
 const requirementsRoute = require("./routes/system_routes/requirementsRoute");
-const applicantRoutes = require("./routes/reset_password_routes/applicantresetpasswordRoutes");
-const studentRoutes = require("./routes/reset_password_routes/studentresetpasswordRoutes");
-const facultyRoutes = require("./routes/reset_password_routes/facultyresetpasswordRoutes");
-const registrarRoutes = require("./routes/reset_password_routes/registrarresetpasswordRoutes");
+const applicantRoutesResetPassword = require("./routes/reset_password_routes/applicantresetpasswordRoutes");
+const studentRoutesResetPassword = require("./routes/reset_password_routes/studentresetpasswordRoutes");
+const facultyRoutesResetPassword = require("./routes/reset_password_routes/facultyresetpasswordRoutes");
+const registrarRoutesResetPassword = require("./routes/reset_password_routes/registrarresetpasswordRoutes");
 const announcementRoute = require("./routes/system_routes/announcement");
 const programSlots = require("./routes/system_routes/programSlots");
 const departmentRoute = require("./routes/system_routes/dprmntRoute");
@@ -163,10 +163,10 @@ app.use("/", receiptCounter);
 app.use("/", matriculationPayment);
 app.use("/", studentPayment);
 app.use("/", importRoutes);
-app.use("/", applicantRoutes);
-app.use("/", studentRoutes);
-app.use("/", facultyRoutes);
-app.use("/", registrarRoutes);
+app.use("/", applicantRoutesResetPassword);
+app.use("/", studentRoutesResetPassword);
+app.use("/", facultyRoutesResetPassword);
+app.use("/", registrarRoutesResetPassword);
 app.use("/api", announcementRoute);
 app.use("/api", programSlots);
 app.use("/api", departmentRoomRoute);

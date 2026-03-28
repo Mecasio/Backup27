@@ -102,7 +102,6 @@ const ApplicantScoring = () => {
 
     }, [settings]);
 
-
     const words = companyName.trim().split(" ");
     const middle = Math.ceil(words.length / 2);
     const firstLine = words.slice(0, middle).join(" ");
@@ -397,6 +396,27 @@ const ApplicantScoring = () => {
         created_at: "",
         middle_code: "",
     });
+
+    useEffect(() => {
+        if (!settings) return;
+
+        const branchId = person?.campus;
+        const matchedBranch = branches.find(
+            (branch) => String(branch?.id) === String(branchId)
+        );
+
+        if (matchedBranch?.address) {
+            setCampusAddress(matchedBranch.address);
+            return;
+        }
+
+        if (settings.campus_address) {
+            setCampusAddress(settings.campus_address);
+            return;
+        }
+
+        setCampusAddress(settings.address || "");
+    }, [settings, branches, person?.campus]);
     const [allApplicants, setAllApplicants] = useState([]);
 
     // ⬇️ Add this inside ApplicantList component, before useEffect
@@ -746,15 +766,8 @@ const ApplicantScoring = () => {
         const firstLine = words.slice(0, middleIndex).join(" ");
         const secondLine = words.slice(middleIndex).join(" ");
 
-        // ✅ Dynamic campus address
-        let campusAddress = "";
-        if (settings?.campus_address && settings.campus_address.trim() !== "") {
-            campusAddress = settings.campus_address;
-        } else if (settings?.address && settings.address.trim() !== "") {
-            campusAddress = settings.address;
-        } else {
-            campusAddress = "No address set in Settings";
-        }
+        const resolvedCampusAddress =
+            campusAddress || "No address set in Settings";
 
         const htmlContent = `
   <html>
@@ -867,7 +880,7 @@ const ApplicantScoring = () => {
               ${secondLine ? `<div class="school-name">${secondLine}</div>` : ""}
             ` : ""}
 
-            <div class="address">${campusAddress}</div>
+            <div class="address">${resolvedCampusAddress}</div>
 
             <div class="title">Entrance Examination Scores</div>
           </div>

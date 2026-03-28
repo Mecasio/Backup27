@@ -353,10 +353,10 @@ const EvaluatorApplicantList = () => {
         <img src="${logoSrc}" alt="School Logo" />
         <div>
           <div style="font-size: 13px; font-family: Arial">Republic of the Philippines</div>
-          <b style="letter-spacing:1px; font-size:22px; font-family:Arial, serif;">${firstLine}</b>
-          ${secondLine ? `<div style="letter-spacing:1px; font-size:22px; font-family:Arial, serif;"><b>${secondLine}</b></div>` : ""}
-          <div style="font-size:12px;">${address}</div>
-          <div style="margin-top:25px;"><b style="font-size:22px; letter-spacing:1px;">Evaluator Applicant List</b></div>
+          <b style="letter-spacing:1px; font-size:20px; font-family: Arial">${firstLine}</b>
+          ${secondLine ? `<div style="letter-spacing:1px; font-size: 20px; font-family: Arial"><b>${secondLine}</b></div>` : ""}
+          <div style="font-size: 13px; font-family: Arial">${address}</div>
+          <div style="margin-top:25px;"><b style="font-size:20px; letter-spacing:1px;">Proctor Applicant List</b></div>
         </div>
       </div>
 
@@ -378,11 +378,10 @@ const EvaluatorApplicantList = () => {
       <table>
         <thead>
           <tr>
-            <th>#</th>
-            <th>Applicant #</th>
-            <th>Applicant Name</th>
-            <th>Program</th>
-            <th>Signature</th>
+         <th style="width:20%">Applicant ID</th>
+            <th style="width:30%">Applicant Name</th>
+            <th style="width:30%">Program</th>
+            <th style="width:20%">Signature</th>
           </tr>
         </thead>
         <tbody>
@@ -391,11 +390,10 @@ const EvaluatorApplicantList = () => {
       const program = programItem ? `(${programItem.program_code}) - ${programItem.program_description} ${programItem.major || ""}` : "N/A";
       return `
             <tr>
-              <td>${index + 1}</td>
-              <td>${a.applicant_number}</td>
-              <td>${a.last_name}, ${a.first_name} ${a.middle_name || ""}</td>
-              <td>${program}</td>
-              <td></td>
+             <td style="width:20%; text-align:center;">${a.applicant_number}</td>
+              <td style="width:30%; text-align:left;">${a.last_name}, ${a.first_name} ${a.middle_name || ""}</td>
+              <td style="width:30%; text-align:center;">${program}</td>
+              <td style="width:20%; text-align:center;"></td>
             </tr>`;
     }).join("")}
           <tr>

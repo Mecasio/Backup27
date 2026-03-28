@@ -237,39 +237,6 @@ const SuperAdminStudentDashboard2 = () => {
     };
 
 
-const handleGuardianChange = (e) => {
-  const { value } = e.target;
-
-  let updatedPerson = { ...person, guardian: value };
-
-  if (value === "Father") {
-    updatedPerson = {
-      ...updatedPerson,
-      guardian_family_name: person.father_family_name || "",
-      guardian_given_name: person.father_given_name || "",
-      guardian_middle_name: person.father_middle_name || "",
-      guardian_ext: person.father_ext || "",
-      guardian_nickname: person.father_nickname || "",
-      guardian_contact: person.father_contact || "",
-      guardian_email: person.father_email || "",
-    };
-  }
-
-  if (value === "Mother") {
-    updatedPerson = {
-      ...updatedPerson,
-      guardian_family_name: person.mother_family_name || "",
-      guardian_given_name: person.mother_given_name || "",
-      guardian_middle_name: person.mother_middle_name || "",
-      guardian_ext: person.mother_ext || "",
-      guardian_nickname: person.mother_nickname || "",
-      guardian_contact: person.mother_contact || "",
-      guardian_email: person.mother_email || "",
-    };
-  }
-
-  setPerson(updatedPerson);
-};
 
 
     // Do not alter
@@ -502,7 +469,7 @@ const handleGuardianChange = (e) => {
 
     // Put this at the very bottom before the return 
     if (loading || hasAccess === null) {
-        return <LoadingOverlay open={loading} message="Loading..." />;
+       return <LoadingOverlay open={loading} message="Loading..." />;
     }
 
     if (!hasAccess) {
@@ -517,7 +484,7 @@ const handleGuardianChange = (e) => {
 
     // dot not alter
     return (
-        <Box sx={{ height: "calc(100vh - 150px)", overflowY: "auto", paddingRight: 1, backgroundColor: "transparent", mt: 1, padding: 2 }}>
+           <Box sx={{ height: "calc(100vh - 150px)", overflowY: "auto", paddingRight: 1, backgroundColor: "transparent", mt: 1, padding: 2 }}>
             {showPrintView && (
                 <div ref={divToPrintRef} style={{ display: "block" }}>
                     <ExamPermit personId={userID} />   {/* ✅ pass the searched person_id */}
@@ -551,8 +518,8 @@ const handleGuardianChange = (e) => {
             </Box>
 
             <hr style={{ border: "1px solid #ccc", width: "100%" }} />
-            <br />
-            <br />
+      <br />
+      <br />
 
 
 
@@ -561,9 +528,9 @@ const handleGuardianChange = (e) => {
                     <TableHead sx={{ backgroundColor: settings?.header_color || "#1976d2", border: `1px solid ${borderColor}`, }}>
                         <TableRow>
                             {/* Left cell: Student Number */}
-                            <TableCell sx={{ color: 'white', fontSize: '20px', fontFamily: "Poppins, sans-serif", border: 'none' }}>
+                            <TableCell sx={{ color: 'white', fontSize: '20px', fontFamily: "Arial", border: 'none' }}>
                                 Student Number:&nbsp;
-                                <span style={{ fontFamily: "Poppins, sans-serif", fontWeight: "normal", textDecoration: "underline" }}>
+                                <span style={{ fontFamily: "Arial", fontWeight: "normal", textDecoration: "underline" }}>
                                     {person?.student_number || "N/A"}
                                 </span>
                             </TableCell>
@@ -571,10 +538,10 @@ const handleGuardianChange = (e) => {
                             {/* Right cell: Student Name */}
                             <TableCell
                                 align="right"
-                                sx={{ color: 'white', fontSize: '20px', fontFamily: "Poppins, sans-serif", border: 'none' }}
+                                sx={{ color: 'white', fontSize: '20px', fontFamily: "Arial", border: 'none' }}
                             >
                                 Student Name:&nbsp;
-                                <span style={{ fontFamily: "Poppins, sans-serif", fontWeight: "normal", textDecoration: "underline" }}>
+                                <span style={{ fontFamily: "Arial", fontWeight: "normal", textDecoration: "underline" }}>
                                     {person?.last_name?.toUpperCase()}, {person?.first_name?.toUpperCase()}{" "}
                                     {person?.middle_name?.toUpperCase()} {person?.extension?.toUpperCase() || ""}
                                 </span>
@@ -629,7 +596,7 @@ const handleGuardianChange = (e) => {
                     <Typography
                         sx={{
                             fontSize: "20px",
-                            fontFamily: "Poppins, sans-serif",
+                            fontFamily: "Arial",
                             color: "#3e3e3e",
                             lineHeight: 1.3, // slightly tighter to fit in fewer rows
                             whiteSpace: "normal",
@@ -653,7 +620,7 @@ const handleGuardianChange = (e) => {
                     marginTop: "25px",
                 }}
             >
-                AVAILABLE PRINTABLE DOCUMENTS
+                LISTS OF ALL PRINTABLE FILES
             </h1>
 
 
@@ -725,7 +692,7 @@ const handleGuardianChange = (e) => {
                                 className="card-text"
                                 sx={{
                                     color: mainButtonColor,
-                                    fontFamily: "Poppins, sans-serif",
+                                    fontFamily: "Arial",
                                     fontWeight: "bold",
                                     fontSize: "0.85rem",
                                 }}
@@ -820,11 +787,11 @@ const handleGuardianChange = (e) => {
                             {index < steps.length - 1 && (
                                 <Box
                                     sx={{
-                                        height: "2px",
-                                        backgroundColor: mainButtonColor,
-                                        flex: 1,
-                                        alignSelf: "center",
-                                        mx: 2,
+                                           height: "2px",
+                    backgroundColor: mainButtonColor,
+                    flex: 1,
+                    alignSelf: "center",
+                    mx: 2,
                                     }}
                                 />
                             )}
@@ -849,7 +816,7 @@ const handleGuardianChange = (e) => {
                         }}
                     >
                         <Box sx={{ width: "100%" }}>
-                            <Typography style={{ fontSize: "20px", padding: "10px", fontFamily: "Poppins, sans-serif" }}>Step 2: Family Background</Typography>
+                            <Typography style={{ fontSize: "20px", padding: "10px", fontFamily: "Arial" }}>Step 2: Family Background</Typography>
                         </Box>
                     </Container>
 
@@ -884,7 +851,7 @@ const handleGuardianChange = (e) => {
                                     onBlur={handleBlur}
                                     sx={{ width: 25, height: 25 }}
                                 />
-                                <label style={{ fontFamily: "Poppins, sans-serif" }}>Solo Parent</label>
+                                <label style={{ fontFamily: "Arial" }}>Solo Parent</label>
                             </Box>
 
                             {/* Parent Type Dropdown */}
@@ -1076,7 +1043,7 @@ const handleGuardianChange = (e) => {
                                             onBlur={handleBlur}
                                             sx={{ width: 25, height: 25 }}
                                         />
-                                        <label style={{ fontFamily: "Poppins, sans-serif" }}>Father's education not applicable</label>
+                                        <label style={{ fontFamily: "Arial" }}>Father's education not applicable</label>
                                     </Box>
 
 
@@ -1136,7 +1103,6 @@ const handleGuardianChange = (e) => {
                                                     fullWidth
                                                     size="small"
                                                     name="father_year_graduated"
-                                                    type="number"
                                                     placeholder="Enter Father Year Graduated"
                                                     value={person.father_year_graduated ?? ""}
                                                     onChange={handleChange}
@@ -1473,7 +1439,7 @@ const handleGuardianChange = (e) => {
                                             onBlur={handleBlur}
                                             sx={{ width: 25, height: 25 }}
                                         />
-                                        <label style={{ fontFamily: "Poppins, sans-serif" }}>Mother's education not applicable</label>
+                                        <label style={{ fontFamily: "Arial" }}>Mother's education not applicable</label>
                                     </Box>
 
                                     {/* Mother Educational Details (conditionally rendered) */}
@@ -1529,7 +1495,6 @@ const handleGuardianChange = (e) => {
                                                 <TextField
                                                     fullWidth
                                                     size="small"
-                                                    type="number"
                                                     name="mother_year_graduated"
                                                     placeholder="Enter your Mother Year Graduated"
                                                     value={person.mother_year_graduated ?? ""}
@@ -1658,7 +1623,7 @@ const handleGuardianChange = (e) => {
                                     name="guardian"
                                     value={person.guardian || ""}
                                     label="Guardian"
-                      onChange={handleGuardianChange}
+                                    onChange={handleChange}
                                     onBlur={handleBlur}
                                 >
                                     <MenuItem value=""><em>Select Guardian</em></MenuItem>

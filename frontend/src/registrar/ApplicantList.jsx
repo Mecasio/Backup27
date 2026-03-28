@@ -314,6 +314,27 @@ const ApplicantList = () => {
     middle_code: "",
   });
 
+  useEffect(() => {
+    if (!settings) return;
+
+    const branchId = person?.campus;
+    const matchedBranch = branches.find(
+      (branch) => String(branch?.id) === String(branchId),
+    );
+
+    if (matchedBranch?.address) {
+      setCampusAddress(matchedBranch.address);
+      return;
+    }
+
+    if (settings.campus_address) {
+      setCampusAddress(settings.campus_address);
+      return;
+    }
+
+    setCampusAddress(settings.address || "");
+  }, [settings, branches, person?.campus]);
+
   // ⬇️ Add this inside ApplicantList component, before useEffect
   const fetchApplicants = async () => {
     try {
@@ -888,15 +909,8 @@ const ApplicantList = () => {
   const divToPrintRef = useRef();
 
   const printDiv = () => {
-     // ✅ Determine dynamic campus address (dropdown or custom)
-     let campusAddress = "";
-     if (settings?.campus_address && settings.campus_address.trim() !== "") {
-       campusAddress = settings.campus_address;
-     } else if (settings?.address && settings.address.trim() !== "") {
-       campusAddress = settings.address;
-     } else {
-       campusAddress = "No address set in Settings";
-     }
+     const resolvedCampusAddress =
+       campusAddress || "No address set in Settings";
  
      // ✅ Dynamic logo and company name
      const logoSrc = fetchedLogo || EaristLogo;
@@ -1026,7 +1040,7 @@ const ApplicantList = () => {
        }
    
                  <!-- ✅ Dynamic campus address -->
-                 <div style="font-size: 13px; font-family: Arial">${campusAddress}</div>
+                 <div style="font-size: 13px; font-family: Arial">${resolvedCampusAddress}</div>
    
                  <div style="margin-top: 30px;">
                    <b style="font-size: 24px; letter-spacing: 1px;">Applicant List</b>
@@ -1040,11 +1054,11 @@ const ApplicantList = () => {
                 
                  <tr>
      <th style="width:10%">Applicant ID</th>
-     <th style="width:40%">Applicant Name</th>
+     <th style="width:35%">Applicant Name</th>
      <th style="width:15%">Program</th>
      <th style="width:10%">SHS GWA</th>
      <th style="width:10%">Date Applied</th>
-     <th style="width:15%">Status</th>
+     <th style="width:20%">Status</th>
  
                  </tr>
                </thead>

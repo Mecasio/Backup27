@@ -56,10 +56,8 @@ router.get("/programs/availability", async (req, res) => {
       SELECT
         ps.curriculum_id,
         ps.max_slots,
-        ps.active_school_year_id,
-        COUNT(ap.applied_id) AS total_applicants
+        ps.active_school_year_id
       FROM program_slots ps
-      LEFT JOIN applied_programs ap ON ap.curriculum_id = ps.curriculum_id
       WHERE ps.curriculum_id IN (?)
         AND ps.active_school_year_id = ?
       GROUP BY ps.curriculum_id, ps.max_slots, ps.active_school_year_id

@@ -978,53 +978,7 @@ const SuperAdminApplicantDashboard1 = () => {
     // ✅ For Excel Import
     const [excelFile, setExcelFile] = useState(null);
 
-    const handleExcelChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            setExcelFile(file);
-        }
-    };
-
-    const handleImportExcel = async () => {
-        try {
-            if (!excelFile) {
-                setSnackbar({
-                    open: true,
-                    message: "⚠️ Please select an Excel file first.",
-                    severity: "warning"
-                });
-                return;
-            }
-
-            const formData = new FormData();
-            formData.append("file", excelFile);
-
-            const res = await axios.post(`${API_BASE_URL}/api/person/import`, formData, {
-                headers: { "Content-Type": "multipart/form-data" },
-            });
-
-            if (res.data.success) {
-                setSnackbar({
-                    open: true,
-                    message: "✅ Excel imported successfully!",
-                    severity: "success"
-                });
-                window.location.reload();
-            } else {
-                setSnackbar({
-                    open: true,
-                    message: "❌ Failed: " + (res.data.error || "Unknown error"),
-                    severity: "error"
-                });
-            }
-        } catch (err) {
-            setSnackbar({
-                open: true,
-                message: "❌ Import failed: " + (err.response?.data?.error || err.message),
-                severity: "error"
-            });
-        }
-    };
+   
 
     const divToPrintRef = useRef();
     const [showPrintView, setShowPrintView] = useState(false);
@@ -1840,7 +1794,7 @@ const SuperAdminApplicantDashboard1 = () => {
                             >
                                 {person.profile_img && person.profile_img !== "" ? (
                                     <img
-                                        src={`${API_BASE_URL}/uploads/Applicant1by1/${person.profile_img}?t=${Date.now()}`}
+                                        src={`${API_BASE_URL}/uploads/Student1by1/${person.profile_img}?t=${Date.now()}`}
                                         alt="Profile"
                                         style={{
                                             width: "100%",
@@ -3191,7 +3145,7 @@ const SuperAdminApplicantDashboard1 = () => {
                                                 src={
                                                     preview
                                                         ? preview
-                                                        : `${API_BASE_URL}/uploads/Applicant1by1/${person.profile_img}`
+                                                        : `${API_BASE_URL}/uploads/Student1by1/${person.profile_img}`
                                                 }
                                                 alt="Preview"
                                                 sx={{
@@ -3321,10 +3275,7 @@ const SuperAdminApplicantDashboard1 = () => {
                                         onClick={handleUpload}
                                         sx={{
                                             backgroundColor: settings?.header_color || "#1976d2",
-
-
                                             border: `1px solid ${borderColor}`,
-
                                             color: "white",
                                             fontWeight: "bold",
                                             "&:hover": {

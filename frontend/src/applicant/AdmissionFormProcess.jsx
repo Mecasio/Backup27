@@ -512,7 +512,7 @@ const AdmissionFormProcess = () => {
                   {campusAddress && (
                     <div
                       style={{
-                        fontSize: "13px",
+                        fontSize: "12px",
                         fontFamily: "Arial",
                       }}
                     >
@@ -648,7 +648,7 @@ const AdmissionFormProcess = () => {
                         style={{
                           width: "25%",
                           textAlign: "center",
-                          fontSize: "14.5px",
+                          fontSize: "12px",
                           borderBottom: "1px solid black",
                         }}
                       >
@@ -658,7 +658,7 @@ const AdmissionFormProcess = () => {
                         style={{
                           width: "25%",
                           textAlign: "center",
-                          fontSize: "14.5px",
+                          fontSize: "12px",
                           borderBottom: "1px solid black",
                         }}
                       >
@@ -668,7 +668,7 @@ const AdmissionFormProcess = () => {
                         style={{
                           width: "25%",
                           textAlign: "center",
-                          fontSize: "14.5px",
+                          fontSize: "12px",
                           borderBottom: "1px solid black",
                         }}
                       >
@@ -678,7 +678,7 @@ const AdmissionFormProcess = () => {
                         style={{
                           width: "25%",
                           textAlign: "center",
-                          fontSize: "14.5px",
+                          fontSize: "12px",
                           borderBottom: "1px solid black",
                         }}
                       >
@@ -1694,7 +1694,7 @@ const AdmissionFormProcess = () => {
                   {campusAddress && (
                     <div
                       style={{
-                        fontSize: "13px",
+                        fontSize: "12px",
                         fontFamily: "Arial",
                       }}
                     >
@@ -1830,7 +1830,7 @@ const AdmissionFormProcess = () => {
                         style={{
                           width: "25%",
                           textAlign: "center",
-                          fontSize: "14.5px",
+                          fontSize: "12px",
                           borderBottom: "1px solid black",
                         }}
                       >
@@ -1840,7 +1840,7 @@ const AdmissionFormProcess = () => {
                         style={{
                           width: "25%",
                           textAlign: "center",
-                          fontSize: "14.5px",
+                          fontSize: "12px",
                           borderBottom: "1px solid black",
                         }}
                       >
@@ -1850,7 +1850,7 @@ const AdmissionFormProcess = () => {
                         style={{
                           width: "25%",
                           textAlign: "center",
-                          fontSize: "14.5px",
+                          fontSize: "12px",
                           borderBottom: "1px solid black",
                         }}
                       >
@@ -1860,7 +1860,7 @@ const AdmissionFormProcess = () => {
                         style={{
                           width: "25%",
                           textAlign: "center",
-                          fontSize: "14.5px",
+                          fontSize: "12px",
                           borderBottom: "1px solid black",
                         }}
                       >

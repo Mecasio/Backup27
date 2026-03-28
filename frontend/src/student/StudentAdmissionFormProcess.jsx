@@ -21,6 +21,8 @@ const StudentAdmissionFormProcess = () => {
   const [fetchedLogo, setFetchedLogo] = useState(null);
   const [companyName, setCompanyName] = useState("");
   const [shortTerm, setShortTerm] = useState("");
+  const [campusAddress, setCampusAddress] = useState("");
+  const [branches, setBranches] = useState([]);
 
   useEffect(() => {
     if (!settings) return;
@@ -44,7 +46,19 @@ const StudentAdmissionFormProcess = () => {
     // 🏷️ School Information
     if (settings.company_name) setCompanyName(settings.company_name);
     if (settings.short_term) setShortTerm(settings.short_term);
-    if (settings.campus_address) setCampusAddress(settings.campus_address);
+    if (settings?.branches) {
+      try {
+        const parsed =
+          typeof settings.branches === "string"
+            ? JSON.parse(settings.branches)
+            : settings.branches;
+
+        setBranches(parsed);
+      } catch (err) {
+        console.error("Failed to parse branches:", err);
+        setBranches([]);
+      }
+    }
   }, [settings]);
 
   const words = companyName.trim().split(" ");
@@ -149,6 +163,28 @@ const StudentAdmissionFormProcess = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const queryPersonId = queryParams.get("person_id");
+  const searchedPersonId = sessionStorage.getItem("student_edit_person_id");
+
+  useEffect(() => {
+    if (!settings) return;
+
+    const branchId = person?.campus;
+    const matchedBranch = branches.find(
+      (branch) => String(branch?.id) === String(branchId),
+    );
+
+    if (matchedBranch?.address) {
+      setCampusAddress(matchedBranch.address);
+      return;
+    }
+
+    if (settings.campus_address) {
+      setCampusAddress(settings.campus_address);
+      return;
+    }
+
+    setCampusAddress(settings.address || "");
+  }, [settings, branches, person?.campus]);
 
   const fetchData = async (storedID) => {
     try {
@@ -169,24 +205,26 @@ const StudentAdmissionFormProcess = () => {
   useEffect(() => {
     const storedUser = localStorage.getItem("email");
     const storedRole = localStorage.getItem("role");
-    const storedID = localStorage.getItem("person_id");
+    const loggedInPersonId = localStorage.getItem("person_id");
 
-    if (storedUser && storedRole && storedID) {
-      setUser(storedUser);
-      setUserRole(storedRole);
-      setUserID(storedID);
-
-      if (
-        storedRole === "student"
-      ) {
-        fetchData(storedID);
-      } else {
-        window.location.href = "/login";
-      }
-    } else {
+    if (!storedUser || !storedRole || !loggedInPersonId) {
       window.location.href = "/login";
+      return;
     }
-  }, []);
+
+    setUser(storedUser);
+    setUserRole(storedRole);
+
+    const allowedRoles = ["registrar", "student"];
+    if (allowedRoles.includes(storedRole)) {
+      const targetId = searchedPersonId || queryPersonId || loggedInPersonId;
+      setUserID(targetId);
+      fetchData(targetId);
+      return;
+    }
+
+    window.location.href = "/login";
+  }, [queryPersonId, searchedPersonId]);
 
   const divToPrintRef = useRef();
 
@@ -226,12 +264,12 @@ const StudentAdmissionFormProcess = () => {
               padding: 10px 20px;
 
               /* 🔹 Apply 10% zoom out */
-              transform: scale(0.90);
+              transform: scale(0.88);
           
             }
 
             .student-table {
-              margin-top: -50px !important;
+              margin-top: -70px !important;
             }
 
             button {
@@ -262,14 +300,6 @@ const StudentAdmissionFormProcess = () => {
     }
   };
 
-  const [campusAddress, setCampusAddress] = useState("");
-
-  useEffect(() => {
-    if (settings && settings.address) {
-      setCampusAddress(settings.address);
-    }
-  }, [settings]);
-
   const [curriculumOptions, setCurriculumOptions] = useState([]);
 
   useEffect(() => {
@@ -292,6 +322,24 @@ const StudentAdmissionFormProcess = () => {
     )?.program_description ||
       (person?.program ?? "");
   }
+
+  document.addEventListener("contextmenu", (e) => e.preventDefault());
+
+  document.addEventListener("keydown", (e) => {
+    const isBlockedKey =
+      e.key === "F12" ||
+      e.key === "F11" ||
+      (e.ctrlKey &&
+        e.shiftKey &&
+        (e.key.toLowerCase() === "i" || e.key.toLowerCase() === "j")) ||
+      (e.ctrlKey && e.key.toLowerCase() === "u") ||
+      (e.ctrlKey && e.key.toLowerCase() === "p");
+
+    if (isBlockedKey) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  });
 
 
   return (
@@ -440,7 +488,7 @@ const StudentAdmissionFormProcess = () => {
                   {campusAddress && (
                     <div
                       style={{
-                        fontSize: "13px",
+                        fontSize: "12px",
                         fontFamily: "Arial",
                       }}
                     >
@@ -576,7 +624,7 @@ const StudentAdmissionFormProcess = () => {
                         style={{
                           width: "25%",
                           textAlign: "center",
-                          fontSize: "14.5px",
+                          fontSize: "12px",
                           borderBottom: "1px solid black",
                         }}
                       >
@@ -586,7 +634,7 @@ const StudentAdmissionFormProcess = () => {
                         style={{
                           width: "25%",
                           textAlign: "center",
-                          fontSize: "14.5px",
+                          fontSize: "12px",
                           borderBottom: "1px solid black",
                         }}
                       >
@@ -596,7 +644,7 @@ const StudentAdmissionFormProcess = () => {
                         style={{
                           width: "25%",
                           textAlign: "center",
-                          fontSize: "14.5px",
+                          fontSize: "12px",
                           borderBottom: "1px solid black",
                         }}
                       >
@@ -606,7 +654,7 @@ const StudentAdmissionFormProcess = () => {
                         style={{
                           width: "25%",
                           textAlign: "center",
-                          fontSize: "14.5px",
+                          fontSize: "12px",
                           borderBottom: "1px solid black",
                         }}
                       >
@@ -1622,7 +1670,7 @@ const StudentAdmissionFormProcess = () => {
                   {campusAddress && (
                     <div
                       style={{
-                        fontSize: "13px",
+                        fontSize: "12px",
                         fontFamily: "Arial",
                       }}
                     >
@@ -1758,7 +1806,7 @@ const StudentAdmissionFormProcess = () => {
                         style={{
                           width: "25%",
                           textAlign: "center",
-                          fontSize: "14.5px",
+                          fontSize: "12px",
                           borderBottom: "1px solid black",
                         }}
                       >
@@ -1768,7 +1816,7 @@ const StudentAdmissionFormProcess = () => {
                         style={{
                           width: "25%",
                           textAlign: "center",
-                          fontSize: "14.5px",
+                          fontSize: "12px",
                           borderBottom: "1px solid black",
                         }}
                       >
@@ -1778,7 +1826,7 @@ const StudentAdmissionFormProcess = () => {
                         style={{
                           width: "25%",
                           textAlign: "center",
-                          fontSize: "14.5px",
+                          fontSize: "12px",
                           borderBottom: "1px solid black",
                         }}
                       >
@@ -1788,7 +1836,7 @@ const StudentAdmissionFormProcess = () => {
                         style={{
                           width: "25%",
                           textAlign: "center",
-                          fontSize: "14.5px",
+                          fontSize: "12px",
                           borderBottom: "1px solid black",
                         }}
                       >
