@@ -233,7 +233,7 @@ const Login = ({ setIsAuthenticated }) => {
                 style={{
                   width: "100%",
                   padding: "0.8rem 2.5rem 0.8rem 2.5rem",
-                  borderRadius: "6px",
+                  borderRadius: "10px",
                   border: "2px solid black",
                   fontSize: "1rem",
                   height: "55px",
@@ -288,6 +288,7 @@ const Login = ({ setIsAuthenticated }) => {
                   paddingLeft: "2.5rem",
                   height: "55px",
                   border: "2px solid black",
+                   borderRadius: "10px",
                 }}
               />
               <EmailIcon
@@ -316,6 +317,7 @@ const Login = ({ setIsAuthenticated }) => {
                   paddingLeft: "2.5rem",
                   height: "55px",
                   border: "2px solid black",
+                   borderRadius: "10px",
                 }}
               />
               <LockIcon
@@ -324,6 +326,7 @@ const Login = ({ setIsAuthenticated }) => {
                   top: "2.75rem",
                   left: "0.7rem",
                   color: "rgba(0,0,0,0.4)",
+                  fontSize: "26px",
                 }}
               />
               <button
@@ -340,7 +343,11 @@ const Login = ({ setIsAuthenticated }) => {
                   cursor: "pointer",
                 }}
               >
-                {showPassword ? <Visibility /> : <VisibilityOff />}
+                {showPassword ? (
+                  <Visibility sx={{ fontSize: "26px", color: "rgba(0,0,0,0.4)" }} />
+                ) : (
+                  <VisibilityOff sx={{ fontSize: "26px", color: "rgba(0,0,0,0.4)" }} />
+                )}
               </button>
             </div>
 

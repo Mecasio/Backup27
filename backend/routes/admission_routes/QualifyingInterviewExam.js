@@ -167,6 +167,15 @@ router.get(
   "/interview_schedules_with_count/:yearId/:semesterId",
   async (req, res) => {
     const { yearId, semesterId } = req.params;
+    const { branch } = req.query;
+
+    const queryParams = [yearId, semesterId];
+    let branchClause = "";
+
+    if (branch) {
+      branchClause = " AND ees.branch = ?";
+      queryParams.push(branch);
+    }
 
     try {
       const [rows] = await db.query(
@@ -189,11 +198,11 @@ router.get(
       JOIN enrollment.active_school_year_table sy ON ees.active_school_year_id = sy.id
       LEFT JOIN admission.interview_applicants ea
         ON ees.schedule_id = ea.schedule_id
-      WHERE sy.year_id = ? AND sy.semester_id = ?
+      WHERE sy.year_id = ? AND sy.semester_id = ?${branchClause}
       GROUP BY ees.schedule_id
       ORDER BY ees.day_description, ees.start_time;
     `,
-        [yearId, semesterId],
+        queryParams,
       );
 
       res.json(rows);
@@ -258,7 +267,6 @@ router.get("/interview_schedules_with_count", async (req, res) => {
       .json({ error: "Failed to fetch interview schedules with count" });
   }
 });
-
 // 4. Unassign one applicant
 router.post("/unassign_interview", async (req, res) => {
   const { applicant_number } = req.body;

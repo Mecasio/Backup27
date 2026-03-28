@@ -824,7 +824,7 @@ const MedicalApplicantList = () => {
          <head>
            <title>Applicant List</title>
           <style>
-   @page { size: A4 landscape; margin: 10mm; }
+   @page { size: A4 landscape; margin: 5mm; }
  
    body {
      font-family: Arial;
@@ -948,11 +948,11 @@ const MedicalApplicantList = () => {
                 
                  <tr>
      <th style="width:10%">Student ID</th>
-     <th style="width:40%">Student Name</th>
+     <th style="width:30%">Student Name</th>
      <th style="width:15%">Program</th>
      <th style="width:10%">SHS GWA</th>
      <th style="width:10%">Date Applied</th>
-     <th style="width:15%">Status</th>
+     <th style="width:20%">Status</th>
  
                  </tr>
                </thead>
@@ -962,10 +962,10 @@ const MedicalApplicantList = () => {
            (person) => `
                        <tr>
                          <td style="width:10%">${person.student_number ?? "N/A"}</td>
-                         <td style="width:40%">${person.last_name}, ${person.first_name} ${person.middle_name || ""} ${person.extension || ""}</td>
+                         <td style="width:30%">${person.last_name}, ${person.first_name} ${person.middle_name || ""} ${person.extension || ""}</td>
                          <td style="width:15%">${person.program_code || ""}</td>
                          <td style="width:10%">${person.generalAverage1 || ""}</td>
-                         <td style="width:10%">${new Date(
+                         <td style="width:20%">${new Date(
              person.created_at.split("T")[0],
            ).toLocaleDateString("en-PH", {
              year: "numeric",

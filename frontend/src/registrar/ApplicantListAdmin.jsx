@@ -955,7 +955,7 @@ const AdminApplicantList = () => {
          <head>
            <title>Applicant List</title>
           <style>
-   @page { size: A4 landscape; margin: 10mm; }
+   @page { size: A4 landscape; margin: 5mm; }
  
    body {
      font-family: Arial;

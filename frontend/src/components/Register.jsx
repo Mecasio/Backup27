@@ -274,10 +274,10 @@ const Register = () => {
 
   const [openBranchDialog, setOpenBranchDialog] = useState(false);
 
-const handleBranchSelect = (e) => {
-  const selectedId = e.target.value;
-  setBranchId(selectedId);
-};
+  const handleBranchSelect = (e) => {
+    const selectedId = e.target.value;
+    setBranchId(selectedId);
+  };
 
   const isDisabled = !registrationOpen;
 
@@ -308,62 +308,66 @@ const handleBranchSelect = (e) => {
 
   const fieldDisabled = !branchSelected || !registrationOpen;
 
-const checkBranchStatus = (branchIdToCheck) => {
-  if (!branchIdToCheck) return false;
+  const checkBranchStatus = (branchIdToCheck) => {
+    if (!branchIdToCheck) return false;
 
-  const branch = branches.find(
-    (b) => b.id.toString() === branchIdToCheck
-  );
-
-  if (!branch) return false;
-
-  const now = new Date(
-    new Date().toLocaleString("en-US", { timeZone: "Asia/Manila" })
-  );
-
-  const parseDate = (dateStr, isEnd = false) => {
-    if (!dateStr) return null;
-
-    const d = new Date(
-      new Date(dateStr).toLocaleString("en-US", { timeZone: "Asia/Manila" })
+    const branch = branches.find(
+      (b) => b.id.toString() === branchIdToCheck
     );
 
-    if (isEnd) {
-      d.setHours(23, 59, 59, 999);
+    if (!branch) return false;
+
+    const now = new Date(
+      new Date().toLocaleString("en-US", { timeZone: "Asia/Manila" })
+    );
+
+    const parseDate = (dateStr, isEnd = false) => {
+      if (!dateStr) return null;
+
+      const d = new Date(
+        new Date(dateStr).toLocaleString("en-US", { timeZone: "Asia/Manila" })
+      );
+
+      if (isEnd) {
+        d.setHours(23, 59, 59, 999);
+      }
+
+      return d;
+    };
+
+    const start = parseDate(branch.start_date);
+    const end = parseDate(branch.end_date, true);
+
+    let isOpen = true;
+
+    // ❌ NOT YET STARTED
+    if (start && now < start) {
+      isOpen = false;
     }
 
-    return d;
+    // ❌ ENDED
+    if (end && now > end) {
+      isOpen = false;
+    }
+
+    // ❌ ADMIN CLOSED
+    if (branch.registration_open !== 1) {
+      isOpen = false;
+    }
+
+    setRegistrationOpen(isOpen);
+
+    // 🔥 THIS IS THE KEY FIX
+    if (!isOpen) {
+      setOpenBranchDialog(true);
+    }
+
+    return isOpen;
   };
 
-  const start = parseDate(branch.start_date);
-  const end = parseDate(branch.end_date, true);
-
-  let isOpen = true;
-
-  // ❌ NOT YET STARTED
-  if (start && now < start) {
-    isOpen = false;
-  }
-
-  // ❌ ENDED
-  if (end && now > end) {
-    isOpen = false;
-  }
-
-  // ❌ ADMIN CLOSED
-  if (branch.registration_open !== 1) {
-    isOpen = false;
-  }
-
-  setRegistrationOpen(isOpen);
-
-  // 🔥 THIS IS THE KEY FIX
-  if (!isOpen) {
-    setOpenBranchDialog(true);
-  }
-
-  return isOpen;
-};
+  const selectedBranch = branches.find(
+    (b) => b.id.toString() === branchId
+  );
 
   const handleKeyDownRegister = (e) => {
     if (e.key === "Enter" && !isSubmitting) {
@@ -398,10 +402,10 @@ const checkBranchStatus = (branchIdToCheck) => {
   const [branchStatusMessage, setBranchStatusMessage] = useState("");
 
   useEffect(() => {
-  if (!branchId) return;
+    if (!branchId) return;
 
-  checkBranchStatus(branchId);
-}, [branchId, branches]); // 🔥 IMPORTANT: include branches
+    checkBranchStatus(branchId);
+  }, [branchId, branches]); // 🔥 IMPORTANT: include branches
 
 
   {/* Unified Dialog Style */ }
@@ -492,20 +496,22 @@ const checkBranchStatus = (branchIdToCheck) => {
             <div className="Body">
 
               <div className="TextField">
-                <label>Select Branch</label>
+                <label>Campus</label>
                 <select
                   value={branchId}
                   onChange={handleBranchSelect}
                   className="border"
                   required
-
                   style={{
                     height: "45px",
                     border: "2px solid black",
                     width: "100%",
+                    appearance: "none",   // 👈 remove default arrow
+                    WebkitAppearance: "none",
+                    MozAppearance: "none",
                   }}
                 >
-                  <option value="">Select Branch</option>
+                  <option value="">Select Campus</option>
                   {branches.map((b) => {
                     const now = new Date(
                       new Date().toLocaleString("en-US", { timeZone: "Asia/Manila" })
@@ -535,6 +541,17 @@ const checkBranchStatus = (branchIdToCheck) => {
                     );
                   })}
                 </select>
+                <ArrowDropDownIcon
+                  sx={{
+                    position: "absolute",
+                    right: "10px", // 👈 like margin-right
+                    top: "70%",
+                    transform: "translateY(-50%)",
+                    fontSize: "30px", // 👈 BIGGER icon
+                    color: "black",
+                    pointerEvents: "none", // 👈 allow clicking select
+                  }}
+                />
               </div>
 
               <div className="TextField" style={{ position: "relative" }}>
@@ -654,13 +671,32 @@ const checkBranchStatus = (branchIdToCheck) => {
                     height: "45px",
                     border: "2px solid black",
                     width: "100%",
+                    appearance: "none",   // 👈 remove default arrow
+                    WebkitAppearance: "none",
+                    MozAppearance: "none",
                   }}
                 >
                   <option value="">Select Program</option>
-                  <option value="0">Undergraduate</option>
-                  <option value="1">Graduate</option>
-                  <option value="2">Techvoc</option>
+
+                  {selectedBranch?.academicPrograms
+                    ?.filter((prog) => prog.open === 1) // 🔥 ONLY SHOW OPEN
+                    .map((prog) => (
+                      <option key={prog.id} value={prog.id}>
+                        {prog.name}
+                      </option>
+                    ))}
                 </select>
+                <ArrowDropDownIcon
+                  sx={{
+                    position: "absolute",
+                    right: "10px", // 👈 like margin-right
+                    top: "70%",
+                    transform: "translateY(-50%)",
+                    fontSize: "30px", // 👈 BIGGER icon
+                    color: "black",
+                    pointerEvents: "none", // 👈 allow clicking select
+                  }}
+                />
               </div>
 
 
@@ -677,6 +713,10 @@ const checkBranchStatus = (branchIdToCheck) => {
                     height: "45px",
                     border: "2px solid black",
                     width: "100%",
+                    appearance: "none",   // 👈 remove default arrow
+                    WebkitAppearance: "none",
+                    MozAppearance: "none",
+
                   }}
                 >
                   <option value="">Select Applying</option>
@@ -689,6 +729,18 @@ const checkBranchStatus = (branchIdToCheck) => {
                   <option value="7">Baccalaureate Graduate</option>
                   <option value="8">Master Degree Graduate</option>
                 </select>
+
+                <ArrowDropDownIcon
+                  sx={{
+                    position: "absolute",
+                    right: "10px", // 👈 like margin-right
+                    top: "70%",
+                    transform: "translateY(-50%)",
+                    fontSize: "30px", // 👈 BIGGER icon
+                    color: "black",
+                    pointerEvents: "none", // 👈 allow clicking select
+                  }}
+                />
               </div>
 
 
@@ -738,7 +790,8 @@ const checkBranchStatus = (branchIdToCheck) => {
                     position: "absolute",
                     top: "2.5rem",
                     left: "0.7rem",
-                    color: "rgba(0,0,0,0.4)"
+                    color: "rgba(0,0,0,0.4)",
+                    fontSize: "26px",
                   }}
                 />
                 <button
@@ -755,7 +808,11 @@ const checkBranchStatus = (branchIdToCheck) => {
                     cursor: "pointer"
                   }}
                 >
-                  {showPassword ? <Visibility /> : <VisibilityOff />}
+                  {showPassword ? (
+                    <Visibility sx={{ fontSize: "26px", color: "rgba(0,0,0,0.4)" }} />
+                  ) : (
+                    <VisibilityOff sx={{ fontSize: "26px", color: "rgba(0,0,0,0.4)" }} />
+                  )}
                 </button>
               </div>
 
@@ -785,7 +842,8 @@ const checkBranchStatus = (branchIdToCheck) => {
                     position: "absolute",
                     top: "2.5rem",
                     left: "0.7rem",
-                    color: "rgba(0,0,0,0.4)"
+                    color: "rgba(0,0,0,0.4)",
+                    fontSize: "26px",
                   }}
                 />
                 <button
@@ -802,7 +860,11 @@ const checkBranchStatus = (branchIdToCheck) => {
                     cursor: "pointer"
                   }}
                 >
-                  {showPassword ? <Visibility /> : <VisibilityOff />}
+                  {showPassword ? (
+                    <Visibility sx={{ fontSize: "26px", color: "rgba(0,0,0,0.4)" }} />
+                  ) : (
+                    <VisibilityOff sx={{ fontSize: "26px", color: "rgba(0,0,0,0.4)" }} />
+                  )}
                 </button>
               </div>
 

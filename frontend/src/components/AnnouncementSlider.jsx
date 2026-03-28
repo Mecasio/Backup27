@@ -49,31 +49,28 @@ const AnnouncementSlider = () => {
     const handleDragEnd = (_, info) => {
         const threshold = 80;
 
-        // ✅ STRICT horizontal detection
         if (Math.abs(info.offset.x) < Math.abs(info.offset.y)) {
             setIsDragging(false);
             return;
         }
 
-        if (info.offset.x < -threshold && index < slides.length - 1) {
-            setIndex(prev => prev + 1);
-        } else if (info.offset.x > threshold && index > 0) {
-            setIndex(prev => prev - 1);
+        if (info.offset.x < -threshold) {
+            // swipe left → next
+            setIndex(prev => (prev + 1) % slides.length);
+        } else if (info.offset.x > threshold) {
+            // swipe right → prev
+            setIndex(prev => (prev - 1 + slides.length) % slides.length);
         }
 
         setIsDragging(false);
     };
 
     const goNext = () => {
-        if (index < slides.length - 1) {
-            setIndex(prev => prev + 1);
-        }
+        setIndex(prev => (prev + 1) % slides.length);
     };
 
     const goPrev = () => {
-        if (index > 0) {
-            setIndex(prev => prev - 1);
-        }
+        setIndex(prev => (prev - 1 + slides.length) % slides.length);
     };
 
     const current = slides[index];

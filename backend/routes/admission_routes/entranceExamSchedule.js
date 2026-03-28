@@ -147,6 +147,7 @@ router.delete("/delete_exam_schedule/:id", async (req, res) => {
 });
 
 // ================== GET SCHEDULES WITH COUNT ==================
+// ================== GET SCHEDULES WITH COUNT ==================
 router.get("/exam_schedules_with_count", async (req, res) => {
   try {
     const [rows] = await db.query(`
@@ -181,6 +182,15 @@ router.get("/exam_schedules_with_count", async (req, res) => {
 // ================== GET SCHEDULES BY YEAR AND SEMESTER ==================
 router.get("/exam_schedules_with_count/:yearId/:semesterId", async (req, res) => {
   const { yearId, semesterId } = req.params;
+  const { branch } = req.query;
+
+  const queryParams = [yearId, semesterId];
+  let branchClause = "";
+
+  if (branch) {
+    branchClause = " AND ees.branch = ?";
+    queryParams.push(branch);
+  }
 
   try {
     const [rows] = await db.query(
@@ -204,11 +214,11 @@ router.get("/exam_schedules_with_count/:yearId/:semesterId", async (req, res) =>
       JOIN enrollment.active_school_year_table sy ON ees.active_school_year_id = sy.id
       LEFT JOIN admission.exam_applicants ea
         ON ees.schedule_id = ea.schedule_id
-      WHERE sy.year_id = ? AND sy.semester_id = ?
+      WHERE sy.year_id = ? AND sy.semester_id = ?${branchClause}
       GROUP BY ees.schedule_id
       ORDER BY ees.day_description, ees.start_time;
     `,
-      [yearId, semesterId]
+      queryParams
     );
 
     res.json(rows);

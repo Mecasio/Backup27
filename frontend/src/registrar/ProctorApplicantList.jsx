@@ -103,13 +103,14 @@ const ProctorApplicantList = () => {
 
 
    const tabs = [
-     { label: "Room Registration", to: "/room_registration", icon: <KeyIcon fontSize="large" /> },
+      { label: "Room Registration", to: "/room_registration", icon: <KeyIcon fontSize="large" /> },
      { label: "Verify Documents Room Assignment", to: "/verify_document_schedule", icon: <MeetingRoomIcon fontSize="large" /> },
-     { label: "Verify Documents Schedule Management", to: "/verify_schedule", icon: <ScheduleIcon fontSize="large" /> },
+     // { label: "Verify Documents Schedule Management", to: "/verify_schedule", icon: <ScheduleIcon fontSize="large" /> },
      { label: "Evaluator's Applicant List", to: "/evaluator_schedule_room_list", icon: <PeopleIcon fontSize="large" /> },
      { label: "Entrance Exam Room Assignment", to: "/assign_entrance_exam", icon: <MeetingRoomIcon fontSize="large" /> },
-     { label: "Entrance Exam Schedule Management", to: "/assign_schedule_applicant", icon: <ScheduleIcon fontSize="large" /> },
+     // { label: "Entrance Exam Schedule Management", to: "/assign_schedule_applicant", icon: <ScheduleIcon fontSize="large" /> },
      { label: "Proctor's Applicant List", to: "/admission_schedule_room_list", icon: <PeopleIcon fontSize="large" /> },
+     // { label: "Examination Permit", to: "/registrar_examination_profile", icon: <PersonSearchIcon fontSize="large" /> },
      { label: "Announcement", to: "/announcement_for_admission", icon: <CampaignIcon fontSize="large" /> },
    ];
 
@@ -176,7 +177,7 @@ const ProctorApplicantList = () => {
   const [applicantToDelete, setApplicantToDelete] = useState(null);
 
   const navigate = useNavigate();
-  const [activeStep, setActiveStep] = useState(6);
+  const [activeStep, setActiveStep] = useState(4);
   const [clickedSteps, setClickedSteps] = useState(Array(tabs.length).fill(false));
 
 
@@ -272,7 +273,16 @@ const ProctorApplicantList = () => {
       @page { size: A4 landscape; margin: 5mm; }
       body { font-family: Arial, sans-serif; margin: 0; padding: 0; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
       .print-container { display: flex; flex-direction: column; align-items: center; text-align: center; }
-      .print-header img { position: absolute; left: 0; margin-left: 10px; width: 90px; height: 90px; border-radius: 50%; object-fit: cover; }
+ .print-header img {
+   position: absolute;
+   left: 200px; /* adjust if needed */
+   top: 0px;
+   width: 120px;
+   height: 120px;
+   border-radius: 50%;
+   object-fit: cover;
+ }
+
       .print-header div { font-size: 12px; }
       b.header-title { font-size: 18px !important; }
       table { border-collapse: collapse; width: 100%; margin-top: 10px; }

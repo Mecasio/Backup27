@@ -159,6 +159,64 @@ router.get("/api/page_access/:userId/:pageId", async (req, res) => {
   }
 });
 
+router.post("/api/page_access/grant-all", async (req, res) => {
+  const { userId } = req.body;
+
+  try {
+    // get all pages
+    const [pages] = await db3.query(
+      "SELECT id FROM page_table"
+    );
+
+    if (!pages.length) {
+      return res.json({ success: true });
+    }
+
+    // build bulk values
+    const values = pages.map((p) => [
+      userId,
+      p.id,
+      1
+    ]);
+
+    await db3.query(
+      `
+      INSERT INTO page_access
+      (user_id, page_id, page_privilege)
+      VALUES ?
+      ON DUPLICATE KEY UPDATE
+      page_privilege = VALUES(page_privilege)
+      `,
+      [values]
+    );
+
+    res.json({ success: true });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Database error" });
+  }
+});
+
+
+router.post("/api/page_access/revoke-all", async (req, res) => {
+  const { userId } = req.body;
+
+  try {
+    await db3.query(
+      "DELETE FROM page_access WHERE user_id = ?",
+      [userId]
+    );
+
+    res.json({ success: true });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Database error" });
+  }
+});
+
+
 module.exports = router;
 
 

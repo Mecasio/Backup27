@@ -52,6 +52,7 @@ const EvaluatorApplicantList = () => {
   const [companyName, setCompanyName] = useState("");
   const [shortTerm, setShortTerm] = useState("");
   const [campusAddress, setCampusAddress] = useState("");
+  const [branches, setBranches] = useState([]);
 
   useEffect(() => {
     if (!settings) return;
@@ -75,6 +76,19 @@ const EvaluatorApplicantList = () => {
     if (settings.company_name) setCompanyName(settings.company_name);
     if (settings.short_term) setShortTerm(settings.short_term);
     if (settings.campus_address) setCampusAddress(settings.campus_address);
+    if (settings?.branches) {
+      try {
+        const parsed =
+          typeof settings.branches === "string"
+            ? JSON.parse(settings.branches)
+            : settings.branches;
+
+        setBranches(Array.isArray(parsed) ? parsed : []);
+      } catch (err) {
+        console.error("Failed to parse branches:", err);
+        setBranches([]);
+      }
+    }
 
   }, [settings]);
 
@@ -296,7 +310,17 @@ const EvaluatorApplicantList = () => {
     const firstLine = words.slice(0, middleIndex).join(" ");
     const secondLine = words.slice(middleIndex).join(" ");
 
-    const address = settings?.campus_address || settings?.address || "No address set in Settings";
+    const branchList = Array.isArray(branches) ? branches : [];
+    const matchedBranch = branchList.find(
+      (branch) =>
+        String(branch?.branch).trim().toLowerCase() ===
+        String(evaluator?.branch || "").trim().toLowerCase()
+    );
+    const address =
+      matchedBranch?.address ||
+      campusAddress ||
+      settings?.address ||
+      "No address set in Settings";
     const today = new Date().toLocaleDateString("en-US", {
       year: "numeric",
       month: "long",
@@ -353,10 +377,10 @@ const EvaluatorApplicantList = () => {
         <img src="${logoSrc}" alt="School Logo" />
         <div>
           <div style="font-size: 13px; font-family: Arial">Republic of the Philippines</div>
-          <b style="letter-spacing:1px; font-size:20px; font-family: Arial">${firstLine}</b>
-          ${secondLine ? `<div style="letter-spacing:1px; font-size: 20px; font-family: Arial"><b>${secondLine}</b></div>` : ""}
-          <div style="font-size: 13px; font-family: Arial">${address}</div>
-          <div style="margin-top:25px;"><b style="font-size:20px; letter-spacing:1px;">Proctor Applicant List</b></div>
+          <b style="letter-spacing:1px; font-size:22px; font-family:Arial, serif;">${firstLine}</b>
+          ${secondLine ? `<div style="letter-spacing:1px; font-size:22px; font-family:Arial, serif;"><b>${secondLine}</b></div>` : ""}
+          <div style="font-size:12px;">${address}</div>
+          <div style="margin-top:25px;"><b style="font-size:22px; letter-spacing:1px;">Evaluator Applicant List</b></div>
         </div>
       </div>
 
@@ -378,10 +402,11 @@ const EvaluatorApplicantList = () => {
       <table>
         <thead>
           <tr>
-         <th style="width:20%">Applicant ID</th>
-            <th style="width:30%">Applicant Name</th>
-            <th style="width:30%">Program</th>
-            <th style="width:20%">Signature</th>
+            <th>#</th>
+            <th>Applicant #</th>
+            <th>Applicant Name</th>
+            <th>Program</th>
+            <th>Signature</th>
           </tr>
         </thead>
         <tbody>
@@ -390,10 +415,11 @@ const EvaluatorApplicantList = () => {
       const program = programItem ? `(${programItem.program_code}) - ${programItem.program_description} ${programItem.major || ""}` : "N/A";
       return `
             <tr>
-             <td style="width:20%; text-align:center;">${a.applicant_number}</td>
-              <td style="width:30%; text-align:left;">${a.last_name}, ${a.first_name} ${a.middle_name || ""}</td>
-              <td style="width:30%; text-align:center;">${program}</td>
-              <td style="width:20%; text-align:center;"></td>
+              <td>${index + 1}</td>
+              <td>${a.applicant_number}</td>
+              <td>${a.last_name}, ${a.first_name} ${a.middle_name || ""}</td>
+              <td>${program}</td>
+              <td></td>
             </tr>`;
     }).join("")}
           <tr>

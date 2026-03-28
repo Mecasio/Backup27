@@ -395,12 +395,14 @@ const LoginEnrollment = ({ setIsAuthenticated }) => {
                   }}
                 />
                 <ArrowDropDownIcon
-                  style={{
+                  sx={{
                     position: "absolute",
-                    top: "2.75rem",
-                    right: "0.7rem",
-                    color: "rgba(0,0,0,0.4)",
-                    pointerEvents: "none",
+                    right: "10px", // 👈 like margin-right
+                    top: "75%",
+                    transform: "translateY(-50%)",
+                    fontSize: "30px", // 👈 BIGGER icon
+                    color: "black",
+                    pointerEvents: "none", // 👈 allow clicking select
                   }}
                 />
               </div>
@@ -452,6 +454,7 @@ const LoginEnrollment = ({ setIsAuthenticated }) => {
                       top: "2.75rem",
                       left: "0.7rem",
                       color: "rgba(0,0,0,0.4)",
+                      fontSize: "26px",
                     }}
                   />
                   <button
@@ -469,7 +472,11 @@ const LoginEnrollment = ({ setIsAuthenticated }) => {
                       marginBottom: "50px"
                     }}
                   >
-                    {showPassword ? <Visibility sx={{padding: "2.75px", }} /> : <VisibilityOff sx={{padding: "2.75px"}}/>}
+                    {showPassword ? (
+                      <Visibility sx={{ fontSize: "26px", color: "rgba(0,0,0,0.4)" }} />
+                    ) : (
+                      <VisibilityOff sx={{ fontSize: "26px", color: "rgba(0,0,0,0.4)" }} />
+                    )}
                   </button>
                 </div>
 
@@ -525,8 +532,8 @@ const LoginEnrollment = ({ setIsAuthenticated }) => {
 
             <div className="Footer">
               <div className="FooterText">
-                &copy; {currentYear} {settings?.company_name || "EARIST"} <br/>
-                Student Information System. <br/>
+                &copy; {currentYear} {settings?.company_name || "EARIST"} <br />
+                Student Information System. <br />
                 All rights reserved.
               </div>
             </div>

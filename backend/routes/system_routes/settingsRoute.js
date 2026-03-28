@@ -271,6 +271,16 @@ router.get("/branches", async (req, res) => {
       branches = [];
     }
 
+    // ✅ ensure ALL branches have academicPrograms
+    branches = branches.map((b) => ({
+      ...b,
+      academicPrograms: b.academicPrograms || [
+        { id: 0, name: "Undergraduate", open: 1 },
+        { id: 1, name: "Graduate", open: 0 },
+        { id: 2, name: "Techvoc", open: 0 },
+      ],
+    }));
+
     res.json(branches);
   } catch (err) {
     console.error("GET ERROR:", err);
@@ -306,11 +316,17 @@ router.post("/branches", async (req, res) => {
       registration_open: 0,
       start_date: null,
       end_date: null,
+
+      // ✅ INCLUDED
+      cademicPrograms: [
+        { id: 0, name: "Undergraduate", open: 1 },
+        { id: 1, name: "Graduate", open: 0 },
+        { id: 2, name: "Techvoc", open: 0 },
+      ]
     };
 
     branches.push(newBranch);
 
-    // 🔥 ALSO handle case where row does NOT exist
     if (rows.length === 0) {
       await db.query(
         "INSERT INTO company_settings (id, branches) VALUES (1, ?)",
@@ -331,7 +347,14 @@ router.post("/branches", async (req, res) => {
 
 router.put("/branches/:id", async (req, res) => {
   const { id } = req.params;
-  const { branch, address, registration_open, start_date, end_date } = req.body;
+  const {
+    branch,
+    address,
+    registration_open,
+    start_date,
+    end_date,
+    academicPrograms, // ✅ added
+  } = req.body;
 
   try {
     const [rows] = await db.query(
@@ -370,14 +393,18 @@ router.put("/branches/:id", async (req, res) => {
               ? registration_open
               : b.registration_open,
 
-          // ✅ STORE RAW STRING (NO Date conversion)
           start_date:
             typeof start_date !== "undefined"
               ? start_date || null
               : b.start_date,
 
           end_date:
-            typeof end_date !== "undefined" ? end_date || null : b.end_date,
+            typeof end_date !== "undefined"
+              ? end_date || null
+              : b.end_date,
+
+          // ✅ THIS WAS MISSING
+          academicPrograms: academicPrograms ?? b.academicPrograms,
         };
       }
       return b;

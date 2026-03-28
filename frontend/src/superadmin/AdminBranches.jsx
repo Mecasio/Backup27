@@ -159,10 +159,21 @@ const AdminBranches = () => {
     fetchBranches();
   }, []);
 
+
   const fetchBranches = async () => {
     try {
       const res = await axios.get(`${API_BASE_URL}/api/branches`);
-      setBranches(res.data);
+
+      const safeData = res.data.map((b) => ({
+        ...b,
+        academicPrograms: b.academicPrograms || [
+          { id: 0, name: "Undergraduate" },
+          { id: 1, name: "Graduate" },
+          { id: 2, name: "Techvoc" },
+        ],
+      }));
+
+      setBranches(safeData);
     } catch (err) {
       console.error(err);
     }
@@ -326,6 +337,10 @@ const AdminBranches = () => {
 
                   <Divider />
 
+                  <Typography fontWeight={600}>
+                    Branch Name / Branch Address
+                  </Typography>
+
                   {/* INPUTS */}
                   <TextField
                     label="Branch Name"
@@ -340,6 +355,43 @@ const AdminBranches = () => {
                     onChange={(e) => handleChange(index, "address", e.target.value)}
                     fullWidth
                   />
+
+                  {/* ✅ ACADEMIC PROGRAMS (OPEN/CLOSE ONLY) */}
+                  <Divider />
+
+                  <Typography fontWeight={600}>
+                    Academic Programs
+                  </Typography>
+
+                  {(b.academicPrograms || []).map((prog, progIndex) => (
+                    <Stack
+                      key={prog.id}
+                      direction="row"
+                      alignItems="center"
+                      justifyContent="space-between"
+                    >
+                      <Typography>{prog.name}</Typography>
+
+                      <Switch
+                        checked={prog.open === 1}
+                        onChange={(e) => {
+                          const updated = [...branches];
+                          updated[index].academicPrograms[progIndex].open =
+                            e.target.checked ? 1 : 0;
+
+                          setBranches(updated);
+                          setIsEditing(true);
+                        }}
+                      />
+                    </Stack>
+                  ))}
+
+                  <Divider />
+
+                  <Typography fontWeight={600}>
+                    Open and Closing Registration
+                  </Typography>
+
 
                   {/* TOGGLE */}
                   <Stack direction="row" alignItems="center" spacing={2}>

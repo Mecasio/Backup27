@@ -309,16 +309,15 @@ const InterviewerApplicantList = () => {
       text-align: center;
     }
 
-    .print-header img {
-      position: absolute;
-      left: 0;
-      margin-left: 10px;
-      width: 90px;
-      height: 90px;
-      border-radius: 50%;
-      object-fit: cover;
-    }
-
+ .print-header img {
+   position: absolute;
+   left: 200px; /* adjust if needed */
+   top: 0px;
+   width: 120px;
+   height: 120px;
+   border-radius: 50%;
+   object-fit: cover;
+ }
     .print-header div { font-size: 12px; }
 
     table {

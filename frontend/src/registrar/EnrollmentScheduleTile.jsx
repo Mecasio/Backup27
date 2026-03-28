@@ -77,6 +77,14 @@ const InterviewScheduleHoverTile = () => {
         navigate(to); // this will actually change the page
     };
 
+    const branches = Array.isArray(settings?.branches)
+        ? settings.branches
+        : typeof settings?.branches === "string"
+            ? JSON.parse(settings.branches)
+            : [];
+
+    const [selectedBranch, setSelectedBranch] = useState("");
+
 
     useEffect(() => {
         if (!settings) return;
@@ -117,9 +125,11 @@ const InterviewScheduleHoverTile = () => {
             if (!selectedSchoolYear || !selectedSchoolSemester) return;
 
             try {
-                const res = await axios.get(
-                    `${API_BASE_URL}/interview_schedules_with_count/${selectedSchoolYear}/${selectedSchoolSemester}`
-                );
+                const url = selectedBranch
+                    ? `${API_BASE_URL}/interview_schedules_with_count/${selectedSchoolYear}/${selectedSchoolSemester}?branch=${selectedBranch}`
+                    : `${API_BASE_URL}/interview_schedules_with_count/${selectedSchoolYear}/${selectedSchoolSemester}`;
+
+                const res = await axios.get(url);
                 setSchedules(res.data);
                 setFilteredSchedules(res.data);
 
@@ -130,7 +140,7 @@ const InterviewScheduleHoverTile = () => {
             }
         };
         fetchSchedules();
-    }, [selectedSchoolYear, selectedSchoolSemester]);
+    }, [selectedSchoolYear, selectedSchoolSemester, selectedBranch]);
 
     useEffect(() => {
         const lowerQuery = searchQuery.toLowerCase().trim();
@@ -354,6 +364,23 @@ const InterviewScheduleHoverTile = () => {
                 >
                     {/* LEFT SIDE: School Year, Semester, Building, Room, From Time, To Time */}
                     <Box sx={{ display: "flex", flexWrap: "wrap", gap: 3 }}>
+                        <Box sx={{ display: "flex", flexDirection: "column" }}>
+                            <Typography fontSize={13} sx={{ mb: 1 }}>Branch</Typography>
+                            <FormControl size="small" sx={{ minWidth: 150 }}>
+                                <Select
+                                    value={selectedBranch}
+                                    onChange={(e) => setSelectedBranch(e.target.value)}
+                                >
+                                    <MenuItem value="">All Branches</MenuItem>
+                                    {branches.map((b) => (
+                                        <MenuItem key={b.id} value={b.branch}>
+                                            {b.branch}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </Box>
+
                         {/* School Year */}
                         <Box sx={{ display: "flex", flexDirection: "column" }}>
                             <Typography fontSize={13} sx={{ mb: 1 }}>School Year</Typography>

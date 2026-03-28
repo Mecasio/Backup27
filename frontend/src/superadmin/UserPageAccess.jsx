@@ -375,10 +375,10 @@ const UserPageAccess = () => {
         prev.map((level) =>
           Number(level.access_id) === Number(editAccessId)
             ? {
-                ...level,
-                access_description: editAccessDescription,
-                access_page: selectedPages,
-              }
+              ...level,
+              access_description: editAccessDescription,
+              access_page: selectedPages,
+            }
             : level,
         ),
       );
@@ -441,11 +441,13 @@ const UserPageAccess = () => {
 
     try {
 
-      const updates = pages.map((p) =>
-        axios.post(`${API_BASE_URL}/api/page_access/${selectedUser.employee_id}/${p.id}`)
+      await axios.post(
+        `${API_BASE_URL}/api/page_access/grant-all`,
+        {
+          userId: selectedUser.employee_id,
+        }
       );
 
-      await Promise.all(updates);
 
       const newAccess = {};
       pages.forEach((p) => {
@@ -471,11 +473,12 @@ const UserPageAccess = () => {
 
     try {
 
-      const updates = pages.map((p) =>
-        axios.delete(`${API_BASE_URL}/api/page_access/${selectedUser.employee_id}/${p.id}`)
+      await axios.post(
+        `${API_BASE_URL}/api/page_access/revoke-all`,
+        {
+          userId: selectedUser.employee_id,
+        }
       );
-
-      await Promise.all(updates);
 
       const newAccess = {};
       pages.forEach((p) => {

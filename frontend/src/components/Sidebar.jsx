@@ -64,8 +64,8 @@ function buildSidebarStyles(s = {}, hasDepartment = true) {
     text-overflow: ellipsis; min-width: 190px;
   }
   .sb-profile-dprtmnt {
-    font-size: 14px; color: ${subColor};
-    opacity: 0.9; margin-top: -3px; font-style: italic;
+    font-size: 13px; color: ${subColor};
+    opacity: 0.9; margin-top: -3px; font-family: Poppins, sans-serif;
   }`
     : `
   .sb-profile {
@@ -639,9 +639,9 @@ const SideBar = ({ setIsAuthenticated, profileImage, setProfileImage }) => {
         <div className="sb-profile">
           <div className="sb-avatar-wrap">
             {avatarSrc ? (
-              <Avatar src={avatarSrc} sx={{ width: 40, height: 40, border: `2px solid ${accentColor}` }} />
+              <Avatar src={avatarSrc} sx={{ width: 55, height: 55, border: `2px solid ${accentColor}` }} />
             ) : (
-              <Avatar sx={{ width: 40, height: 40, bgcolor: accentColor, fontSize: 16, border: `2px solid ${accentColor}` }}>
+              <Avatar sx={{ width: 55, height: 55, bgcolor: accentColor, fontSize: 16, border: `2px solid ${accentColor}` }}>
                 {personData?.fname?.[0] || "?"}
               </Avatar>
             )}
