@@ -52,6 +52,7 @@ const ProctorApplicantList = () => {
   const [companyName, setCompanyName] = useState("");
   const [shortTerm, setShortTerm] = useState("");
   const [campusAddress, setCampusAddress] = useState("");
+  const [branches, setBranches] = useState([]);
 
   useEffect(() => {
     if (!settings) return;
@@ -75,6 +76,21 @@ const ProctorApplicantList = () => {
     if (settings.company_name) setCompanyName(settings.company_name);
     if (settings.short_term) setShortTerm(settings.short_term);
     if (settings.campus_address) setCampusAddress(settings.campus_address);
+    if (settings?.branches) {
+      try {
+        const parsed =
+          typeof settings.branches === "string"
+            ? JSON.parse(settings.branches)
+            : settings.branches;
+
+        setBranches(Array.isArray(parsed) ? parsed : []);
+      } catch (err) {
+        console.error("Failed to parse branches:", err);
+        setBranches([]);
+      }
+    } else {
+      setBranches([]);
+    }
 
   }, [settings]);
 
@@ -255,7 +271,18 @@ const ProctorApplicantList = () => {
     const firstLine = words.slice(0, middleIndex).join(" ");
     const secondLine = words.slice(middleIndex).join(" ");
 
-    const address = settings?.campus_address || settings?.address || "No address set in Settings";
+    const branchList = Array.isArray(branches) ? branches : [];
+    const matchedBranch = branchList.find(
+      (branch) =>
+        String(branch?.branch).trim().toLowerCase() ===
+        String(proctor?.branch || "").trim().toLowerCase()
+    );
+    const address =
+      matchedBranch?.address ||
+      matchedBranch?.branch_address ||
+      campusAddress ||
+      settings?.address ||
+      "No address set in Settings";
     const today = new Date().toLocaleDateString("en-US", {
       year: "numeric",
       month: "long",
@@ -275,14 +302,13 @@ const ProctorApplicantList = () => {
       .print-container { display: flex; flex-direction: column; align-items: center; text-align: center; }
  .print-header img {
    position: absolute;
-   left: 200px; /* adjust if needed */
-   top: 0px;
+   left: 180px; /* adjust if needed */
+   top: -5px;
    width: 120px;
    height: 120px;
    border-radius: 50%;
    object-fit: cover;
  }
-
       .print-header div { font-size: 12px; }
       b.header-title { font-size: 18px !important; }
       table { border-collapse: collapse; width: 100%; margin-top: 10px; }

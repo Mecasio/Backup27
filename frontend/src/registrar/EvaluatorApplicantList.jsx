@@ -338,7 +338,15 @@ const EvaluatorApplicantList = () => {
       @page { size: A4 landscape; margin: 5mm; }
       body { font-family: Arial; margin: 0; padding: 0; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
       .print-container { display: flex; flex-direction: column; align-items: center; text-align: center; }
-      .print-header img { position: absolute; left: 0; margin-left: 10px; width: 90px; height: 90px; border-radius: 50%; object-fit: cover; }
+ .print-header img {
+   position: absolute;
+    left: 180px; /* adjust if needed */
+   top: -5px;
+   width: 120px;
+   height: 120px;
+   border-radius: 50%;
+   object-fit: cover;
+ }
       .print-header div { font-size: 12px; }
       b.header-title { font-size: 18px !important; }
       table { border-collapse: collapse; width: 100%; margin-top: 10px; }
@@ -377,10 +385,10 @@ const EvaluatorApplicantList = () => {
         <img src="${logoSrc}" alt="School Logo" />
         <div>
           <div style="font-size: 13px; font-family: Arial">Republic of the Philippines</div>
-          <b style="letter-spacing:1px; font-size:22px; font-family:Arial, serif;">${firstLine}</b>
-          ${secondLine ? `<div style="letter-spacing:1px; font-size:22px; font-family:Arial, serif;"><b>${secondLine}</b></div>` : ""}
+          <b style="letter-spacing:1px; font-size:20px; font-family:Arial, serif;">${firstLine}</b>
+          ${secondLine ? `<div style="letter-spacing:1px; font-size:20px; font-family:Arial, serif;"><b>${secondLine}</b></div>` : ""}
           <div style="font-size:12px;">${address}</div>
-          <div style="margin-top:25px;"><b style="font-size:22px; letter-spacing:1px;">Evaluator Applicant List</b></div>
+          <div style="margin-top:25px;"><b style="font-size:20px; letter-spacing:1px;">Evaluator Applicant List</b></div>
         </div>
       </div>
 
@@ -402,11 +410,11 @@ const EvaluatorApplicantList = () => {
       <table>
         <thead>
           <tr>
-            <th>#</th>
-            <th>Applicant #</th>
-            <th>Applicant Name</th>
-            <th>Program</th>
-            <th>Signature</th>
+          
+            <th style="width:20%">Applicant ID</th>
+            <th style="width:30%">Applicant Name</th>
+            <th style="width:30%">Program</th>
+            <th style="width:20%">Signature</th>
           </tr>
         </thead>
         <tbody>
@@ -415,11 +423,10 @@ const EvaluatorApplicantList = () => {
       const program = programItem ? `(${programItem.program_code}) - ${programItem.program_description} ${programItem.major || ""}` : "N/A";
       return `
             <tr>
-              <td>${index + 1}</td>
-              <td>${a.applicant_number}</td>
-              <td>${a.last_name}, ${a.first_name} ${a.middle_name || ""}</td>
-              <td>${program}</td>
-              <td></td>
+              <td style="width:20%; text-align:center;">${a.applicant_number}</td>
+              <td style="width:30%; text-align:left;">${a.last_name}, ${a.first_name} ${a.middle_name || ""}</td>
+              <td style="width:30%; text-align:center;">${program}</td>
+              <td style="width:20%; text-align:center;"></td>
             </tr>`;
     }).join("")}
           <tr>

@@ -52,59 +52,59 @@ const ApplicationProcessAdmin = () => {
     const socket = useRef(null);
 
     const settings = useContext(SettingsContext);
-  
+
     const [titleColor, setTitleColor] = useState("#000000");
     const [subtitleColor, setSubtitleColor] = useState("#555555");
     const [borderColor, setBorderColor] = useState("#000000");
     const [mainButtonColor, setMainButtonColor] = useState("#1976d2");
     const [subButtonColor, setSubButtonColor] = useState("#ffffff"); // ✅ NEW
     const [stepperColor, setStepperColor] = useState("#000000"); // ✅ NEW
-  
+
     const [fetchedLogo, setFetchedLogo] = useState(null);
     const [companyName, setCompanyName] = useState("");
     const [shortTerm, setShortTerm] = useState("");
     const [campusAddress, setCampusAddress] = useState("");
     const [branches, setBranches] = useState([]);
-  
+
     useEffect(() => {
-      if (!settings) return;
-  
-      // 🎨 Colors
-      if (settings.title_color) setTitleColor(settings.title_color);
-      if (settings.subtitle_color) setSubtitleColor(settings.subtitle_color);
-      if (settings.border_color) setBorderColor(settings.border_color);
-      if (settings.main_button_color)
-        setMainButtonColor(settings.main_button_color);
-      if (settings.sub_button_color) setSubButtonColor(settings.sub_button_color);
-      if (settings.stepper_color) setStepperColor(settings.stepper_color);
-  
-      // 🏫 Logo
-      if (settings.logo_url) {
-        setFetchedLogo(`${API_BASE_URL}${settings.logo_url}`);
-      } else {
-        setFetchedLogo(EaristLogo);
-      }
-  
-      // 🏷️ School Info
-      if (settings.company_name) setCompanyName(settings.company_name);
-      if (settings.short_term) setShortTerm(settings.short_term);
-  
-      // ✅ Branches (JSON stored in DB)
-      if (settings?.branches) {
-        try {
-          const parsed =
-            typeof settings.branches === "string"
-              ? JSON.parse(settings.branches)
-              : settings.branches;
-  
-          setBranches(parsed);
-        } catch (err) {
-          console.error("Failed to parse branches:", err);
-          setBranches([]);
+        if (!settings) return;
+
+        // 🎨 Colors
+        if (settings.title_color) setTitleColor(settings.title_color);
+        if (settings.subtitle_color) setSubtitleColor(settings.subtitle_color);
+        if (settings.border_color) setBorderColor(settings.border_color);
+        if (settings.main_button_color)
+            setMainButtonColor(settings.main_button_color);
+        if (settings.sub_button_color) setSubButtonColor(settings.sub_button_color);
+        if (settings.stepper_color) setStepperColor(settings.stepper_color);
+
+        // 🏫 Logo
+        if (settings.logo_url) {
+            setFetchedLogo(`${API_BASE_URL}${settings.logo_url}`);
+        } else {
+            setFetchedLogo(EaristLogo);
         }
-      }
+
+        // 🏷️ School Info
+        if (settings.company_name) setCompanyName(settings.company_name);
+        if (settings.short_term) setShortTerm(settings.short_term);
+
+        // ✅ Branches (JSON stored in DB)
+        if (settings?.branches) {
+            try {
+                const parsed =
+                    typeof settings.branches === "string"
+                        ? JSON.parse(settings.branches)
+                        : settings.branches;
+
+                setBranches(parsed);
+            } catch (err) {
+                console.error("Failed to parse branches:", err);
+                setBranches([]);
+            }
+        }
     }, [settings]);
-  
+
     useEffect(() => {
         socket.current = io(API_BASE_URL);
 
@@ -846,21 +846,21 @@ const ApplicationProcessAdmin = () => {
     const [applicants, setApplicants] = useState([]);
     const divToPrintRef = useRef();
 
- 
-     const printDiv = () => {
+
+    const printDiv = () => {
         const resolvedCampusAddress =
-          campusAddress || "No address set in Settings";
-    
+            campusAddress || "No address set in Settings";
+
         // ✅ Dynamic logo and company name
         const logoSrc = fetchedLogo || EaristLogo;
         const name = companyName?.trim() || "";
-    
+
         // ✅ Split company name into two balanced lines
         const words = name.split(" ");
         const middleIndex = Math.ceil(words.length / 2);
         const firstLine = words.slice(0, middleIndex).join(" ");
         const secondLine = words.slice(middleIndex).join(" ");
-    
+
         // ✅ Generate printable HTML
         const newWin = window.open("", "Print-Window");
         newWin.document.open();
@@ -964,19 +964,19 @@ const ApplicationProcessAdmin = () => {
       
                     <!-- ✅ Dynamic company name -->
                     ${name
-            ? `
+                ? `
                           <b style="letter-spacing: 1px; font-size: 20px; font-family: Arial, sans-serif;">
                             ${firstLine}
                           </b>
                           ${secondLine
-              ? `<div style="letter-spacing: 1px; font-size: 20px; font-family: Arial, sans-serif;">
+                    ? `<div style="letter-spacing: 1px; font-size: 20px; font-family: Arial, sans-serif;">
                                   <b>${secondLine}</b>
                                 </div>`
-              : ""
-            }
+                    : ""
+                }
                         `
-            : ""
-          }
+                : ""
+            }
       
                     <!-- ✅ Dynamic campus address -->
                     <div style="font-size: 13px; font-family: Arial">${resolvedCampusAddress}</div>
@@ -1003,25 +1003,25 @@ const ApplicationProcessAdmin = () => {
                   </thead>
                   <tbody>
                     ${filteredPersons
-            .map(
-              (person) => `
+                .map(
+                    (person) => `
                           <tr>
                             <td style="width:10%">${person.applicant_number || ""}</td>
                             <td style="width:40%">${person.last_name}, ${person.first_name} ${person.middle_name || ""} ${person.extension || ""}</td>
                             <td style="width:15%">${person.program_code || ""}</td>                 
                             <td style="width:10%">${person.generalAverage1 || ""}</td>
                             <td style="width:10%">${new Date(
-                person.created_at.split("T")[0],
-              ).toLocaleDateString("en-PH", {
-                year: "numeric",
-                month: "short",
-                day: "2-digit",
-              })}</td>
+                        person.created_at.split("T")[0],
+                    ).toLocaleDateString("en-PH", {
+                        year: "numeric",
+                        month: "short",
+                        day: "2-digit",
+                    })}</td>
                             <td style="width:15%">${getApplicantStatus(person)}</td>
                           </tr>
                         `,
-            )
-            .join("")}
+                )
+                .join("")}
                   </tbody>
                 </table>
               </div>
@@ -1029,9 +1029,9 @@ const ApplicationProcessAdmin = () => {
           </html>
         `);
         newWin.document.close();
-      };
-    
-   
+    };
+
+
 
     const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
     const handleCloseSnackbar = () => setSnackbar((prev) => ({ ...prev, open: false }));
@@ -2265,7 +2265,7 @@ const ApplicationProcessAdmin = () => {
                                             minHeight: "42px",
                                             marginRight: "10px",
                                             marginLeft: "10px",
-                                            
+
                                         }}
                                     >
                                         <Button
@@ -2525,8 +2525,9 @@ const ApplicationProcessAdmin = () => {
                             ) && (
                                     <Button
                                         variant="contained"
+                                        color="primary"
                                         onClick={handleSaveMissingDocs}
-                                        sx={{ background: "maroon" }}
+
                                     >
                                         Save
                                     </Button>

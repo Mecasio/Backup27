@@ -38,6 +38,7 @@ import ConfirmationNumberIcon from "@mui/icons-material/ConfirmationNumber";
 import GradeIcon from "@mui/icons-material/Grade";
 import SchoolIcon from "@mui/icons-material/School";
 import API_BASE_URL from "../apiConfig";
+import CloseIcon from "@mui/icons-material/Close";
 
 const StudentNumbering = () => {
     const socket = useRef(null);
@@ -158,75 +159,75 @@ const StudentNumbering = () => {
     };
 
 
- const [person, setPerson] = useState({
+    const [person, setPerson] = useState({
 
-    profile_img: "",
-    campus: "",
-    academicProgram: "",
-    classifiedAs: "",
-    program: "",
-    program2: "",
-    program3: "",
-    yearLevel: "",
-    last_name: "",
-    first_name: "",
-    middle_name: "",
-    extension: "",
-    nickname: "",
-    height: "",
-    weight: "",
-    lrnNumber: "",
-    gender: "",
-    pwdType: "",
-    pwdId: "",
-    birthOfDate: "",
-    age: "",
-    birthPlace: "",
-    languageDialectSpoken: "",
-    citizenship: "",
-    religion: "",
-    civilStatus: "",
-    tribeEthnicGroup: "",
-    otherEthnicGroup: "",
-    cellphoneNumber: "",
-    emailAddress: "",
-    telephoneNumber: "",
-    facebookAccount: "",
-    presentStreet: "",
-    presentBarangay: "",
-    presentZipCode: "",
-    presentRegion: "",
-    presentProvince: "",
-    presentMunicipality: "",
-    presentDswdHouseholdNumber: "",
-    permanentStreet: "",
-    permanentBarangay: "",
-    permanentZipCode: "",
-    permanentRegion: "",
-    permanentProvince: "",
-    permanentMunicipality: "",
-    permanentDswdHouseholdNumber: "",
-    father_deceased: "",
-    father_family_name: "", father_given_name: "", father_middle_name: "", father_ext: "", father_contact: "", father_occupation: "",
-    father_income: "", father_email: "", mother_deceased: "", mother_family_name: "", mother_given_name: "", mother_middle_name: "",
-    mother_contact: "", mother_occupation: "", mother_income: "", guardian: "", guardian_family_name: "", guardian_given_name: "",
-    guardian_middle_name: "", guardian_ext: "", guardian_nickname: "", guardian_address: "", guardian_contact: "", guardian_email: "",
-    schoolLevel: "",
-    schoolLastAttended: "",
-    schoolAddress: "",
-    courseProgram: "",
-    honor: "",
-    generalAverage: "",
-    yearGraduated: "",
-    schoolLevel1: "",
-    schoolLastAttended1: "",
-    schoolAddress1: "",
-    courseProgram1: "",
-    honor1: "",
-    generalAverage1: "",
-    yearGraduated1: "",
-    strand: "",
-  });
+        profile_img: "",
+        campus: "",
+        academicProgram: "",
+        classifiedAs: "",
+        program: "",
+        program2: "",
+        program3: "",
+        yearLevel: "",
+        last_name: "",
+        first_name: "",
+        middle_name: "",
+        extension: "",
+        nickname: "",
+        height: "",
+        weight: "",
+        lrnNumber: "",
+        gender: "",
+        pwdType: "",
+        pwdId: "",
+        birthOfDate: "",
+        age: "",
+        birthPlace: "",
+        languageDialectSpoken: "",
+        citizenship: "",
+        religion: "",
+        civilStatus: "",
+        tribeEthnicGroup: "",
+        otherEthnicGroup: "",
+        cellphoneNumber: "",
+        emailAddress: "",
+        telephoneNumber: "",
+        facebookAccount: "",
+        presentStreet: "",
+        presentBarangay: "",
+        presentZipCode: "",
+        presentRegion: "",
+        presentProvince: "",
+        presentMunicipality: "",
+        presentDswdHouseholdNumber: "",
+        permanentStreet: "",
+        permanentBarangay: "",
+        permanentZipCode: "",
+        permanentRegion: "",
+        permanentProvince: "",
+        permanentMunicipality: "",
+        permanentDswdHouseholdNumber: "",
+        father_deceased: "",
+        father_family_name: "", father_given_name: "", father_middle_name: "", father_ext: "", father_contact: "", father_occupation: "",
+        father_income: "", father_email: "", mother_deceased: "", mother_family_name: "", mother_given_name: "", mother_middle_name: "",
+        mother_contact: "", mother_occupation: "", mother_income: "", guardian: "", guardian_family_name: "", guardian_given_name: "",
+        guardian_middle_name: "", guardian_ext: "", guardian_nickname: "", guardian_address: "", guardian_contact: "", guardian_email: "",
+        schoolLevel: "",
+        schoolLastAttended: "",
+        schoolAddress: "",
+        courseProgram: "",
+        honor: "",
+        generalAverage: "",
+        yearGraduated: "",
+        schoolLevel1: "",
+        schoolLastAttended1: "",
+        schoolAddress1: "",
+        courseProgram1: "",
+        honor1: "",
+        generalAverage1: "",
+        yearGraduated1: "",
+        strand: "",
+    });
 
 
     const location = useLocation();
@@ -711,20 +712,23 @@ ${loginUrl}`;
                     {/* LEFT COLUMN: Sorting & Status Filters */}
                     <Box display="flex" flexDirection="column" gap={2}>
                         <Box display="flex" alignItems="center" gap={1}>
-                            <Typography fontSize={13} sx={{ minWidth: "100px" }}>Campus:</Typography>
+                            <Typography fontSize={13}>Campus:</Typography>
                             <FormControl size="small" sx={{ width: "200px" }}>
-                                <InputLabel id="campus-label-registrar">Campus</InputLabel>
+                                
                                 <Select
-                                    labelId="campus-label-registrar"
+                                    labelId="campus-label"
+                                    id="campus-select"
+                                    name="campus"
                                     value={selectedCampus}
-                                    label="Campus"
                                     onChange={(e) => {
                                         setSelectedCampus(e.target.value);
                                         setCurrentPage(1);
                                     }}
                                     displayEmpty
                                 >
-                                    <MenuItem value=""><em>All Campuses</em></MenuItem>
+                                    <MenuItem value="">
+                                        <em>All Campuses</em>
+                                    </MenuItem>
                                     {branches.map((branch) => (
                                         <MenuItem key={branch.id} value={branch.id}>
                                             {branch.branch}
@@ -1310,8 +1314,12 @@ ${loginUrl}`;
             </Snackbar>
 
             <Dialog open={openModal} onClose={() => setOpenModal(false)} maxWidth="md" fullWidth>
-                <DialogTitle sx={{ color: "maroon", fontWeight: "bold" }}>
+                <DialogTitle sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     Acceptance Email Preview
+
+                    <IconButton onClick={() => setOpenModal(false)}>
+                        <CloseIcon />
+                    </IconButton>
                 </DialogTitle>
                 <DialogContent>
                     <Typography sx={{ mb: 1.5, fontSize: 13, color: "#555" }}>

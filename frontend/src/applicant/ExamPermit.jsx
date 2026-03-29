@@ -296,7 +296,7 @@ const ExamPermit = ({ personId }) => {
 `}</style>
 
             {/* Header */}
-            <table width="100%" style={{ borderCollapse: "collapse", marginTop: "-20px", fontFamily: "Arial" }}>
+            <table width="100%" style={{ borderCollapse: "collapse", marginTop: "-40px", fontFamily: "Arial" }}>
                 <tbody>
                     <tr>
 
@@ -354,7 +354,7 @@ const ExamPermit = ({ personId }) => {
                             {/* Add spacing here */}
                             <div style={{ marginTop: "30px" }}>
                                 <b style={{ fontSize: "24px", letterSpacing: '1px', fontWeight: "bold" }}>
-                                    APPLICANT PROFILE
+                                    EXAMINATION PERMIT
                                 </b>
                             </div>
                         </td>

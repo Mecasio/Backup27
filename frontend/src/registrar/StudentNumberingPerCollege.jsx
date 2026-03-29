@@ -42,6 +42,7 @@ import LoadingOverlay from "../components/LoadingOverlay";
 import API_BASE_URL from "../apiConfig";
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import ScoreIcon from '@mui/icons-material/Score';
+import CloseIcon from "@mui/icons-material/Close";
 
 const StudentNumbering = () => {
     const socket = useRef(null);
@@ -106,32 +107,32 @@ const StudentNumbering = () => {
     }, []);
 
     const tabs = [
-         {
-             label: "Admission Process For College",
-             to: "/applicant_list",
-             icon: <SchoolIcon fontSize="large" />,
-           },
-           {
-             label: "Applicant Form",
-             to: "/registrar_dashboard1",
-             icon: <AssignmentIcon fontSize="large" />,
-           },
-           {
-             label: "Student Requirements",
-             to: "/registrar_requirements",
-             icon: <AssignmentTurnedInIcon fontSize="large" />,
-           },
-           {
-             label: "Qualifying / Interview Exam Score",
-             to: "/qualifying_interview_exam_scores",
-             icon: <ScoreIcon fontSize="large" />,
-           },
-           {
-             label: "Student Numbering",
-             to: "/student_numbering_per_college",
-             icon: <DashboardIcon fontSize="large" />,
-           },
-         
+        {
+            label: "Admission Process For College",
+            to: "/applicant_list",
+            icon: <SchoolIcon fontSize="large" />,
+        },
+        {
+            label: "Applicant Form",
+            to: "/registrar_dashboard1",
+            icon: <AssignmentIcon fontSize="large" />,
+        },
+        {
+            label: "Student Requirements",
+            to: "/registrar_requirements",
+            icon: <AssignmentTurnedInIcon fontSize="large" />,
+        },
+        {
+            label: "Qualifying / Interview Exam Score",
+            to: "/qualifying_interview_exam_scores",
+            icon: <ScoreIcon fontSize="large" />,
+        },
+        {
+            label: "Student Numbering",
+            to: "/student_numbering_per_college",
+            icon: <DashboardIcon fontSize="large" />,
+        },
+
     ];
 
 
@@ -724,11 +725,13 @@ const StudentNumbering = () => {
                     {/* LEFT COLUMN: Sorting & Status Filters */}
                     <Box display="flex" flexDirection="column" gap={2}>
                         <Box display="flex" alignItems="center" gap={1}>
-                            <Typography fontSize={13} sx={{ minWidth: "100px" }}>Campus:</Typography>
+                            <Typography fontSize={13}>Campus:</Typography>
                             <FormControl size="small" sx={{ width: "200px" }}>
-                                <InputLabel id="campus-label-college">Campus</InputLabel>
+                              
                                 <Select
-                                    labelId="campus-label-college"
+                                    labelId="campus-label"
+                                    id="campus-select"
+                                    name="campus"
                                     value={selectedCampus}
                                     label="Campus"
                                     onChange={(e) => {
@@ -737,7 +740,9 @@ const StudentNumbering = () => {
                                     }}
                                     displayEmpty
                                 >
-                                    <MenuItem value=""><em>All Campuses</em></MenuItem>
+                                    <MenuItem value="">
+                                        <em>All Campuses</em>
+                                    </MenuItem>
                                     {branches.map((branch) => (
                                         <MenuItem key={branch.id ?? branch.branch} value={branch.id ?? ""}>
                                             {branch.branch}
@@ -1322,8 +1327,12 @@ const StudentNumbering = () => {
             </Snackbar>
 
             <Dialog open={openModal} onClose={() => setOpenModal(false)} maxWidth="md" fullWidth>
-                <DialogTitle sx={{ color: "maroon", fontWeight: "bold" }}>
+                <DialogTitle sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     Acceptance Email Preview
+
+                    <IconButton onClick={() => setOpenModal(false)}>
+                        <CloseIcon />
+                    </IconButton>
                 </DialogTitle>
                 <DialogContent>
                     <Typography sx={{ mb: 1.5, fontSize: 13, color: "#555" }}>

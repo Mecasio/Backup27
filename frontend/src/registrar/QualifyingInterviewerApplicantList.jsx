@@ -97,6 +97,7 @@ const InterviewerApplicantList = () => {
 
   const [shortTerm, setShortTerm] = useState("");
   const [campusAddress, setCampusAddress] = useState("");
+  const [branches, setBranches] = useState([]);
 
   useEffect(() => {
     if (!settings) return;
@@ -120,6 +121,21 @@ const InterviewerApplicantList = () => {
     if (settings.company_name) setCompanyName(settings.company_name);
     if (settings.short_term) setShortTerm(settings.short_term);
     if (settings.campus_address) setCampusAddress(settings.campus_address);
+    if (settings?.branches) {
+      try {
+        const parsed =
+          typeof settings.branches === "string"
+            ? JSON.parse(settings.branches)
+            : settings.branches;
+
+        setBranches(Array.isArray(parsed) ? parsed : []);
+      } catch (err) {
+        console.error("Failed to parse branches:", err);
+        setBranches([]);
+      }
+    } else {
+      setBranches([]);
+    }
 
   }, [settings]);
 
@@ -277,7 +293,18 @@ const InterviewerApplicantList = () => {
     const firstLine = words.slice(0, mid).join(" ");
     const secondLine = words.slice(mid).join(" ");
 
-    const campus = settings?.campus_address || settings?.address || "No address set in Settings";
+    const branchList = Array.isArray(branches) ? branches : [];
+    const matchedBranch = branchList.find(
+      (branch) =>
+        String(branch?.branch).trim().toLowerCase() ===
+        String(interviewerData?.branch || "").trim().toLowerCase()
+    );
+    const campus =
+      matchedBranch?.address ||
+      matchedBranch?.branch_address ||
+      campusAddress ||
+      settings?.address ||
+      "No address set in Settings";
 
     const today = new Date().toLocaleDateString("en-US", {
       year: "numeric",
@@ -311,8 +338,8 @@ const InterviewerApplicantList = () => {
 
  .print-header img {
    position: absolute;
-   left: 200px; /* adjust if needed */
-   top: 0px;
+  left: 180px; /* adjust if needed */
+   top: -5px;
    width: 120px;
    height: 120px;
    border-radius: 50%;
