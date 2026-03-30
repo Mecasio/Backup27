@@ -417,10 +417,7 @@ const SideBar = ({ setIsAuthenticated, profileImage, setProfileImage }) => {
         { title: "Room Registration", link: "/room_registration", icon: MeetingRoom, page_id: 52 },
         { title: "Verify Schedule Assignment", link: "/verify_document_schedule", icon: MeetingRoom, page_id: 115 },
         { title: "Evaluator Applicant List", link: "/evaluator_schedule_room_list", icon: MeetingRoom, page_id: 120 },
-
         { title: "Exam Room Assignment", link: "/assign_entrance_exam", icon: AccessTimeIcon, page_id: 9 },
-
-
         { title: "Proctor's Applicant List", link: "/admission_schedule_room_list", icon: People, page_id: 33 },
         { title: "Announcement", link: "/announcement_for_admission", icon: Campaign, page_id: 98 },
         { title: "Program Slot Remaining", link: "/program_slot_limit", icon: People, page_id: 110 },
@@ -436,7 +433,6 @@ const SideBar = ({ setIsAuthenticated, profileImage, setProfileImage }) => {
         { title: "Applicant Online Requirements", link: "/registrar_requirements", icon: FolderCopy, page_id: 49 },
         { title: "Qualifying / Interview Scores", link: "/qualifying_interview_exam_scores", icon: Assessment, page_id: 37 },
         { title: "Student Numbering", link: "/student_numbering_per_college", icon: FormatListNumbered, page_id: 60 },
-
         { title: "Student List", link: "/student_list_for_enrollment", icon: ListAlt, page_id: 104 },
         { title: "Student Profile", link: "/official_student_dashboard1", icon: AccountCircle, page_id: 43 },
         { title: "Student Online Requirements", link: "/student_official_requirements", icon: FolderCopy, page_id: 124 },
@@ -444,8 +440,6 @@ const SideBar = ({ setIsAuthenticated, profileImage, setProfileImage }) => {
         { title: "Course Tagging For Summer", link: "/summer_tagging_for_college", icon: Class, page_id: 141 },
         { title: "Search COR", link: "/search_cor_for_college", icon: Search, page_id: 125 },
         { title: "Class List", link: classRosterEnrollmentLink, icon: Class, page_id: 15, activeCheck: () => isClassRosterActive(classRosterEnrollmentLink) },
-
-
         { title: "Qualifying Room Mgmt", link: "/assign_qualifying_interview_exam", icon: MeetingRoom, page_id: 10 },
         { title: "Qualifying Schedule Mgmt", link: "/assign_schedule_applicants_qualifying_interview", icon: EditCalendar, page_id: 12 },
         { title: "Interviewer Applicant List", link: "/enrollment_schedule_room_list", icon: People, page_id: 36 },
@@ -588,6 +582,7 @@ const SideBar = ({ setIsAuthenticated, profileImage, setProfileImage }) => {
         { title: "Applicant Information", link: "/super_admin_applicant_dashboard1", icon: Info, page_id: 75 },
         { title: "Upload Requirements", link: "/super_admin_requirements_uploader", icon: Info, page_id: 84 },
         { title: "Student Information", link: "/super_admin_student_dashboard1", icon: Info, page_id: 86 },
+        { title: "Archive", link: "/archived", icon: Info, page_id: 142}
       ]
     },
     {
